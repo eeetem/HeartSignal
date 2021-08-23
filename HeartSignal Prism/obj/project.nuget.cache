@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "dgSpecHash": "vov1OyZuGVAK2GILKezNXMaDDlIwJgiB1q9WbOs4Wrfz3pHJAEF7IzXv9Zw7M8FkgAGSYINcYzGfGNyNtgQR/A==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\etet\\source\\repos\\HeartSignal Prism\\HeartSignal Prism\\HeartSignal.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\etet\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.0.1641\\monogame.framework.desktopgl.3.8.0.1641.nupkg.sha512",
+    "C:\\Users\\etet\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
+    "C:\\Users\\etet\\.nuget\\packages\\sadconsole\\9.1.1\\sadconsole.9.1.1.nupkg.sha512",
+    "C:\\Users\\etet\\.nuget\\packages\\sadconsole.host.monogame\\9.1.1\\sadconsole.host.monogame.9.1.1.nupkg.sha512",
+    "C:\\Users\\etet\\.nuget\\packages\\telnet\\0.8.6\\telnet.0.8.6.nupkg.sha512",
+    "C:\\Users\\etet\\.nuget\\packages\\thesadrogue.primitives\\1.0.0\\thesadrogue.primitives.1.0.0.nupkg.sha512",
+    "C:\\Users\\etet\\.nuget\\packages\\thesadrogue.primitives.monogame\\1.0.0\\thesadrogue.primitives.monogame.1.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
