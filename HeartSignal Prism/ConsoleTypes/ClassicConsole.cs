@@ -27,7 +27,7 @@ namespace HeartSignal
 
             Cursor.DisableWordBreak = true;
 
-
+            
 
         }
 
@@ -59,7 +59,7 @@ namespace HeartSignal
         }
         public void DrawMessage(string value) {
             Cursor.Print(value).NewLine();
-        
+            
         
         
         }
@@ -67,7 +67,13 @@ namespace HeartSignal
 
         public void ReciveInput(string value)
         {
+            value = value.Replace("[", "");
+            value = value.Replace("]", "");
+            Cursor.UseStringParser = false;
+            this.UsePrintProcessor = false;
             DrawMessage(value);
+            Cursor.UseStringParser = true;
+            this.UsePrintProcessor = true;
             value = value.Replace(">", "");
             if (awaitingInput) {
                 inputToReturn = value;

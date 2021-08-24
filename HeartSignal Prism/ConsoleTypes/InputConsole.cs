@@ -20,7 +20,7 @@ namespace HeartSignal
             IsFocused = true;
             UseKeyboard = true;
             keyboard.EnterPressed += SendCommand;
-  
+            this.
    
                 ReciverParent = (ITextInputReciver)parent;
         
