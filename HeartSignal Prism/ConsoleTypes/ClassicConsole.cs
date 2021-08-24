@@ -7,55 +7,33 @@ using System.Threading.Tasks;
 
 namespace HeartSignal
 {
-    internal class ClassicConsole : Console
+    internal class ClassicConsole : Console, ITextInputReciver
     {
         public string Prompt { get; set; }
 
-        private readonly KeyboardHandler _keyboardHandlerObject;
-
 
         // This console domonstrates a classic MS-DOS or Windows Command Prompt style console.
-        public ClassicConsole(): base(80, 23)
+        public ClassicConsole(int width,int height): base(width, height)
         {
-           
-            // This is our cusotmer keyboard handler we'll be using to process the cursor on this console.
-            _keyboardHandlerObject = new KeyboardHandler();
 
-            // Our custom handler has a call back for processing the commands the user types. We could handle
-            // this in any method object anywhere, but we've implemented it on this console directly.
-            _keyboardHandlerObject.EnterPressedAction = EnterPressedActionHandler;
-
-            // Enable the keyboard and setup the prompt.
-            UseKeyboard = true;
-            Cursor.IsVisible = true;
-            Prompt = ">";
-            IsFocused = true;
             
 
                         // Startup description
-                        ClearText();
+             ClearText();
 
-                        // Disable the cursor since our keyboard handler will do the work.
-                        Cursor.IsEnabled = false;
-                        Cursor.Position = new Point(0, 24);
-                       _keyboardHandlerObject.CursorLastY = 24;
-                        TimesShiftedUp = 0;
+           // Disable the cursor since our keyboard handler will do the work.
+            Cursor.IsEnabled = false;
+            Cursor.IsVisible = false;
 
-                        Cursor.DisableWordBreak = true;
-                        Cursor.Print(Prompt);
-                        Cursor.DisableWordBreak = false;
+            Cursor.DisableWordBreak = true;
 
-                        // Assign our custom handler method from our handler object to this consoles keyboard handler.
-                        // We could have overridden the ProcessKeyboard method, but I wanted to demonstrate how you
-                        // can use your own handler on any console type.
-            SadComponents.Add(_keyboardHandlerObject);
+
+
         }
 
         public void ClearText()
         {
             this.Clear();
-            Cursor.Position = new Point(0, 24);
-            _keyboardHandlerObject.CursorLastY = 24;
         }
 
 
@@ -63,40 +41,38 @@ namespace HeartSignal
         string inputToReturn = "";
         public async Task<string> AskForInput(string prompt)
         {
-           Cursor.NewLine().Print(prompt+":");
+            ReciveExternalInput(prompt+":");
             awaitingInput = true;
-            IniatePrompt();
+            
             while (awaitingInput)
             {
                 await Task.Delay(10);
             }
-
             return inputToReturn;
         }
-        public void DisplayMessageFromServer(string value) {
-            Cursor.Print(value);
-            IniatePrompt();
-
-
-
-        }
-        public int promptIndex;
-        public void IniatePrompt()
-        {
-            Cursor.NewLine().Print(Prompt);
-            _keyboardHandlerObject.CursorLastY = Cursor.Position.Y;
-            promptIndex = new Point(Cursor.Position.X, Cursor.Position.Y).ToIndex(Width);
-
-
-
-        }
-
-        private void EnterPressedActionHandler(string value)
-        {
+        public void ReciveExternalInput(string value) {
+            DrawMessage(value);
             
+            
+
+
+        }
+        public void DrawMessage(string value) {
+            Cursor.Print(value).NewLine();
+        
+        
+        
+        }
+    
+
+        public void ReciveInput(string value)
+        {
+            DrawMessage(value);
+            value = value.Replace(">", "");
             if (awaitingInput) {
                 inputToReturn = value;
                 awaitingInput = false;
+                
                 return;
             
             

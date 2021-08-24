@@ -284,11 +284,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\etet\\source\\repos\\HeartSignal Prism\\HeartSignal Prism\\HeartSignal.csproj",
+      "projectUniqueName": "E:\\my games\\HeartSignal\\HeartSignal Prism\\HeartSignal.csproj",
       "projectName": "HeartSignal",
-      "projectPath": "C:\\Users\\etet\\source\\repos\\HeartSignal Prism\\HeartSignal Prism\\HeartSignal.csproj",
+      "projectPath": "E:\\my games\\HeartSignal\\HeartSignal Prism\\HeartSignal.csproj",
       "packagesPath": "C:\\Users\\etet\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\etet\\source\\repos\\HeartSignal Prism\\HeartSignal Prism\\obj\\",
+      "outputPath": "E:\\my games\\HeartSignal\\HeartSignal Prism\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

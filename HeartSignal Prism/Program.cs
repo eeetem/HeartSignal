@@ -14,8 +14,8 @@ namespace HeartSignal
         public static Client TelnetClient;
         private static void Main(string[] args)
         {
-            var SCREEN_WIDTH = 100;
-            var SCREEN_HEIGHT = 50;
+            var SCREEN_WIDTH = 96*2;
+            var SCREEN_HEIGHT = 54;
 
             SadConsole.Settings.WindowTitle = "HeartSignal Prism";
             SadConsole.Settings.UseDefaultExtendedFont = true;
@@ -31,10 +31,13 @@ namespace HeartSignal
         {
 
             //creates a new instance of classic console
-            MainConsole = new ClassicConsole();
+         MainConsole = new ClassicConsole(Game.Instance.ScreenCellsX, SadConsole.Game.Instance.ScreenCellsY);
 
             //assings the console to the main screen
             Game.Instance.Screen = MainConsole;
+            InputConsole input = new InputConsole(Game.Instance.ScreenCellsX, 2, MainConsole);
+            MainConsole.Children.Add(input);
+            input.Position = new Point(0, Game.Instance.ScreenCellsY-2);
 
             // This is needed because we replaced the initial screen object with our own.
             Game.Instance.DestroyDefaultStartingConsole();
@@ -77,7 +80,7 @@ namespace HeartSignal
                 await client.WriteLine("connect "+login+" "+pass);
                 await Task.Delay(50);
                 string response = await client.ReadAsync();
-                MainConsole.DisplayMessageFromServer(response);
+                MainConsole.ReciveExternalInput(response);
                 TelnetClient = client;
                 while (true) {
 
@@ -89,7 +92,7 @@ namespace HeartSignal
                     }
                     response = await client.ReadAsync(TimeSpan.FromMilliseconds(50));
                     if (response.Length >1) {
-                        MainConsole.DisplayMessageFromServer(response);
+                        MainConsole.ReciveExternalInput(response);
                     }
                     
 
