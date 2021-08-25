@@ -62,3 +62,10 @@ E:\my games\HeartSignal\HeartSignal Prism\obj\Debug\net5.0\HeartSignal.dll
 E:\my games\HeartSignal\HeartSignal Prism\obj\Debug\net5.0\ref\HeartSignal.dll
 E:\my games\HeartSignal\HeartSignal Prism\obj\Debug\net5.0\HeartSignal.pdb
 E:\my games\HeartSignal\HeartSignal Prism\obj\Debug\net5.0\HeartSignal.genruntimeconfig.cache
+E:\my games\HeartSignal\HeartSignal Prism\bin\Debug\net5.0\System.Windows.Forms.dll
+E:\my games\HeartSignal\HeartSignal Prism\bin\Debug\net5.0\Accessibility.dll
+E:\my games\HeartSignal\HeartSignal Prism\bin\Debug\net5.0\System.Runtime.Serialization.Formatters.Soap.dll
+E:\my games\HeartSignal\HeartSignal Prism\bin\Debug\net5.0\System.Deployment.dll
+E:\my games\HeartSignal\HeartSignal Prism\bin\Debug\net5.0\ru\System.Windows.Forms.resources.dll
+E:\my games\HeartSignal\HeartSignal Prism\bin\Debug\net5.0\ru\System.Runtime.Serialization.Formatters.Soap.resources.dll
+E:\my games\HeartSignal\HeartSignal Prism\bin\Debug\net5.0\ru\System.Deployment.resources.dll

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using SadConsole.Components;
 using SadConsole.Input;
 using SadConsole;
 using SadRogue.Primitives;
 using Console = SadConsole.Console;
+using Keys = SadConsole.Input.Keys;
+using System.Text;
+using System.Windows.Forms;
+
 namespace HeartSignal
 {
     class KeyboardHandler : KeyboardConsoleComponent
@@ -16,7 +19,7 @@ namespace HeartSignal
         // this is a callback for the owner of this keyboard handler. It is called when the user presses ENTER.
         public delegate void KeyDelegate();
         public event KeyDelegate EnterPressed;
-        public event KeyDelegate BackPressed;
+      //  public event KeyDelegate BackPressed;
 
         public int CursorLastY = 0;
         public override void OnAdded(IScreenObject host)
@@ -36,6 +39,17 @@ namespace HeartSignal
                 // If the character associated with the key pressed is a printable character, print it
                 if (key.Character != '\0')
                 {
+
+                    if (key.Character == 'v' && info.IsKeyDown(Keys.LeftControl)) {
+
+                        
+                        console.Cursor.Print(Clipboard.GetText());
+
+                    }
+                    
+                        
+                    
+                    
                     console.Cursor.Print(key.Character.ToString());
                 }
 

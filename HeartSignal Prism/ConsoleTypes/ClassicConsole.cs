@@ -69,11 +69,9 @@ namespace HeartSignal
         {
             value = value.Replace("[", "");
             value = value.Replace("]", "");
-            Cursor.UseStringParser = false;
-            this.UsePrintProcessor = false;
+
             DrawMessage(value);
-            Cursor.UseStringParser = true;
-            this.UsePrintProcessor = true;
+
             value = value.Replace(">", "");
             if (awaitingInput) {
                 inputToReturn = value;
