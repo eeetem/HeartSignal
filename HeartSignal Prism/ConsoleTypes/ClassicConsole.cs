@@ -27,7 +27,7 @@ namespace HeartSignal
 
             Cursor.DisableWordBreak = true;
 
-            
+            SadComponents.Add(new MouseHandler());
 
         }
 
@@ -67,11 +67,15 @@ namespace HeartSignal
 
         public void ReciveInput(string value)
         {
-#if DEBUG
-    
-#else
+            ///sanitize stuff if not in dev mode
+#if RELEASE
+
+
             value = value.Replace("[", "");
             value = value.Replace("]", "");
+            value = value.Replace(Environment.NewLine, "");
+            value = value.Replace("\n", "");
+            value = value.Replace("\r", "");
 #endif
 
 

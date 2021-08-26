@@ -37,8 +37,12 @@ namespace HeartSignal
 
     }
 
+
+        
+
         //a bunch of repeating code, might be worth moving into "drawlist" fucntion
         public void DrawRoom() {
+
             this.Clear();
             Cursor.NewLine().NewLine().NewLine();
             Cursor.Print(name).NewLine();

@@ -24,7 +24,7 @@ namespace HeartSignal
         public int CursorLastY = 0;
         public override void OnAdded(IScreenObject host)
         {
-            var console = (Console)host;
+          //  var console = (Console)host;
 
         }
         

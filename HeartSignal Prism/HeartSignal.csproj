@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="MouseHandler.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="SadConsole.Host.MonoGame" Version="9.1.1" />
     <PackageReference Include="System.Security.Permissions" Version="5.0.0" />
     <PackageReference Include="Telnet" Version="0.8.6" />

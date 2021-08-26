@@ -23,12 +23,14 @@ namespace HeartSignal
 
             SadConsole.Settings.WindowTitle = "HeartSignal Prism";
             SadConsole.Settings.UseDefaultExtendedFont = true;
+           
             SadConsole.Settings.AllowWindowResize = false;
 
             SadConsole.Game.Create(SCREEN_WIDTH, SCREEN_HEIGHT);
             SadConsole.Game.Instance.OnStart = Init;
             SadConsole.Game.Instance.Run();
             SadConsole.Game.Instance.Dispose();
+
         }
 
 
@@ -261,7 +263,7 @@ namespace HeartSignal
 #endif
                     }
 
-
+                    if (!client.IsConnected) { break; }
                     //await Task.Delay(50);
                 }
             }
