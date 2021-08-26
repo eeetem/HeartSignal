@@ -115,6 +115,16 @@ namespace HeartSignal
         }
         private static void SplitInput(string input)
         {
+#if DEBUG
+            if (input.Contains("[debug]"))
+            {
+
+                System.Console.WriteLine(input);
+
+            }
+
+#endif
+
 
             int idx = input.IndexOf(Environment.NewLine);
             if (idx < 1) {
@@ -155,14 +165,6 @@ namespace HeartSignal
         }
         private static void ParseServerInput(string input) {
 
-#if DEBUG
-            if (input.Contains("[debug]")) {
-
-                System.Console.WriteLine(input);
-            
-            }
-
-#endif
 
             int idx = input.IndexOf(':');
             if (idx > 0 && idx <8)//hardcoded max lenght, kinda cringe but whatever for now
