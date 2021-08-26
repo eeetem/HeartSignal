@@ -67,8 +67,14 @@ namespace HeartSignal
 
         public void ReciveInput(string value)
         {
+#if DEBUG
+    
+#else
             value = value.Replace("[", "");
             value = value.Replace("]", "");
+#endif
+
+
 
             DrawMessage(value);
 
