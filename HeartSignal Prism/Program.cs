@@ -15,6 +15,7 @@ namespace HeartSignal
         static RoomConsole RoomConsole;
         static ScreenObject root;
         public static Client TelnetClient;
+        [STAThread]
         private static void Main(string[] args)
         {
             var SCREEN_WIDTH = 96*2;

@@ -27,7 +27,7 @@ namespace HeartSignal
             var console = (Console)host;
 
         }
-
+        
         public override void ProcessKeyboard(IScreenObject consoleObject, Keyboard info, out bool handled)
         {
             // Upcast this because we know we're only using it with a Console type.
@@ -42,8 +42,25 @@ namespace HeartSignal
 
                     if (key.Character == 'v' && info.IsKeyDown(Keys.LeftControl)) {
 
+
+                        string data = "";
+                        // Declares an IDataObject to hold the data returned from the clipboard.
+                        // Retrieves the data from the clipboard.
+                        IDataObject iData = Clipboard.GetDataObject();
+
+                        // Determines whether the data is in a format you can use.
+                        if (iData.GetDataPresent(DataFormats.Text))
+                        {
+                            // Yes it is, so display it in a text box.
+                            data = (String)iData.GetData(DataFormats.Text);
+                       
+
                         
-                        console.Cursor.Print(Clipboard.GetText());
+                        console.Cursor.Print(data);
+                        System.Console.WriteLine(data);
+                        }
+                        handled = true;
+                        return;
 
                     }
                     
