@@ -115,14 +115,7 @@ namespace HeartSignal
         }
         private static void SplitInput(string input)
         {
-#if DEBUG
-           
 
-                System.Console.WriteLine(input);
-
-            
-
-#endif
 
 
             int idx = input.IndexOf(Environment.NewLine);
@@ -257,8 +250,16 @@ namespace HeartSignal
                     response = await client.ReadAsync(TimeSpan.FromMilliseconds(50));
                     if (response.Length >1) {
                         SplitInput(response);
+#if DEBUG
+
+
+                        System.Console.WriteLine(response);
+
+
+
+#endif
                     }
-                    
+
 
                     //await Task.Delay(50);
                 }
