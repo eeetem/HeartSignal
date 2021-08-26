@@ -116,12 +116,11 @@ namespace HeartSignal
         private static void SplitInput(string input)
         {
 #if DEBUG
-            if (input.Contains("[debug]"))
-            {
+           
 
                 System.Console.WriteLine(input);
 
-            }
+            
 
 #endif
 
