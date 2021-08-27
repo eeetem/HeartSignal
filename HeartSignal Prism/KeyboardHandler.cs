@@ -19,7 +19,9 @@ namespace HeartSignal
         // this is a callback for the owner of this keyboard handler. It is called when the user presses ENTER.
         public delegate void KeyDelegate();
         public event KeyDelegate EnterPressed;
-      //  public event KeyDelegate BackPressed;
+        public event KeyDelegate UpPressed;
+        public event KeyDelegate DownPressed;
+        //  public event KeyDelegate BackPressed;
 
         public int CursorLastY = 0;
         public override void OnAdded(IScreenObject host)
@@ -57,6 +59,7 @@ namespace HeartSignal
 
                         
                         console.Cursor.Print(data);
+                        
                         System.Console.WriteLine(data);
                         }
                         handled = true;
@@ -81,11 +84,37 @@ namespace HeartSignal
                         console.Cursor.LeftWrap(1).Print(" ").LeftWrap(1);
                     }
                 }
+                else if (key.Key == Keys.Left)
+                {
+
+
+                    // Do not let them backspace into the prompt
+                    if (console.Cursor.Position.Y != CursorLastY || console.Cursor.Position.X > 1)
+                    {
+                        console.Cursor.LeftWrap(1);
+                    }
+                }
+                else if (key.Key == Keys.Right)
+                {
+
+
+                    
+                        console.Cursor.RightWrap(1);
+                    
+                }
 
                 // Special character - ENTER
                 else if (key.Key == Keys.Enter)
                 {
                     EnterPressed();
+                }
+                else if (key.Key == Keys.Up)
+                {
+                    UpPressed();
+                }
+                else if (key.Key == Keys.Down)
+                {
+                    DownPressed();
                 }
             }
 

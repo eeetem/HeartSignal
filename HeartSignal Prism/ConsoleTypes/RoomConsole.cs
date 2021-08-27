@@ -53,53 +53,32 @@ namespace HeartSignal
 
             }
             Cursor.NewLine();
-            int index = 0;
-            if (thingInfo.Count > 0)
-            {
+            DrawList(thingInfo);
+            DrawList(bodyInfo);
+        }
 
-                index = 0;
+
+
+
+
+        private void DrawList(List<string> ls) {
+
+
+            int index = 0;
+     
+
+         
                 Cursor.Print("There is ");
-                foreach (string thing in thingInfo)
+                foreach (string thing in ls)
                 {
                     index++;
                     Cursor.Print(thing);
-                    if (index >= thingInfo.Count)
+                    if (index >= ls.Count)
                     {
 
 
                     }
-                    else if (index == thingInfo.Count - 1) {
-
-                        Cursor.Print(" and ");
-                    }
-
-                    else
-                    {
-                    Cursor.Print(", ");
-
-                    }
-
-
-                    
-
-
-                }
-                Cursor.NewLine();
-            }
-            if (bodyInfo.Count > 0)
-            {
-
-                index = 0;
-                Cursor.Print("There is ");
-                foreach (string body in bodyInfo)
-                {
-                    index++;
-                    Cursor.Print(body);
-                    if (index >= bodyInfo.Count)
-                    {
-
-                    }
-                    else if (index == bodyInfo.Count - 1)
+                    else if (index == ls.Count - 1)
                     {
 
                         Cursor.Print(" and ");
@@ -118,7 +97,10 @@ namespace HeartSignal
                 }
                 Cursor.NewLine();
             }
-        }
+
+
+        
+
 
     }
 
