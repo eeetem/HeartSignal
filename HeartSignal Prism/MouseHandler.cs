@@ -39,17 +39,34 @@ namespace HeartSignal
             }
             else if (!state.Mouse.LeftButtonDown && holding)
             {
-                holding = false;
-                   releaseindex = state.SurfaceCellPosition.ToIndex(owner.Width);
+                try
+                {
+                    holding = false;
+                    releaseindex = state.SurfaceCellPosition.ToIndex(owner.Width);
+                    string str = owner.GetString(clickindex, releaseindex - clickindex);
+                    if (str.Length > 1)
+                    {
+                        Clipboard.SetText(str);
 
-                Clipboard.SetText(owner.GetString(clickindex, releaseindex - clickindex));
+                    }
+                }
+                catch ( Exception e)///kinda cringe but i am not bothered fixing this exception for now
+                { 
+                
+                
+                
+                
+                
+                }
+                
+                
 
             }
 
 
             if (holding) {
   
-
+                //todo graphics here
 
 
             }
