@@ -11,7 +11,6 @@ namespace HeartSignal
     {
         public string Prompt { get; set; }
 
-
         // This console domonstrates a classic MS-DOS or Windows Command Prompt style console.
         public ClassicConsole(int width,int height): base(width, height)
         {
@@ -59,7 +58,7 @@ namespace HeartSignal
         }
         public void DrawMessage(string value) {
             Cursor.Print(value).NewLine();
-            
+
         
         
         }

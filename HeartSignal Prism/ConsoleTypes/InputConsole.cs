@@ -14,7 +14,7 @@ namespace HeartSignal
         readonly KeyboardHandler keyboard;
         ITextInputReciver ReciverParent;
         List<string> commands = new List<string>();
-        public InputConsole(int width, int height,Console parent) : base(width, height)
+        public InputConsole(int width, int height, ITextInputReciver parent) : base(width, height)
         {
             DefaultBackground = Color.Gray;
             keyboard = new KeyboardHandler();
@@ -27,7 +27,7 @@ namespace HeartSignal
             keyboard.DownPressed += DownCommand;
             this.
    
-                ReciverParent = (ITextInputReciver)parent;
+                ReciverParent = parent;
         
                 
             SadComponents.Add(keyboard);

@@ -5,7 +5,10 @@ using Console = SadConsole.Console;
 using PrimS.Telnet;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Linq;
+
+using SadConsole.UI.Controls;
+using SadConsole.UI.Themes;
+using SadConsole.UI;
 
 namespace HeartSignal
 {
@@ -25,6 +28,8 @@ namespace HeartSignal
             SadConsole.Settings.UseDefaultExtendedFont = true;
            
             SadConsole.Settings.AllowWindowResize = false;
+            SadConsole.UI.Themes.Library.Default.Colors.Lines = new AdjustableColor(Color.Red, "red");
+
 
             SadConsole.Game.Create(SCREEN_WIDTH, SCREEN_HEIGHT);
             SadConsole.Game.Instance.OnStart = Init;
@@ -203,6 +208,20 @@ namespace HeartSignal
                         cutstring = cutstring.Remove(0, cutstring.IndexOf('{'));
 
                         RoomConsole.bodyInfo = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+                        RoomConsole.DrawRoom();
+                        break;
+
+
+                    case "actions":
+
+                        cutstring = cutstring.Remove(0, cutstring.IndexOf(':') + 1);
+
+                        string name = cutstring.Substring(0, cutstring.IndexOf('{'));
+
+
+                        cutstring = cutstring.Remove(0, cutstring.IndexOf('{'));
+
+                        RoomConsole.actionDatabase[name] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
                         RoomConsole.DrawRoom();
                         break;
 
