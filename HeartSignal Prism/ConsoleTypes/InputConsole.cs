@@ -40,7 +40,11 @@ namespace HeartSignal
 
         private void SendCommand() {
             int startingIndex = 0;
-            string data = this.GetString(startingIndex, Cursor.Position.ToIndex(Width) - startingIndex);
+
+            string data = this.GetString(startingIndex, 100);///textbox is capped at 100 characters. arbitrary -  might need adjustment latyer
+            data = data.Replace("\0", "");
+
+            string input = this.GetString(startingIndex, data.Length);
             ReciverParent.ReciveInput(data);
 
             commands.Add(data);
@@ -55,9 +59,10 @@ namespace HeartSignal
         int commandindex;
         private void UpCommand() {
 
-            commandindex++;
-            if (commandindex <= commands.Count) { 
-            this.Clear();
+            
+            if (commandindex+1 <= commands.Count) {
+                commandindex++;
+                this.Clear();
                 Cursor.Position = new Point(0, 0);
                 Cursor.Print(commands[commands.Count - commandindex]);
             }
@@ -68,9 +73,10 @@ namespace HeartSignal
 
         private void DownCommand() {
 
-            commandindex--;
-            if (commandindex > 0)
+            
+            if (commandindex-1 > 0)
             {
+                commandindex--;
                 this.Clear();
                 Cursor.Position = new Point(0, 0);
                 Cursor.Print(commands[commands.Count - commandindex]);

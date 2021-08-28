@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using SadConsole;
 using Console = SadConsole.Console;
+using SadRogue.Primitives;
 
 namespace HeartSignal
 {
     class RoomConsole : Console
     {
-        
+        MouseHandler mouse;
         public RoomConsole(int width, int height) : base(width, height)
         {
             
@@ -18,6 +19,8 @@ namespace HeartSignal
             Cursor.IsVisible = false;
 
             Cursor.DisableWordBreak = true;
+            mouse = new MouseHandler();
+            SadComponents.Add(mouse);
 
         }
         public string name { get; private set; }
@@ -42,8 +45,9 @@ namespace HeartSignal
 
         //a bunch of repeating code, might be worth moving into "drawlist" fucntion
         public void DrawRoom() {
-
+            
             this.Clear();
+            Cursor.Position = new Point(0, 0);
             Cursor.NewLine().NewLine().NewLine();
             Cursor.Print(name).NewLine();
             foreach (string desc in roomInfo)
@@ -64,16 +68,20 @@ namespace HeartSignal
         private void DrawList(List<string> ls) {
 
 
-            int index = 0;
-     
+            
 
-         
-                Cursor.Print("There is ");
+            if (ls.Count == 0) { return; }
+            int index = 0;
+
+            Cursor.Print("There is ");
                 foreach (string thing in ls)
                 {
                     index++;
+                    Point pos = Cursor.Position;
                     Cursor.Print(thing);
-                    if (index >= ls.Count)
+
+                this.SetDecorator(pos.X, pos.Y,thing.Length, new CellDecorator(Color.White, 95, Mirror.None));
+                if (index >= ls.Count)
                     {
 
 
@@ -98,7 +106,7 @@ namespace HeartSignal
                 Cursor.NewLine();
             }
 
-
+        
         
 
 

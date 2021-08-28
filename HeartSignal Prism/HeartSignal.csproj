@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="MouseHandler.cs" />
+    <None Include="CopyPasteMouse.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -27,7 +27,7 @@ namespace HeartSignal
 
             Cursor.DisableWordBreak = true;
 
-            SadComponents.Add(new MouseHandler());
+            SadComponents.Add(new CopyPasteMouse());
 
         }
 
