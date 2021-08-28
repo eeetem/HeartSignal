@@ -21,8 +21,9 @@ namespace HeartSignal
             Cursor.IsVisible = false;
 
             Cursor.DisableWordBreak = true;
-
-
+            actionWidnow = new ControlsConsole(30, 5);
+            Children.Add(actionWidnow);
+            actionWidnow.IsVisible = false;
 
         }
         public string name { get; private set; }
@@ -51,11 +52,10 @@ namespace HeartSignal
         {
 
             this.Clear();
-            if (actionWidnow != null)
-            {
-                actionWidnow.Dispose();
-                actionWidnow = null;//i'm not sure it is mentioned elsewhere in the sadconsole itself? if it is it might cause garbage collection issues, but for now i'll leave it as is
-            }
+
+             actionWidnow.Clear();
+            actionWidnow.Controls.Clear();
+
             Controls.Clear();
             Cursor.Position = new Point(0, 0);
             Cursor.NewLine().NewLine().NewLine();
@@ -127,7 +127,7 @@ namespace HeartSignal
         }
 
         public Dictionary<string, List<string>> actionDatabase = new Dictionary<string, List<string>>();
-        Window actionWidnow;
+        ControlsConsole actionWidnow;
         private void RetriveActions(string item)
         {
             if (!actionDatabase.ContainsKey(item) || actionDatabase[item] == null)
@@ -136,14 +136,11 @@ namespace HeartSignal
                 Program.SendNetworkMessage("ex " + item);
             }
             else
-            {if (actionWidnow != null)
-                {
-                    actionWidnow.Dispose();
-                }
-                actionWidnow = new Window(30, 5);
-                actionWidnow.Title = "Actions";
-
-
+            {
+                actionWidnow.Clear();
+                actionWidnow.Controls.Clear();
+                var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.Red, Color.Transparent));
+                actionWidnow.DrawBox(new Rectangle(0, 0, 30, 5), boxShape);
                 actionWidnow.Position = new Point(0, Cursor.Position.Y);
                 actionWidnow.Cursor.Position = new Point(1, 3);
                 foreach (string action in actionDatabase[item])
@@ -163,7 +160,8 @@ namespace HeartSignal
                 }
                 actionWidnow.IsVisible = true;
                 actionWidnow.IsEnabled = true;
-                actionWidnow.Show();
+                
+             //   actionWidnow.Show();
             }
 
         }
