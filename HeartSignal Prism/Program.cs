@@ -16,6 +16,7 @@ namespace HeartSignal
     {
        static ClassicConsole MainConsole;
         static RoomConsole RoomConsole;
+        static MapConsole MapConsole;
         static ScreenObject root;
         public static Client TelnetClient;
         [STAThread]
@@ -27,7 +28,7 @@ namespace HeartSignal
             SadConsole.Settings.WindowTitle = "HeartSignal Prism";
             SadConsole.Settings.UseDefaultExtendedFont = true;
            
-            SadConsole.Settings.AllowWindowResize = false;
+           // SadConsole.Settings.AllowWindowResize = false;
             SadConsole.UI.Themes.Library.Default.Colors.Lines = new AdjustableColor(Color.Red, "red");
 
 
@@ -59,13 +60,16 @@ namespace HeartSignal
             
             RoomConsole = new RoomConsole(Game.Instance.ScreenCellsX, 10);
             root.Children.Add(RoomConsole);
-            
-            
-            Game.Instance.Screen = root;
-            
-            
 
-            
+
+            MapConsole = new MapConsole(14, 7);
+            MapConsole.Position = new Point(Game.Instance.ScreenCellsX-14,0);
+
+            root.Children.Add(MapConsole);
+            Game.Instance.Screen = root;
+
+          
+
 
             // This is needed because we replaced the initial screen object with our own.
             Game.Instance.DestroyDefaultStartingConsole();
@@ -223,6 +227,16 @@ namespace HeartSignal
 
                         RoomConsole.actionDatabase[name] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
                         RoomConsole.DrawRoom();
+                        break;
+                    case "map":
+
+
+                        cutstring = cutstring.Remove(0, cutstring.IndexOf(':') + 1);
+
+
+                        cutstring = cutstring.Remove(0, cutstring.IndexOf('{'));
+
+                        MapConsole.DrawMap(ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));
                         break;
 
 
