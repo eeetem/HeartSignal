@@ -52,8 +52,8 @@ namespace HeartSignal
         {
 
             this.Clear();
-
-             actionWidnow.Clear();
+            focusitem = null;
+            actionWidnow.Clear();
             actionWidnow.Controls.Clear();
 
             Controls.Clear();
@@ -97,6 +97,7 @@ namespace HeartSignal
                     Theme = new RoomButtonTheme()
                 };
                 button.MouseEnter += (s, a) => RetriveActions(thing);
+                button.Click += (s, a) => SetFocus(thing);
                 Controls.Add(button);
                 Cursor.Right(thing.Length);
 
@@ -125,11 +126,22 @@ namespace HeartSignal
             }
             Cursor.NewLine();
         }
-
+        private void SetFocus(string item) {
+            focusitem = item;
+            RetriveActions(item);
+        
+        }
         public Dictionary<string, List<string>> actionDatabase = new Dictionary<string, List<string>>();
         ControlsConsole actionWidnow;
+        string focusitem;
         private void RetriveActions(string item)
         {
+            if(focusitem != null)
+            {
+
+
+                item = focusitem;
+            }
             if (!actionDatabase.ContainsKey(item) || actionDatabase[item] == null)
             {
 
@@ -155,22 +167,21 @@ namespace HeartSignal
                     };
                     button.MouseButtonClicked += (s, a) => DoAction(item, action);
                     actionWidnow.Controls.Add(button);
-                    actionWidnow.Cursor.Right(action.Length+1);
+                    actionWidnow.Cursor.Right(action.Length + 1);
 
                 }
                 actionWidnow.IsVisible = true;
                 actionWidnow.IsEnabled = true;
-                
-             //   actionWidnow.Show();
+
+                //   actionWidnow.Show();
             }
 
         }
-        private void DoAction(string item,string action)
+        private void DoAction(string item, string action)
         {
 
-            Program.SendNetworkMessage(action +" "+ item);
+            Program.SendNetworkMessage(action + " " + item);
         }
-
 
     }
 

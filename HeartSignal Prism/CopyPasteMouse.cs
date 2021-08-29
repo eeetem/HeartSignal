@@ -35,6 +35,7 @@ namespace HeartSignal
             if (state.Mouse.LeftButtonDown&& !holding) {
                 holding = true;
                 clickindex = state.SurfaceCellPosition.ToIndex(owner.Width);
+                owner.IsFocused = true;
  
             }
             else if (!state.Mouse.LeftButtonDown && holding)
