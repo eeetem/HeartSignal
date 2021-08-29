@@ -72,6 +72,8 @@ namespace HeartSignal
 
             value = value.Replace("[", "");
             value = value.Replace("]", "");
+            value = value.Replace("{", "");
+            value = value.Replace("}", "");
             value = value.Replace(Environment.NewLine, "");
             value = value.Replace("\n", "");
             value = value.Replace("\r", "");

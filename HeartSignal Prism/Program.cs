@@ -228,7 +228,8 @@ namespace HeartSignal
 
                     default:
                         System.Console.WriteLine("unkown parsing tag: " + sub);
-
+                        //if we couldn't parse it - it's possibly not meant to be parsed to print it
+                        MainConsole.ReciveExternalInput(input);
                         break;
 
                 }
