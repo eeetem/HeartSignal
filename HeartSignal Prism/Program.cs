@@ -44,7 +44,6 @@ namespace HeartSignal
         {
             root = new ScreenObject();
             
-            //creates a new instance of classic console
 
             
             MainConsole = new ClassicConsole(Game.Instance.ScreenCellsX, SadConsole.Game.Instance.ScreenCellsY-12);
@@ -238,11 +237,16 @@ namespace HeartSignal
 
                         MapConsole.DrawMap(ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));
                         break;
+                    case "exits":
+
+
+//todo highlight possible exits
+                        break;
 
 
                     default:
                         System.Console.WriteLine("unkown parsing tag: " + sub);
-                        //if we couldn't parse it - it's possibly not meant to be parsed to print it
+                        //if we couldn't parse it - it's possibly not meant to be parsed - print it
                         MainConsole.ReciveExternalInput(input);
                         break;
 
