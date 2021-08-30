@@ -66,7 +66,7 @@ namespace HeartSignal
                 Program.SendNetworkMessage("southwest");
 
             }
-            else if (angle > 180 && angle < -90)
+            else if (angle > -180 && angle < -90)
             {
                 Program.SendNetworkMessage("southeast");
 
