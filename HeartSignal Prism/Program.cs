@@ -249,6 +249,10 @@ namespace HeartSignal
                         MapConsole.DrawMap();
                         break;
 
+                    case "exits":
+
+                        //todo
+                        break;
 
                     default:
                         System.Console.WriteLine("unkown parsing tag: " + sub);
