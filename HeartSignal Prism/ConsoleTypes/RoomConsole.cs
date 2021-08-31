@@ -67,8 +67,11 @@ namespace HeartSignal
 
             }
             Cursor.NewLine();
-            DrawList(thingInfo);
-            DrawList(bodyInfo);
+            List<string> copylist;
+            copylist = new List<string>(thingInfo);
+            DrawList(copylist);
+            copylist = new List<string>(bodyInfo);
+            DrawList(copylist);
         }
 
 

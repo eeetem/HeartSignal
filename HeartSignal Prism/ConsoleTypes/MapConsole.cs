@@ -82,21 +82,30 @@ namespace HeartSignal
             float yDiff = p2.Y - p1.Y;
             return Math.Atan2(yDiff, xDiff) * (180 / Math.PI);
         }
+        public List<string> cexists = new List<string>();
+        public List<string> mapdata = new List<string>();
 
-
-        //a bunch of repeating code, might be worth moving into "drawlist" fucntion
-        public void DrawMap(List<string> lines)
+        public void DrawMap()
         {
             
              this.Clear();
-            Cursor.Position = new Point(1,1);
-            foreach (string line in lines) {
+            Cursor.Position = new Point(2,1);
+            foreach (string line in mapdata) {
                 System.Console.WriteLine(line);
-                Cursor.Print(line).NewLine().Right(1);
+                Cursor.Print(line).NewLine().Right(2);
             
             
             
             }
+
+            this.Print(0, 0, "NW");
+            this.Print(6, 0, "NN");
+            this.Print(12, 0, "NE");
+            this.Print(0, 3, "WW");
+            this.Print(12, 3, "EE");
+            this.Print(0, 6, "SW");
+            this.Print(6, 6, "SS");
+            this.Print(12, 6, "SE");
 
         }
 

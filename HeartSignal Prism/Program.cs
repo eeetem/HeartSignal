@@ -34,7 +34,7 @@ namespace HeartSignal
 
             SadConsole.Game.Create(SCREEN_WIDTH, SCREEN_HEIGHT);
             SadConsole.Game.Instance.OnStart = Init;
-            SadConsole.Game.Instance.Run();
+            SadConsole.Game.Instance.Run();//exception is likely caused by async bullshit and foreach in consoles - fix before playtest by coppying the lists before for-each-ing them
             SadConsole.Game.Instance.Dispose();
 
         }
@@ -234,13 +234,19 @@ namespace HeartSignal
 
 
                         cutstring = cutstring.Remove(0, cutstring.IndexOf('{'));
-
-                        MapConsole.DrawMap(ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));
+                        MapConsole.mapdata = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+                        MapConsole.DrawMap();
                         break;
-                    case "exits":
+                    case "cexits":
+
+                        cutstring = cutstring.Remove(0, cutstring.IndexOf(':') + 1);
 
 
-//todo highlight possible exits
+                        cutstring = cutstring.Remove(0, cutstring.IndexOf('{'));
+
+                        
+                        MapConsole.cexists = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+                        MapConsole.DrawMap();
                         break;
 
 
