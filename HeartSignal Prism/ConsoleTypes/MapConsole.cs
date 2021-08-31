@@ -28,7 +28,7 @@ namespace HeartSignal
         readonly Point middle = new Point(3,3);
 
        public void Clicked(Point loc) {
-
+            System.Console.WriteLine(loc);
             loc = new Point((int)Math.Floor((double)loc.X / 2), loc.Y); //cells are 2 coordinates wide
 
             double angle = GetAngleOfLineBetweenTwoPoints(loc, middle);

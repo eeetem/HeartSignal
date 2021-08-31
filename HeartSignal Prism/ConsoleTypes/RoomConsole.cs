@@ -72,6 +72,7 @@ namespace HeartSignal
             DrawList(copylist);
             copylist = new List<string>(bodyInfo);
             DrawList(copylist);
+            this.IsFocused = true; 
         }
 
 

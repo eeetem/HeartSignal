@@ -27,6 +27,12 @@ namespace HeartSignal
         bool holding = false;
         public override void ProcessMouse(IScreenObject host, MouseScreenObjectState state, out bool handled)
         {
+            if (!state.IsOnScreenObject)
+            {
+                handled = false;
+                return;
+            }
+
             if (state.Mouse.LeftButtonDown &&!holding) {
                 holding = true;
                 owner.Clicked(state.CellPosition);
