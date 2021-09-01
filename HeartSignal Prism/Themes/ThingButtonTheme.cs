@@ -9,7 +9,7 @@ using SadConsole.UI.Themes;
 
 namespace HeartSignal
 {
-    class RoomButtonTheme : ButtonLinesTheme
+    class ThingButtonTheme : ButtonLinesTheme
     {
 
         Gradient grad;

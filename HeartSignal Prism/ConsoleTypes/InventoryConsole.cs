@@ -10,9 +10,9 @@ using SadConsole.UI;
 
 namespace HeartSignal
 {
-    class RoomConsole : SadConsole.UI.ControlsConsole
+    class InventoryConsole : SadConsole.UI.ControlsConsole
     {
-        public RoomConsole(int width, int height) : base(width, height)
+        public InventoryConsole(int width, int height) : base(width, height)
         {
 
 
@@ -21,57 +21,47 @@ namespace HeartSignal
             Cursor.IsVisible = false;
 
             Cursor.DisableWordBreak = true;
-            //since both inventory and room consoles use very similar actionWindows - turn it into a class at some point
             actionWidnow = new ControlsConsole(30, 5);
-            Children.Add(actionWidnow);
+            Program.root.Children.Add(actionWidnow);
             actionWidnow.IsVisible = false;
 
         }
         public string name { get; private set; }
-        public List<string> roomInfo = new List<string>();
-        public List<string> thingInfo = new List<string>();
-        public List<string> bodyInfo = new List<string>();
+        public Dictionary<string,List<string>> inventoryInfo = new Dictionary<string, List<string>>();
+        public Dictionary<string, List<string>> holdingInfo = new Dictionary<string, List<string>>();
 
 
-        //setting name aka changing rooms wipes everything
-        public void SetName(string n)
-        {
 
 
-            name = n;
-            roomInfo = new List<string>();
-            thingInfo = new List<string>();
-            bodyInfo = new List<string>();
-
-        }
 
 
 
 
         //a bunch of repeating code, might be worth moving into "drawlist" fucntion
-        public void DrawRoom()
+        public void DrawInventory()
         {
-           needRedraw = false;
+            needRedraw = false;
             this.Clear();
-            focusitem = null;
+           // focusitem = null;
             actionWidnow.Clear();
             actionWidnow.Controls.Clear();
 
             Controls.Clear();
             Cursor.Position = new Point(0, 0);
-            Cursor.NewLine().NewLine().NewLine();
-            Cursor.Print(name).NewLine();
-            foreach (string desc in new List<string>(roomInfo))
-            {
-                Cursor.Print(desc);
+            //this could be re-used for self-description
+            /* Cursor.NewLine().NewLine().NewLine();
+             Cursor.Print(name).NewLine();
+             foreach (string desc in new List<string>(roomInfo))
+             {
+                 Cursor.Print(desc);
 
 
-            }
-            Cursor.NewLine();
-
-            DrawList(new List<string>(thingInfo));
-
-            DrawList(new List<string>(bodyInfo));
+             }
+             Cursor.NewLine();*/
+            Cursor.Print("My Body:").NewLine();
+            DrawList(new Dictionary<string, List<string>>(inventoryInfo));
+            Cursor.Print("I can hold with:").NewLine();
+            DrawList(new Dictionary<string, List<string>>(holdingInfo));
             this.IsFocused = true; 
         }
 
@@ -79,7 +69,7 @@ namespace HeartSignal
 
 
 
-        private void DrawList(List<string> ls)
+        private void DrawList(Dictionary<string, List<string>> ls)
         {
 
 
@@ -87,39 +77,25 @@ namespace HeartSignal
 
 
             if (ls.Count == 0) { return; }
-            int index = 0;
 
-            Cursor.Print("There is ");
-            foreach (string thing in ls)
+            foreach (KeyValuePair<string, List<string>> info in ls)
             {
-                index++;
-                Point pos = Cursor.Position;
-                var button = new Button(thing.Length, 1)
-                {
-                    Text = thing,
-                    Position = pos,
-                    Theme = new ThingButtonTheme()
-                };
-                button.MouseEnter += (s, a) => RetriveActions(thing);
-                button.Click += (s, a) => SetFocus(thing);
-                Controls.Add(button);
-                Cursor.Right(thing.Length);
+               
+                
+                Cursor.Print(info.Key + ":").NewLine();
+                foreach (string item in info.Value) {
+                    var button = new Button(item.Length, 1)
+                    {
+                        Text = item,
+                        Position = Cursor.Position,
+                        Theme = new ThingButtonTheme()
+                    };
+                    button.MouseEnter += (s, a) => RetriveActions(item);
+                    button.Click += (s, a) => SetFocus(item);
+                    Controls.Add(button);
+                    Cursor.NewLine();
+                  //  this.SetDecorator(pos.X, pos.Y, thing.Length, new CellDecorator(Color.White, 95, Mirror.None));
 
-               // this.SetDecorator(pos.X, pos.Y, thing.Length, new CellDecorator(Color.White, 95, Mirror.None));
-                if (index >= ls.Count)
-                {
-
-
-                }
-                else if (index == ls.Count - 1)
-                {
-
-                    Cursor.Print(" and ");
-                }
-
-                else
-                {
-                    Cursor.Print(", ");
 
                 }
 
@@ -130,6 +106,7 @@ namespace HeartSignal
             }
             Cursor.NewLine();
         }
+        
         private void SetFocus(string item) {
             focusitem = item;
             RetriveActions(item);
@@ -139,25 +116,21 @@ namespace HeartSignal
         ControlsConsole actionWidnow;
         string focusitem;
         public bool needRedraw = false;
-        public override void Update(TimeSpan delta) {
+        public override void Update(TimeSpan delta)
+        {
             base.Update(delta);
-            if (needRedraw) {
-                DrawRoom();
+            if (needRedraw)
+            {
+                DrawInventory();
 
 
 
             }
-        
+
         }
-
-
-
-
-    
-        
         private void RetriveActions(string item)
         {
-            if(focusitem != null)
+           if(focusitem != null)
             {
 
 
@@ -174,7 +147,8 @@ namespace HeartSignal
                 actionWidnow.Controls.Clear();
                 var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.Red, Color.Transparent));
                 actionWidnow.DrawBox(new Rectangle(0, 0, 30, 5), boxShape);
-                actionWidnow.Position = new Point(0, Cursor.Position.Y);
+                actionWidnow.Position = new Point(Game.Instance.ScreenCellsX-(20+30), Game.Instance.ScreenCellsY-(5+2));
+
                 actionWidnow.Cursor.Position = new Point(1, 3);
                 foreach (string action in Program.actionDatabase[item])
                 {

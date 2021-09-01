@@ -17,7 +17,9 @@ namespace HeartSignal
        static ClassicConsole MainConsole;
         static RoomConsole RoomConsole;
         static MapConsole MapConsole;
-        static ScreenObject root;
+        static InventoryConsole InventoryConsole;
+        public static ScreenObject root;
+        public static Dictionary<string, List<string>> actionDatabase = new Dictionary<string, List<string>>();
         public static Client TelnetClient;
         [STAThread]
         private static void Main(string[] args)
@@ -50,7 +52,7 @@ namespace HeartSignal
             MainConsole.Position = new Point(0, 10);
 
 
-            InputConsole input = new InputConsole(Game.Instance.ScreenCellsX, 2, MainConsole);
+            InputConsole input = new InputConsole(Game.Instance.ScreenCellsX-20 , 2, MainConsole);
             MainConsole.Children.Add(input);
             input.Position = new Point(0, Game.Instance.ScreenCellsY - 12);
 
@@ -63,8 +65,12 @@ namespace HeartSignal
 
             MapConsole = new MapConsole(14, 7);
             MapConsole.Position = new Point(Game.Instance.ScreenCellsX-14,0);
-
             root.Children.Add(MapConsole);
+
+            InventoryConsole = new InventoryConsole(20, Game.Instance.ScreenCellsY-7);
+            InventoryConsole.Position = new Point(Game.Instance.ScreenCellsX - 20, 7);
+            root.Children.Add(InventoryConsole);
+
             Game.Instance.Screen = root;
 
           
@@ -89,7 +95,7 @@ namespace HeartSignal
             }
             networkMessage = message;
             needToSendMessage = true;
-           // System.Console.WriteLine(message);
+            System.Console.WriteLine(message);
             return true;
 
         }
@@ -175,6 +181,7 @@ namespace HeartSignal
 
                 string sub = input.Substring(0, idx);
                 string cutstring = input;
+                string[] returned;
               //  System.Console.WriteLine(input);
                 switch (sub)
                 {
@@ -182,71 +189,94 @@ namespace HeartSignal
                     ///a lot of parse repeating - turn this into a function at some point
                     case "room":
 
-                        cutstring = cutstring.Remove(0,cutstring.IndexOf(':')+1);
+                        returned = ParseUntillBracket(cutstring);
+                        cutstring = returned[0];
 
-                        sub = cutstring.Substring(0, cutstring.IndexOf('{'));
+                        RoomConsole.SetName(returned[1]);
 
-                        RoomConsole.SetName(sub);
-
-                        cutstring = cutstring.Remove(0,cutstring.IndexOf('{'));
 
                         RoomConsole.roomInfo = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
                         RoomConsole.DrawRoom();
                         break;
                     case "things":
 
-                        cutstring = cutstring.Remove(0, cutstring.IndexOf(':') + 1);
+                        returned = ParseUntillBracket(cutstring);
+                        cutstring = returned[0];
 
-
-                        cutstring = cutstring.Remove(0, cutstring.IndexOf('{'));
 
                         RoomConsole.thingInfo = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
                         RoomConsole.DrawRoom();
                         break;
                     case "bodies":
 
-                        cutstring = cutstring.Remove(0, cutstring.IndexOf(':') + 1);
-
-
-                        cutstring = cutstring.Remove(0, cutstring.IndexOf('{'));
+                        returned = ParseUntillBracket(cutstring);
+                        cutstring = returned[0];
 
                         RoomConsole.bodyInfo = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        RoomConsole.DrawRoom();
+                        RoomConsole.needRedraw = true;
                         break;
 
 
                     case "actions":
-
-                        cutstring = cutstring.Remove(0, cutstring.IndexOf(':') + 1);
-
-                        string name = cutstring.Substring(0, cutstring.IndexOf('{'));
+                        returned = ParseUntillBracket(cutstring);
+                        cutstring = returned[0];
 
 
-                        cutstring = cutstring.Remove(0, cutstring.IndexOf('{'));
-
-                        RoomConsole.actionDatabase[name] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        RoomConsole.DrawRoom();
+                        actionDatabase[returned[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+                        //possibly turn this into a delegate later
+                        RoomConsole.needRedraw = true;
+                        InventoryConsole.needRedraw = true;
                         break;
                     case "map":
 
 
-                        cutstring = cutstring.Remove(0, cutstring.IndexOf(':') + 1);
+                        returned = ParseUntillBracket(cutstring);
+                        cutstring = returned[0];
 
-
-                        cutstring = cutstring.Remove(0, cutstring.IndexOf('{'));
                         MapConsole.mapdata = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
                         MapConsole.DrawMap();
                         break;
                     case "cexits":
 
+                        returned = ParseUntillBracket(cutstring);
+                        cutstring = returned[0];
+
+
+                        MapConsole.cexists = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+                        MapConsole.DrawMap();
+                        break;
+                    /*case "inventory":
+
                         cutstring = cutstring.Remove(0, cutstring.IndexOf(':') + 1);
 
 
                         cutstring = cutstring.Remove(0, cutstring.IndexOf('{'));
 
-                        
+        
                         MapConsole.cexists = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
                         MapConsole.DrawMap();
+                        break;*/
+                   case "holding":
+                        Dictionary<string, List<string>> holding = new Dictionary<string, List<string>>();
+                        returned = ParseUntillBracket(cutstring);
+                        cutstring = returned[0];
+						while (cutstring.Contains('{')) { 
+
+                        returned = ParseUntillBracket(cutstring);
+                        cutstring = returned[0];
+
+                        holding[returned[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+
+                            if (cutstring.Contains('{'))///this if statement is horrible however the entire parser is a bit of a mess already and will need a refactor in the future to be a bit more consistent
+                            {
+                                cutstring = cutstring.Remove(0, cutstring.IndexOf('}') + 3);
+                            }
+                            else {
+                                cutstring = cutstring.Remove(0, cutstring.IndexOf('}') + 2);
+                            }
+                        }
+                        InventoryConsole.holdingInfo = holding;
+                        InventoryConsole.needRedraw = true;
                         break;
 
                     case "exits":
@@ -271,6 +301,18 @@ namespace HeartSignal
 
                 
             
+        }
+        private static string[] ParseUntillBracket(string s) {
+
+
+
+            s = s.Remove(0, s.IndexOf(':') + 1);
+
+            string name = s.Substring(0, s.IndexOf('{'));
+
+
+            s = s.Remove(0, s.IndexOf('{')+1);
+            return new string[] { s, name };
         }
 
         private static async void ServerLoop() {
