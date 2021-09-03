@@ -20,6 +20,7 @@ namespace HeartSignal
         static InventoryConsole InventoryConsole;
         public static ScreenObject root;
         public static Dictionary<string, List<string>> actionDatabase = new Dictionary<string, List<string>>();
+        public static Dictionary<string, List<string>> argactionDatabase = new Dictionary<string, List<string>>();
         public static Client TelnetClient;
         [STAThread]
         private static void Main(string[] args)
@@ -36,7 +37,7 @@ namespace HeartSignal
 
             SadConsole.Game.Create(SCREEN_WIDTH, SCREEN_HEIGHT);
             SadConsole.Game.Instance.OnStart = Init;
-            SadConsole.Game.Instance.Run();//exception is likely caused by async bullshit and foreach in consoles - fix before playtest by coppying the lists before for-each-ing them
+            SadConsole.Game.Instance.Run();//STILL NOT FIXED TODO FIX
             SadConsole.Game.Instance.Dispose();
 
         }
@@ -176,7 +177,7 @@ namespace HeartSignal
 
 
             int idx = input.IndexOf(':');
-            if (idx > 0 && idx <8)//hardcoded max lenght, kinda cringe but whatever for now
+            if (idx > 0 && idx < 11)//hardcoded max lenght, kinda cringe but whatever for now
             {
 
                 string sub = input.Substring(0, idx);
@@ -186,10 +187,10 @@ namespace HeartSignal
                 switch (sub)
                 {
 
-                    ///a lot of parse repeating - turn this into a function at some point
+                    ///a lot of parse repeating - turn this into a function at some point - me from the future: turned some bits into functions however there is still shitload of repeating, needs quite a big refactor
                     case "room":
 
-                        returned = ParseUntillBracket(cutstring);
+                        returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
 
                         RoomConsole.SetName(returned[1]);
@@ -200,7 +201,7 @@ namespace HeartSignal
                         break;
                     case "things":
 
-                        returned = ParseUntillBracket(cutstring);
+                        returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
 
 
@@ -209,7 +210,7 @@ namespace HeartSignal
                         break;
                     case "bodies":
 
-                        returned = ParseUntillBracket(cutstring);
+                        returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
 
                         RoomConsole.bodyInfo = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
@@ -218,7 +219,7 @@ namespace HeartSignal
 
 
                     case "actions":
-                        returned = ParseUntillBracket(cutstring);
+                        returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
 
 
@@ -227,10 +228,20 @@ namespace HeartSignal
                         RoomConsole.needRedraw = true;
                         InventoryConsole.needRedraw = true;
                         break;
+                    case "argactions":
+                        returned = RemoveParseTag(cutstring);
+                        cutstring = returned[0];
+
+
+                       argactionDatabase[returned[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+                        //possibly turn this into a delegate later
+                        RoomConsole.needRedraw = true;
+                        InventoryConsole.needRedraw = true;
+                        break;
                     case "map":
 
 
-                        returned = ParseUntillBracket(cutstring);
+                        returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
 
                         MapConsole.mapdata = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
@@ -238,31 +249,45 @@ namespace HeartSignal
                         break;
                     case "cexits":
 
-                        returned = ParseUntillBracket(cutstring);
+                        returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
 
 
                         MapConsole.cexists = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
                         MapConsole.DrawMap();
                         break;
-                    /*case "inventory":
+                    case "inventory":
 
-                        cutstring = cutstring.Remove(0, cutstring.IndexOf(':') + 1);
+                        Dictionary<string, List<string>> inventory = new Dictionary<string, List<string>>();
+                        returned = RemoveParseTag(cutstring);
+                        cutstring = returned[0];
+                        while (cutstring.Contains('{'))
+                        {
 
+                            returned = RemoveParseTag(cutstring);
+                            cutstring = returned[0];
 
-                        cutstring = cutstring.Remove(0, cutstring.IndexOf('{'));
+                            inventory[returned[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
 
-        
-                        MapConsole.cexists = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        MapConsole.DrawMap();
-                        break;*/
+                            if (cutstring.Contains('{'))///this if statement is horrible however the entire parser is a bit of a mess already and will need a refactor in the future to be a bit more consistent
+                            {
+                                cutstring = cutstring.Remove(0, cutstring.IndexOf('}') + 3);
+                            }
+                            else
+                            {
+                                cutstring = cutstring.Remove(0, cutstring.IndexOf('}') + 2);
+                            }
+                        }
+                        InventoryConsole.inventoryInfo = inventory;
+                        InventoryConsole.needRedraw = true;
+                        break;
                    case "holding":
                         Dictionary<string, List<string>> holding = new Dictionary<string, List<string>>();
-                        returned = ParseUntillBracket(cutstring);
+                        returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
-						while (cutstring.Contains('{')) { 
+                        while (cutstring.Contains('{')) { 
 
-                        returned = ParseUntillBracket(cutstring);
+                        returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
 
                         holding[returned[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
@@ -302,7 +327,7 @@ namespace HeartSignal
                 
             
         }
-        private static string[] ParseUntillBracket(string s) {
+        private static string[] RemoveParseTag(string s) {
 
 
 

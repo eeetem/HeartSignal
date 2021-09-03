@@ -22,9 +22,9 @@ namespace HeartSignal
 
             Cursor.DisableWordBreak = true;
             //since both inventory and room consoles use very similar actionWindows - turn it into a class at some point
-            actionWidnow = new ControlsConsole(30, 5);
-            Children.Add(actionWidnow);
-            actionWidnow.IsVisible = false;
+            actionWindow = new Actionwindow(30, 5, new Point(0, Cursor.Position.Y));
+            Children.Add(actionWindow);
+            actionWindow.IsVisible = false;
 
         }
         public string name { get; private set; }
@@ -53,9 +53,9 @@ namespace HeartSignal
         {
            needRedraw = false;
             this.Clear();
-            focusitem = null;
-            actionWidnow.Clear();
-            actionWidnow.Controls.Clear();
+
+            actionWindow.Clear();
+            actionWindow.Controls.Clear();
 
             Controls.Clear();
             Cursor.Position = new Point(0, 0);
@@ -100,8 +100,8 @@ namespace HeartSignal
                     Position = pos,
                     Theme = new ThingButtonTheme()
                 };
-                button.MouseEnter += (s, a) => RetriveActions(thing);
-                button.Click += (s, a) => SetFocus(thing);
+                button.MouseEnter += (s, a) => actionWindow.DisplayActions(thing, new Point(0, Cursor.Position.Y));
+                button.Click += (s, a) => actionWindow.SetFocus(thing);
                 Controls.Add(button);
                 Cursor.Right(thing.Length);
 
@@ -130,79 +130,30 @@ namespace HeartSignal
             }
             Cursor.NewLine();
         }
-        private void SetFocus(string item) {
-            focusitem = item;
-            RetriveActions(item);
-        
-        }
-        
-        ControlsConsole actionWidnow;
-        string focusitem;
-        public bool needRedraw = false;
-        public override void Update(TimeSpan delta) {
+        public override void Update(TimeSpan delta)
+        {
             base.Update(delta);
-            if (needRedraw) {
+            if (needRedraw)
+            {
                 DrawRoom();
 
 
 
             }
+
+        }
+
+        Actionwindow actionWindow;
+
+        public bool needRedraw = false;
+
+
+
+
+
+
         
-        }
 
-
-
-
-    
-        
-        private void RetriveActions(string item)
-        {
-            if(focusitem != null)
-            {
-
-
-                item = focusitem;
-            }
-            if (!Program.actionDatabase.ContainsKey(item) || Program.actionDatabase[item] == null)
-            {
-
-                Program.SendNetworkMessage("ex " + item);
-            }
-            else
-            {
-                actionWidnow.Clear();
-                actionWidnow.Controls.Clear();
-                var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.Red, Color.Transparent));
-                actionWidnow.DrawBox(new Rectangle(0, 0, 30, 5), boxShape);
-                actionWidnow.Position = new Point(0, Cursor.Position.Y);
-                actionWidnow.Cursor.Position = new Point(1, 3);
-                foreach (string action in Program.actionDatabase[item])
-                {
-
-                    Point pos = actionWidnow.Cursor.Position;
-                    var button = new Button(action.Length, 1)
-                    {
-                        Text = action,
-                        Position = pos,
-                        Theme = new ThingButtonTheme()
-                    };
-                    button.MouseButtonClicked += (s, a) => DoAction(item, action);
-                    actionWidnow.Controls.Add(button);
-                    actionWidnow.Cursor.Right(action.Length + 1);
-
-                }
-                actionWidnow.IsVisible = true;
-                actionWidnow.IsEnabled = true;
-
-                //   actionWidnow.Show();
-            }
-
-        }
-        private void DoAction(string item, string action)
-        {
-
-            Program.SendNetworkMessage(action + " " + item);
-        }
 
     }
 
