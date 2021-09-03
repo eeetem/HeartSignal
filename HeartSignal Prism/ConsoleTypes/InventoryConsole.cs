@@ -90,7 +90,7 @@ namespace HeartSignal
                         Position = Cursor.Position,
                         Theme = new ThingButtonTheme()
                     };
-                    button.MouseEnter += (s, a) => actionWindow.DisplayActions(item);
+                    button.MouseEnter += (s, a) => actionWindow.DisplayActions(item, new Point(Game.Instance.ScreenCellsX - (20 + 30), Cursor.Position.Y));
                     button.Click += (s, a) => actionWindow.SetFocus(item);
                     Controls.Add(button);
                     Cursor.NewLine();
