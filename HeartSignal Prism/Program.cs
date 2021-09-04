@@ -80,7 +80,6 @@ namespace HeartSignal
             // This is needed because we replaced the initial screen object with our own.
             Game.Instance.DestroyDefaultStartingConsole();
 
-
             ServerLoop();
 
 
@@ -302,6 +301,13 @@ namespace HeartSignal
                         }
                         InventoryConsole.holdingInfo = holding;
                         InventoryConsole.needRedraw = true;
+                        break;
+                    case "sound":
+                        returned = RemoveParseTag(cutstring);
+                        cutstring = returned[0];
+                        List<string> args = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+                        AudioManager.ParseRequest(returned[1],args[0],args[1]);
+
                         break;
 
                     case "exits":
