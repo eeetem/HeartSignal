@@ -55,7 +55,7 @@ namespace HeartSignal
                     // Theme = new but
                 };
 
-                button.MouseButtonClicked += (s, a) => Program.SendNetworkMessage("prompt:yes");
+                button.MouseButtonClicked += (s, a) => Program.SendNetworkMessage("yes");
                 button.MouseButtonClicked += (s, a) => this.IsVisible = false;
                 this.Controls.Add(button);
                 button = new Button(4, 1)
@@ -65,7 +65,7 @@ namespace HeartSignal
                     // Theme = new but
                 };
 
-                button.MouseButtonClicked += (s, a) => Program.SendNetworkMessage("prompt:no");
+                button.MouseButtonClicked += (s, a) => Program.SendNetworkMessage("no");
                 button.MouseButtonClicked += (s, a) => this.IsVisible = false;
                 this.Controls.Add(button);
             }
