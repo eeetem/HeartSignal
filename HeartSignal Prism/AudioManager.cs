@@ -57,7 +57,9 @@ namespace HeartSignal
 		public static bool download(string file, bool doCallback = false)
 		{
 			if (File.Exists("sfx/" + file)) { return true; }
-			Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/sfx");
+
+			string dir = Directory.GetCurrentDirectory() + "/sfx/" + file.Remove(file.LastIndexOf("/"), file.Length - file.LastIndexOf("/"));
+			Directory.CreateDirectory(dir);
 			using (var client = new WebClient())
 			{
 				if (doCallback)
@@ -92,6 +94,7 @@ namespace HeartSignal
 
 		private static void playSound(string id, string path)
 		{
+			path = "sfx/" + path;
 			//TODO IMPLEMENT OTHER PLATFORMS ALSO TURN THIS INTO COMPILE TIME IF RATHER THAN RUNTIME
 			if (OperatingSystem.IsWindows())
 			{
