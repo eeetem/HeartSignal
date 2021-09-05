@@ -17,6 +17,7 @@ namespace HeartSignal
        static ClassicConsole MainConsole;
         static RoomConsole RoomConsole;
         static MapConsole MapConsole;
+        static PromptWindow PromptWindow;
         static InventoryConsole InventoryConsole;
         public static ScreenObject root;
         public static Dictionary<string, List<string>> actionDatabase = new Dictionary<string, List<string>>();
@@ -47,7 +48,7 @@ namespace HeartSignal
         {
             root = new ScreenObject();
             
-
+            ///todo: replace all hardcoded coordinates with variables since a lot of them counterdepend on other console sizes
             
             MainConsole = new ClassicConsole(Game.Instance.ScreenCellsX, SadConsole.Game.Instance.ScreenCellsY-12);
             MainConsole.Position = new Point(0, 10);
@@ -63,6 +64,9 @@ namespace HeartSignal
             RoomConsole = new RoomConsole(Game.Instance.ScreenCellsX, 10);
             root.Children.Add(RoomConsole);
 
+            ///currently there is a single static window however this could be later turned in multiple dymanically created ones
+            PromptWindow = new PromptWindow(30,10,new Point(Game.Instance.ScreenCellsX/2-15, Game.Instance.ScreenCellsY/2-5));
+            root.Children.Add(PromptWindow);
 
             MapConsole = new MapConsole(14, 7);
             MapConsole.Position = new Point(Game.Instance.ScreenCellsX-14,0);
@@ -196,7 +200,7 @@ namespace HeartSignal
 
 
                         RoomConsole.roomInfo = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        RoomConsole.DrawRoom();
+                        RoomConsole.needRedraw = true;
                         break;
                     case "things":
 
@@ -205,7 +209,7 @@ namespace HeartSignal
 
 
                         RoomConsole.thingInfo = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        RoomConsole.DrawRoom();
+                        RoomConsole.needRedraw = true;
                         break;
                     case "bodies":
 
@@ -307,6 +311,24 @@ namespace HeartSignal
                         cutstring = returned[0];
                         List<string> args = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
                         AudioManager.ParseRequest(returned[1],args[0],args[1]);
+
+                        break;
+                    case "prompt":
+                       
+                        returned = RemoveParseTag(cutstring);
+                        cutstring = returned[0];
+
+                        PromptWindow.toptext = returned[1];
+                        List<string> args2 = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+                        PromptWindow.middletext = args2[0];
+                        //cringe
+                        if (args2[1] == "binary") {
+
+                            PromptWindow.binary = true;
+						}
+						else { PromptWindow.binary = false; }
+                        PromptWindow.needsDraw = true;
+                        
 
                         break;
 

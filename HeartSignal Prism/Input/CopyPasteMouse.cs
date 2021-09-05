@@ -51,11 +51,10 @@ namespace HeartSignal
 
                     }
                 }
-                catch ( Exception e)///kinda cringe but i am not bothered fixing this exception for now
+                catch ( Exception)///kinda cringe but i am not bothered fixing this exception for now
                 { 
                 
-                
-                
+             
                 
                 
                 }

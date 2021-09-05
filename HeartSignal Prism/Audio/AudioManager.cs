@@ -101,8 +101,16 @@ namespace HeartSignal
 		public static bool download(string file, bool doCallback = false)
 		{
 			if (File.Exists("sfx/" + file)) { return true; }
+			string dir;
+			if (file.Contains("/"))
+			{
+				dir = Directory.GetCurrentDirectory() + "/sfx/" + file.Remove(file.LastIndexOf("/"), file.Length - file.LastIndexOf("/"));
+			}
+			else {
+				dir = Directory.GetCurrentDirectory() + "/sfx/";
 
-			string dir = Directory.GetCurrentDirectory() + "/sfx/" + file.Remove(file.LastIndexOf("/"), file.Length - file.LastIndexOf("/"));
+
+			}
 			Directory.CreateDirectory(dir);
 			using (var client = new WebClient())
 			{
@@ -140,6 +148,8 @@ namespace HeartSignal
 		{
 			path = "sfx/" + path;
 			//TODO IMPLEMENT OTHER PLATFORMS ALSO TURN THIS INTO COMPILE TIME IF RATHER THAN RUNTIME
+
+			///todo try catch for corrupted wav files and inform the user to clear cache
 			if (OperatingSystem.IsWindows())
 			{
 				SoundPlayer player;
