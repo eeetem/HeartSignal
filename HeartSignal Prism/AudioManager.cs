@@ -26,19 +26,63 @@ namespace HeartSignal
 					download(sfxFile);
 					break;
 				case "play":
-					if (download(sfxFile))
+					if (Sounds.ContainsKey(ID)) {
+						Sounds[ID].Play();
+					
+					
+					}
+					else if (download(sfxFile))
 					{
 						playSound(ID, sfxFile);
 					}
 					break;
 				case "forceplay":
-					if (download(sfxFile, true))
+					if (Sounds.ContainsKey(ID))
+					{
+						Sounds[ID].Play();
+
+
+					}
+					else if(download(sfxFile, true))
 					{
 						playSound(ID, sfxFile);
 					}
 					else
 					{
 						DownloadAwaiters.Add(new string[] { ID, sfxFile });
+
+					}
+					break;
+				case "loop":
+					if (Sounds.ContainsKey(ID))
+					{
+						Sounds[ID].PlayLooping();
+
+
+					}
+					else if(download(sfxFile, true))
+					{
+						playSound(ID, sfxFile,true);
+					}
+					else
+					{
+						DownloadAwaiters.Add(new string[] { ID, sfxFile });
+
+					}
+					break;
+				case "pause":
+					if (Sounds.ContainsKey(ID))
+					{
+						Sounds[ID].Stop();
+
+
+					}
+					break;
+				case "stop":
+					if (Sounds.ContainsKey(ID))
+					{
+						Sounds[ID].Dispose();
+						Sounds.Remove(ID);
 
 					}
 					break;
@@ -89,10 +133,10 @@ namespace HeartSignal
 			}
 
 		}
+		static Dictionary<string, SoundPlayer> Sounds = new Dictionary<string, SoundPlayer>();
 
 
-
-		private static void playSound(string id, string path)
+		private static void playSound(string id, string path,bool loop =false)
 		{
 			path = "sfx/" + path;
 			//TODO IMPLEMENT OTHER PLATFORMS ALSO TURN THIS INTO COMPILE TIME IF RATHER THAN RUNTIME
@@ -114,8 +158,19 @@ namespace HeartSignal
 					player.SoundLocation = path;
 				}
 				player.Load();
-				player.Play();
+				if (loop)
+				{
+					player.PlayLooping();
+				}
+				else {
+					player.Play();
+
+				}
+				
+				Sounds.Add(id, player);
+
 			}
+			
 
 		}
 		
