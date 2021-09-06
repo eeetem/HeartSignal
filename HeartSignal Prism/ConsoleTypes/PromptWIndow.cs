@@ -55,8 +55,8 @@ namespace HeartSignal
                     // Theme = new but
                 };
 
-                button.MouseButtonClicked += (s, a) => Program.SendNetworkMessage("yes");
-                button.MouseButtonClicked += (s, a) => this.IsVisible = false;
+                button.Click += (s, a) => Program.SendNetworkMessage("yes");
+                button.Click += (s, a) => this.IsVisible = false;
                 this.Controls.Add(button);
                 button = new Button(4, 1)
                 {
@@ -65,9 +65,34 @@ namespace HeartSignal
                     // Theme = new but
                 };
 
-                button.MouseButtonClicked += (s, a) => Program.SendNetworkMessage("no");
-                button.MouseButtonClicked += (s, a) => this.IsVisible = false;
+                button.Click += (s, a) => Program.SendNetworkMessage("no");
+                button.Click += (s, a) => this.IsVisible = false;
                 this.Controls.Add(button);
+            }
+            else {
+
+                var text = new TextBox(15)
+                {
+                   // Mask = '*',
+                    Position = new Point(Width / 2 - 15, Height-2)
+                };
+                Controls.Add(text);
+
+                var button = new Button(4, 1)
+                {
+                    Text = "OK",
+                    Position = new Point(Width / 2 - 4, Height - 1)
+                };
+                button.Click += (s, a) => Program.SendNetworkMessage(text.Text);
+                button.Click += (s, a) => this.IsVisible = false;
+                Controls.Add(button);
+
+
+
+
+
+
+
             }
             this.IsVisible = true;
 
