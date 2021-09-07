@@ -31,7 +31,7 @@ namespace HeartSignal
             System.Console.WriteLine(loc);
             loc = new Point((int)Math.Floor((double)loc.X / 2), loc.Y); //cells are 2 coordinates wide
 
-            double angle = GetAngleOfLineBetweenTwoPoints(loc, middle);
+            double angle = Utility.GetAngleOfLineBetweenTwoPoints(loc, middle);
             System.Console.WriteLine(angle);
             if (angle == 0) {
                 Program.SendNetworkMessage("west");
@@ -76,13 +76,7 @@ namespace HeartSignal
 
 
         }
-        //probably not the best spot to put a math fucntion into but whatever, once i have more than 1 use for this i'll seperate it out
-        public static double GetAngleOfLineBetweenTwoPoints(Point p1, Point p2)
-        {
-            float xDiff = p2.X - p1.X;
-            float yDiff = p2.Y - p1.Y;
-            return Math.Atan2(yDiff, xDiff) * (180 / Math.PI);
-        }
+
         public List<string> cexists = new List<string>();
         public List<string> mapdata = new List<string>();
 

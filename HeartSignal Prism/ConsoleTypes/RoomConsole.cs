@@ -82,6 +82,7 @@ namespace HeartSignal
         private void DrawList(List<string> ls)
         {
 
+            var g = ls.GroupBy(i => i);
 
 
 
@@ -90,28 +91,69 @@ namespace HeartSignal
             int index = 0;
 
             Cursor.Print("There is ");
-            foreach (string thing in ls)
+            foreach (IGrouping<string,string> thing in g)
             {
                 index++;
-                Point pos = Cursor.Position;
-                var button = new Button(thing.Length, 1)
+                bool multiple = false;
+                if (thing.Count() > 1) {
+                    multiple = true;
+   
+                }
+                if (!multiple) {
+                    if (thing.Key.ToLower()[0] == 'a' || thing.Key.ToLower()[0] == 'e')
+                    {
+
+                        Cursor.Print("an ");
+                    }
+                    else
+                    {
+
+                        Cursor.Print("a ");
+                    }
+                }
+                else
                 {
-                    Text = thing,
-                    Position = pos,
-                    Theme = new ThingButtonTheme()
-                };
-                button.MouseEnter += (s, a) => actionWindow.DisplayActions(thing, new Point(0, Cursor.Position.Y));
-                button.Click += (s, a) => actionWindow.SetFocus(thing);
-                Controls.Add(button);
-                Cursor.Right(thing.Length);
+
+                    Cursor.Print(Utility.ConvertWholeNumber(thing.Count().ToString())+" ");
+
+                }
+                Point pos = Cursor.Position;
+                if (!multiple)
+                {
+                    var button = new Button(thing.Key.Length, 1)
+                    {
+                        Text = thing.Key,
+                        Position = pos,
+                        Theme = new ThingButtonTheme()
+                    };
+                    button.MouseEnter += (s, a) => actionWindow.DisplayActions(thing.Key, pos + new Point(-3, 1));
+                    button.Click += (s, a) => actionWindow.SetFocus(thing.Key);
+                    Controls.Add(button);
+                    Cursor.Right(thing.Key.Length);
+                }
+                else {
+                    var button = new Button(thing.Key.Length+1, 1)
+                    {
+                        Text = thing.Key+"s",
+                        Position = pos,
+                        Theme = new ThingButtonTheme()
+                    };
+                    button.MouseEnter += (s, a) => actionWindow.DisplayMultiItem(thing.Key, pos + new Point(-3, 1), thing.Count());
+                   // button.Click += (s, a) => actionWindow.SetFocus(thing.Key);
+                    Controls.Add(button);
+                    Cursor.Right(thing.Key.Length+1);
+
+
+
+                }
 
                // this.SetDecorator(pos.X, pos.Y, thing.Length, new CellDecorator(Color.White, 95, Mirror.None));
-                if (index >= ls.Count)
+                if (index >= g.Count())
                 {
 
 
                 }
-                else if (index == ls.Count - 1)
+                else if (index == g.Count() - 1)
                 {
 
                     Cursor.Print(" and ");

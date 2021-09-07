@@ -42,7 +42,7 @@ namespace HeartSignal
         {
             needRedraw = false;
             this.Clear();
-            actionWindow.ClearFocus();
+          //  actionWindow.ClearFocus();
             actionWindow.Clear();
             actionWindow.Controls.Clear();
 

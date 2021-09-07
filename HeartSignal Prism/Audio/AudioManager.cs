@@ -146,40 +146,52 @@ namespace HeartSignal
 
 		private static void playSound(string id, string path,bool loop =false)
 		{
-			path = "sfx/" + path;
-			//TODO IMPLEMENT OTHER PLATFORMS ALSO TURN THIS INTO COMPILE TIME IF RATHER THAN RUNTIME
-
-			///todo try catch for corrupted wav files and inform the user to clear cache
-			if (OperatingSystem.IsWindows())
+			try
 			{
-				SoundPlayer player;
-				if (path.EndsWith(".ogg"))
+				path = "sfx/" + path;
+				//TODO IMPLEMENT OTHER PLATFORMS ALSO TURN THIS INTO COMPILE TIME IF RATHER THAN RUNTIME
+
+				///todo try catch for corrupted wav files and inform the user to clear cache
+				if (OperatingSystem.IsWindows())
 				{
-					using (var file = new FileStream(path, FileMode.Open, FileAccess.Read))
+					SoundPlayer player;
+					if (path.EndsWith(".ogg"))
 					{
-						player = new SoundPlayer(new OggDecoder.OggDecodeStream(file));
+						using (var file = new FileStream(path, FileMode.Open, FileAccess.Read))
+						{
+							player = new SoundPlayer(new OggDecoder.OggDecodeStream(file));
+
+						}
+					}
+					else
+					{
+
+						player = new System.Media.SoundPlayer();
+						player.SoundLocation = path;
+					}
+					player.Load();
+					if (loop)
+					{
+						player.PlayLooping();
+					}
+					else
+					{
+						player.Play();
 
 					}
-				}
-				else
-				{
 
-					player = new System.Media.SoundPlayer();
-					player.SoundLocation = path;
-				}
-				player.Load();
-				if (loop)
-				{
-					player.PlayLooping();
-				}
-				else {
-					player.Play();
+					Sounds.Add(id, player);
 
 				}
-				
-				Sounds.Add(id, player);
-
 			}
+			catch (Exception e) {
+
+				System.Console.WriteLine("audio error:" + e);
+			
+			
+			
+			}
+			
 			
 
 		}
