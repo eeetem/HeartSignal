@@ -84,17 +84,19 @@ namespace HeartSignal
                 
                 Cursor.Print(info.Key + ":").NewLine();
                 foreach (string item in info.Value) {
-                    var button = new Button(item.Length, 1)
+                    string[] returned = Utility.SplitThingID(item);
+                    string thing = returned[0];
+                    string id = returned[1];
+                    var button = new Button(thing.Length, 1)
                     {
-                        Text = item,
+                        Text = thing,
                         Position = Cursor.Position,
                         Theme = new ThingButtonTheme()
                     };
-                    button.MouseEnter += (s, a) => actionWindow.DisplayActions(item, new Point(Game.Instance.ScreenCellsX - (20 + 30), Cursor.Position.Y));
-                    button.Click += (s, a) => actionWindow.SetFocus(item);
+                    button.MouseEnter += (s, a) => actionWindow.DisplayActions(item, new Point(Game.Instance.ScreenCellsX - (20 + 30), Cursor.Position.Y-4));
+                    button.Click += (s, a) => actionWindow.ClickItem(id);
                     Controls.Add(button);
                     Cursor.NewLine();
-                  //  this.SetDecorator(pos.X, pos.Y, thing.Length, new CellDecorator(Color.White, 95, Mirror.None));
 
 
                 }

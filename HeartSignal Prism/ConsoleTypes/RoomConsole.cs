@@ -82,25 +82,49 @@ namespace HeartSignal
         private void DrawList(List<string> ls)
         {
 
-            var g = ls.GroupBy(i => i);
-
-
+  
 
 
             if (ls.Count == 0) { return; }
             int index = 0;
+            int indexoffset = 0;
+            List<string[]> thingids = new List<string[]>();
+            foreach (string thingid in ls) {
+                thingids.Add(Utility.SplitThingID(thingid));
+
+            }
 
             Cursor.Print("There is ");
-            foreach (IGrouping<string,string> thing in g)
+            List<string> processed = new List<string>();
+            foreach (string[] thingid in thingids)
             {
+                
+                if (processed.Contains(thingid[0])) {
+                    continue;
+                
+                }
                 index++;
-                bool multiple = false;
-                if (thing.Count() > 1) {
+                ///if there is other things with same name process them at the same time
+                List<string> sameThingsIDs = new List<string>();
+                foreach (string[] innerthingid in thingids)
+                {
+                    if (thingid[0] == innerthingid[0]) {
+
+                        processed.Add(innerthingid[0]);
+                        sameThingsIDs.Add(innerthingid[1]);
+                                        
+                    }
+                
+                }
+
+
+                    bool multiple = false;
+                if (sameThingsIDs.Count() > 1) {
                     multiple = true;
-   
+                    indexoffset += sameThingsIDs.Count() - 1;
                 }
                 if (!multiple) {
-                    if (thing.Key.ToLower()[0] == 'a' || thing.Key.ToLower()[0] == 'e')
+                    if (thingid[0].ToLower()[0] == 'a' || thingid[0].ToLower()[0] == 'e')
                     {
 
                         Cursor.Print("an ");
@@ -114,46 +138,46 @@ namespace HeartSignal
                 else
                 {
 
-                    Cursor.Print(Utility.ConvertWholeNumber(thing.Count().ToString())+" ");
+                    Cursor.Print(Utility.ConvertWholeNumber(sameThingsIDs.Count().ToString())+" ");
 
                 }
                 Point pos = Cursor.Position;
                 if (!multiple)
                 {
-                    var button = new Button(thing.Key.Length, 1)
+                    
+                    var button = new Button(thingid[0].Length, 1)
                     {
-                        Text = thing.Key,
+                        Text = thingid[0],
                         Position = pos,
                         Theme = new ThingButtonTheme()
                     };
-                    button.MouseEnter += (s, a) => actionWindow.DisplayActions(thing.Key, pos + new Point(-3, 1));
-                    button.Click += (s, a) => actionWindow.SetFocus(thing.Key);
+                    button.MouseEnter += (s, a) => actionWindow.DisplayActions(thingid[0]+"("+thingid[1] + ")", pos + new Point(-3, 1));
+                    button.Click += (s, a) => actionWindow.ClickItem(thingid[1]);
                     Controls.Add(button);
-                    Cursor.Right(thing.Key.Length);
+                    Cursor.Right(thingid[0].Length);
                 }
                 else {
-                    var button = new Button(thing.Key.Length+1, 1)
+                    var button = new Button(thingid[0].Length+1, 1)
                     {
-                        Text = thing.Key+"s",
+                        Text = thingid[0] + "s",
                         Position = pos,
                         Theme = new ThingButtonTheme()
                     };
-                    button.MouseEnter += (s, a) => actionWindow.DisplayMultiItem(thing.Key, pos + new Point(-3, 1), thing.Count());
+                    button.MouseEnter += (s, a) => actionWindow.DisplayMultiItem(thingid[0], pos + new Point(-3, 1), sameThingsIDs);
                    // button.Click += (s, a) => actionWindow.SetFocus(thing.Key);
                     Controls.Add(button);
-                    Cursor.Right(thing.Key.Length+1);
+                    Cursor.Right(thingid[0].Length+ 1);
 
 
 
                 }
 
-               // this.SetDecorator(pos.X, pos.Y, thing.Length, new CellDecorator(Color.White, 95, Mirror.None));
-                if (index >= g.Count())
+                if (index >= thingids.Count()-indexoffset)
                 {
 
 
                 }
-                else if (index == g.Count() - 1)
+                else if (index == thingids.Count() - indexoffset - 1)
                 {
 
                     Cursor.Print(" and ");

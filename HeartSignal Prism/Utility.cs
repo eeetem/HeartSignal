@@ -202,5 +202,18 @@ namespace HeartSignal
             float yDiff = p2.Y - p1.Y;
             return Math.Atan2(yDiff, xDiff) * (180 / Math.PI);
         }
+
+
+        public static string[] SplitThingID(string thingid) {
+
+
+            string id = thingid.Substring(thingid.IndexOf("(")).Replace("(","").Replace(")", "");
+            string thing = thingid.Remove(thingid.IndexOf("("), thingid.Length - thingid.IndexOf("("));
+
+
+            return new string[] { thing, id };
+
+
+        }
     }
 }

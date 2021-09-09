@@ -22,11 +22,12 @@ namespace HeartSignal
 
         public void DisplayActions(string item, Point? newPosition = null,int index =1) {
             //if (focusitem != null) { item = focusitem; }
-            if (!Program.actionDatabase.ContainsKey(item) || Program.actionDatabase[item] == null)
-            {
-               // index++;///arrays starting at 1 momment
-                Program.SendNetworkMessage("ex " + index+"."+item);
+            string[] returned = Utility.SplitThingID(item);
+            string thing = returned[0];
+            string id = returned[1];
+            if (!GetActions(id)) {
                 return;
+            
             }
 
             if (newPosition != null) {
@@ -37,9 +38,9 @@ namespace HeartSignal
             Controls.Clear();
             var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.Red, Color.Transparent));
             this.DrawBox(new Rectangle(0, 0, Width, Height), boxShape);
-            this.Print(1, 0, item);
+            this.Print(1, 0, thing);
             this.Cursor.Position = new Point(1, 1);
-            foreach (string action in Program.actionDatabase[item])
+            foreach (string action in Program.actionDatabase[id])
             {
 
                 
@@ -53,12 +54,12 @@ namespace HeartSignal
                     Position = pos,
                     Theme = new ThingButtonTheme()
                 };
-                button.MouseButtonClicked += (s, a) => DoAction(item, action, index);
+                button.MouseButtonClicked += (s, a) => DoAction(id, action);
                 this.Controls.Add(button);
                 this.Cursor.Right(action.Length + 1);
 
             }
-            foreach (string action in Program.argactionDatabase[item])
+            foreach (string action in Program.argactionDatabase[id])
             {
 
                 string parsedAction = action.Replace(" [name]", "") + "...";
@@ -73,7 +74,7 @@ namespace HeartSignal
                     Position = pos,
                     Theme = new ThingButtonTheme()
                 };
-                button.MouseButtonClicked += (s, a) => DoArgAction(item, action,index);
+                button.MouseButtonClicked += (s, a) => DoArgAction(id, action);
                 this.Controls.Add(button);
                 this.Cursor.Right(action.Length + 1);
 
@@ -84,15 +85,14 @@ namespace HeartSignal
 
 
         }
-        public void DisplayMultiItem(string item, Point? newPosition = null, int count = 1)
+        public void DisplayMultiItem(string name, Point? newPosition = null, List<string> IDs = null)
         {
             if (awaitingItemClick) { return; }
-            //if (focusitem != null && focusitem != item) { return; }
-            if (!Program.actionDatabase.ContainsKey(item) || Program.actionDatabase[item] == null)
-            {
+            foreach (string id in IDs) {
 
-                Program.SendNetworkMessage("ex " + "1."+item);
-                return;
+                GetActions(id);
+
+
             }
 
             if (newPosition != null)
@@ -104,10 +104,10 @@ namespace HeartSignal
             Controls.Clear();
             var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.Red, Color.Transparent));
             this.DrawBox(new Rectangle(0, 0, Width, Height), boxShape);
-            this.Print(1, 0, item);
+            this.Print(1, 0, name);
             this.Cursor.Position = new Point(1, 1);
-            Cursor.Print("Which " + item + "?").NewLine().Right(1);
-            for (int i = 1; i < count+1; i++)
+            Cursor.Print("Which " + name + "?").NewLine().Right(1);
+            for (int i = 1; i < IDs.Count()+1; i++)
             {
                
                 
@@ -144,9 +144,9 @@ namespace HeartSignal
                     Theme = new ThingButtonTheme()
                 };
 
-                int foo = i;
-                button.MouseEnter += (s, a) => DisplayActions(item, null, foo);
-                button.Click += (s, a) => SetFocus(item, foo);
+                int foo = i-1;
+                button.MouseEnter += (s, a) => DisplayActions(name+"("+IDs[foo]+")", null);
+                //button.Click += (s, a) => ClickItem(item, foo);
                 this.Controls.Add(button);
                 this.Cursor.Right(buttontext.Length + 1);
 
@@ -160,40 +160,45 @@ namespace HeartSignal
 
         }
 
-        private void DoAction(string item, string action, int index = 1)
+        private void DoAction(string id, string action)
         {
             //index++;///arrays starting at 1 momment
-            Program.SendNetworkMessage(action + " " + index+"."+item);
+            Program.SendNetworkMessage(action + " " +id);
         }
 
         static bool awaitingItemClick = false;
         static string PendingArgMessage = "";
-        private static void DoArgAction(string item, string action,int index = 1) {
+        private static void DoArgAction(string id, string action) {
            // index++;///arrays starting at 1 momment
-            PendingArgMessage = action.Replace("[name]", index+"."+item);
+            PendingArgMessage = action.Replace("[name]", id);
             awaitingItemClick = true;
 
 
 
         }
 
-        /// <summary>
-        /// returns true if focus was swaped - returns false if the click was used for something else
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        /// 
-      
-        public void SetFocus(string item, int index = 1)
+
+        public void ClickItem(string item)
         {
 
           
             if (awaitingItemClick)
             {
-                Program.SendNetworkMessage(PendingArgMessage + " " + index + "." + item);
+                Program.SendNetworkMessage(PendingArgMessage + " " + item);
                 awaitingItemClick = false;
                 return;
             }
+        }
+        public static bool GetActions(string id) {
+
+            if (!Program.actionDatabase.ContainsKey(id) || Program.actionDatabase[id] == null)
+            {
+
+                Program.SendNetworkMessage("ex " + id);
+                return false;
+            }
+            return true;
+
         }
 
 
