@@ -22,7 +22,7 @@ namespace HeartSignal
 
         public void DisplayActions(string item, Point? newPosition = null,int index =1) {
             //if (focusitem != null) { item = focusitem; }
-            if (awaitingItemClick) { return; }
+           // if (awaitingItemClick) { return; }
             string[] returned = Utility.SplitThingID(item);
             string thing = returned[0];
             string id = returned[1];
@@ -88,7 +88,7 @@ namespace HeartSignal
         }
         public void DisplayMultiItem(string name, Point? newPosition = null, List<string> IDs = null)
         {
-            if (awaitingItemClick) { return; }
+            //if (awaitingItemClick) { return; }
             foreach (string id in IDs) {
 
                 GetActions(id);
@@ -147,7 +147,7 @@ namespace HeartSignal
 
                 int foo = i-1;
                 button.MouseEnter += (s, a) => DisplayActions(name+"("+IDs[foo]+")", null);
-                //button.Click += (s, a) => ClickItem(item, foo);
+                button.Click += (s, a) => ClickItem(IDs[foo]);
                 this.Controls.Add(button);
                 this.Cursor.Right(buttontext.Length + 1);
 
