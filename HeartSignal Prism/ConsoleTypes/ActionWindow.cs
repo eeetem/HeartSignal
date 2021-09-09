@@ -22,6 +22,7 @@ namespace HeartSignal
 
         public void DisplayActions(string item, Point? newPosition = null,int index =1) {
             //if (focusitem != null) { item = focusitem; }
+            if (awaitingItemClick) { return; }
             string[] returned = Utility.SplitThingID(item);
             string thing = returned[0];
             string id = returned[1];
