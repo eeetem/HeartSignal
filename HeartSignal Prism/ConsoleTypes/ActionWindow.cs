@@ -12,26 +12,39 @@ namespace HeartSignal
 {
     class Actionwindow : SadConsole.UI.ControlsConsole
     {
-        public Actionwindow(int width, int height,Point position) : base(width, height)
+        public Actionwindow(int width, int height, Point position) : base(width, height)
         {
 
 
             this.Position = position;
         }
 
-
-        public void DisplayActions(string item, Point? newPosition = null,int index =1) {
+        string lastitem = "";
+        public void DisplayActions(string item, Point? newPosition = null)
+        {
             //if (focusitem != null) { item = focusitem; }
             if (awaitingItemClick) { return; }
+
+
+
             string[] returned = Utility.SplitThingID(item);
             string thing = returned[0];
             string id = returned[1];
-            if (!GetActions(id)) {
+
+            if (!GetActions(id))
+            {
                 return;
-            
+
+            }
+            if (lastitem != item)
+            {
+                GetDesc(id);
+
+                lastitem = item;
             }
 
-            if (newPosition != null) {
+            if (newPosition != null)
+            {
 
                 Position = (Point)newPosition;
             }
@@ -44,8 +57,9 @@ namespace HeartSignal
             foreach (string action in Program.actionDatabase[id])
             {
 
-                
-                if (Cursor.Position.X + action.Length+1> Width) {
+
+                if (Cursor.Position.X + action.Length + 1 > Width)
+                {
                     Cursor.NewLine().Right(1);
                 }
                 Point pos = this.Cursor.Position;
@@ -89,7 +103,9 @@ namespace HeartSignal
         public void DisplayMultiItem(string name, Point? newPosition = null, List<string> IDs = null)
         {
             //if (awaitingItemClick) { return; }
-            foreach (string id in IDs) {
+
+            foreach (string id in IDs)
+            {
 
                 GetActions(id);
 
@@ -108,33 +124,34 @@ namespace HeartSignal
             this.Print(1, 0, name);
             this.Cursor.Position = new Point(1, 1);
             Cursor.Print("Which " + name + "?").NewLine().Right(1);
-            for (int i = 1; i < IDs.Count()+1; i++)
+            for (int i = 1; i < IDs.Count() + 1; i++)
             {
-               
-                
 
-                if (Cursor.Position.X + 2> Width)
+
+
+                if (Cursor.Position.X + 2 > Width)
                 {
                     Cursor.NewLine().Right(1);
                 }
                 Point pos = this.Cursor.Position;
                 string buttontext = i.ToString();
-                if (buttontext[buttontext.Length-1] == '1')
+                if (buttontext[buttontext.Length - 1] == '1')
                 {
                     buttontext = buttontext + "st";
 
                 }
-                else if (buttontext[buttontext.Length-1] == '2')
+                else if (buttontext[buttontext.Length - 1] == '2')
                 {
                     buttontext = buttontext + "nd";
 
                 }
-                else if (buttontext[buttontext.Length-1] == '3')
+                else if (buttontext[buttontext.Length - 1] == '3')
                 {
                     buttontext = buttontext + "rd";
 
                 }
-                else {
+                else
+                {
                     buttontext = buttontext + "th";
 
                 }
@@ -145,15 +162,15 @@ namespace HeartSignal
                     Theme = new ThingButtonTheme()
                 };
 
-                int foo = i-1;
-                button.MouseEnter += (s, a) => DisplayActions(name+"("+IDs[foo]+")", null);
+                int foo = i - 1;
+                button.MouseEnter += (s, a) => DisplayActions(name + "(" + IDs[foo] + ")", null);
                 button.Click += (s, a) => ClickItem(IDs[foo]);
                 this.Controls.Add(button);
                 this.Cursor.Right(buttontext.Length + 1);
 
             }
-          
-            
+
+
             this.IsVisible = true;
             this.IsEnabled = true;
 
@@ -164,13 +181,14 @@ namespace HeartSignal
         private void DoAction(string id, string action)
         {
             //index++;///arrays starting at 1 momment
-            Program.SendNetworkMessage(action + " " +id);
+            Program.SendNetworkMessage(action + " " + id);
         }
 
         static bool awaitingItemClick = false;
         static string PendingArgMessage = "";
-        private static void DoArgAction(string id, string action) {
-           // index++;///arrays starting at 1 momment
+        private static void DoArgAction(string id, string action)
+        {
+            // index++;///arrays starting at 1 momment
             PendingArgMessage = action.Replace("[name]", id);
             awaitingItemClick = true;
 
@@ -182,7 +200,7 @@ namespace HeartSignal
         public void ClickItem(string item)
         {
 
-          
+
             if (awaitingItemClick)
             {
                 Program.SendNetworkMessage(PendingArgMessage + " " + item);
@@ -190,7 +208,10 @@ namespace HeartSignal
                 return;
             }
         }
-        public static bool GetActions(string id) {
+        public static bool GetActions(string id)
+        {
+
+            //this being outside the IF causes ex spam but currently it's needed for descriptions, definatelly possible to optimise this if needed
 
             if (!Program.actionDatabase.ContainsKey(id) || Program.actionDatabase[id] == null)
             {
@@ -201,9 +222,11 @@ namespace HeartSignal
             return true;
 
         }
+        public static void GetDesc(string id)
+        {
+            Program.SendNetworkMessage("look " + id);
 
-
+        }
 
     }
-
 }

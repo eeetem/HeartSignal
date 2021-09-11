@@ -19,6 +19,7 @@ namespace HeartSignal
         static MapConsole MapConsole;
         static PromptWindow PromptWindow;
         static InventoryConsole InventoryConsole;
+        static ThingConsole ThingConsole;
         public static ScreenObject root;
         public static Dictionary<string, List<string>> actionDatabase = new Dictionary<string, List<string>>();
         public static Dictionary<string, List<string>> argactionDatabase = new Dictionary<string, List<string>>();
@@ -44,12 +45,16 @@ namespace HeartSignal
         }
 
 
+
         private static void Init()
         {
             root = new ScreenObject();
-            
+
+            int MapConsoleWidth = 14;
+            int roomConsoleWidth = (Game.Instance.ScreenCellsX - MapConsoleWidth) / 2;
+
             ///todo: replace all hardcoded coordinates with variables since a lot of them counterdepend on other console sizes
-            
+
             MainConsole = new ClassicConsole(Game.Instance.ScreenCellsX, SadConsole.Game.Instance.ScreenCellsY-12);
             MainConsole.Position = new Point(0, 10);
 
@@ -61,20 +66,27 @@ namespace HeartSignal
             root.Children.Add(MainConsole);
             
             
-            RoomConsole = new RoomConsole(Game.Instance.ScreenCellsX, 10);
+            RoomConsole = new RoomConsole(roomConsoleWidth, 10);
             root.Children.Add(RoomConsole);
+
+            ThingConsole = new ThingConsole(roomConsoleWidth, 10);
+            ThingConsole.Position = new Point(roomConsoleWidth, 0);
+            root.Children.Add(ThingConsole);
 
             ///currently there is a single static window however this could be later turned in multiple dymanically created ones
             PromptWindow = new PromptWindow(30,10,new Point(Game.Instance.ScreenCellsX/2-15, Game.Instance.ScreenCellsY/2-5));
             root.Children.Add(PromptWindow);
 
-            MapConsole = new MapConsole(14, 7);
+            MapConsole = new MapConsole(MapConsoleWidth, 7);
             MapConsole.Position = new Point(Game.Instance.ScreenCellsX-14,0);
             root.Children.Add(MapConsole);
 
             InventoryConsole = new InventoryConsole(20, Game.Instance.ScreenCellsY-7);
             InventoryConsole.Position = new Point(Game.Instance.ScreenCellsX - 20, 7);
             root.Children.Add(InventoryConsole);
+
+
+
 
             Game.Instance.Screen = root;
 
@@ -191,6 +203,17 @@ namespace HeartSignal
                 {
 
                     ///a lot of parse repeating - turn this into a function at some point - me from the future: turned some bits into functions however there is still shitload of repeating, needs quite a big refactor
+                    case "desc":
+
+                        returned = RemoveParseTag(cutstring);
+                        cutstring = returned[0];
+
+                     
+
+
+                        ThingConsole.lines = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+                        ThingConsole.needRedraw = true;
+                        break;
                     case "room":
 
                         returned = RemoveParseTag(cutstring);

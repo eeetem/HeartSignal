@@ -123,6 +123,12 @@ namespace HeartSignal
                     multiple = true;
                     indexoffset += sameThingsIDs.Count() - 1;
                 }
+
+                if (thingid[0].Length + Cursor.Position.X + 5 > Width) {
+                    Cursor.NewLine().Right(1);
+                }
+
+
                 if (!multiple) {
                     if (thingid[0].ToLower()[0] == 'a' || thingid[0].ToLower()[0] == 'e')
                     {
