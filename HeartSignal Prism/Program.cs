@@ -336,12 +336,7 @@ namespace HeartSignal
                         AudioManager.ParseRequest(returned[1],args[0],args[1]);
 
                         break;
-                    case "plural":
-                        returned = RemoveParseTag(cutstring);
-                        cutstring = returned[0];
-                        Utility.plurals[returned[1]] = cutstring.Substring(0, cutstring.IndexOf('}'));
 
-                        break;
                     case "prompt":
                        
                         returned = RemoveParseTag(cutstring);

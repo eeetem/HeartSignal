@@ -15,7 +15,8 @@ namespace HeartSignal
         private float Counter = 0;
 
         public double Speed { get; set; }
-        public Gradient gradient;
+        public Gradient foregradient;
+        public Gradient backgradient;
         public bool IsForeground;
 
 
@@ -31,21 +32,12 @@ namespace HeartSignal
 
         public override bool ApplyToCell(ColoredGlyph cell, ColoredGlyphState originalState)
         {
-    
-                  Color color = gradient.Lerp(Counter);
 
-            if (IsForeground)
-            {
-
-                cell.Foreground = color;
+            cell.Foreground = foregradient.Lerp(Counter);
 
 
-            }
-            else {
+                cell.Background = backgradient.Lerp(Counter);
 
-     
-                cell.Background = color;
-            }
 
             return true;        
         }
@@ -73,7 +65,8 @@ namespace HeartSignal
         public override ICellEffect Clone() => new GradientEffect()
         {
             Speed = Speed,
-            gradient = gradient,
+            foregradient = foregradient,
+            backgradient = backgradient,
             IsForeground = IsForeground,
 
         };

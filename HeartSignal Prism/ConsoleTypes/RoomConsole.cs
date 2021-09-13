@@ -88,7 +88,7 @@ namespace HeartSignal
 
             if (ls.Count == 0) { return; }
             int index = 0;
-            int indexoffset = 0;
+            //int indexoffset = 0;
             List<string[]> thingids = new List<string[]>();
             foreach (string thingid in ls) {
                 thingids.Add(Utility.SplitThingID(thingid));
@@ -96,58 +96,34 @@ namespace HeartSignal
             }
 
             Cursor.Print("There is ");
-            List<string> processed = new List<string>();
             foreach (string[] thingid in thingids)
             {
                 
-                if (processed.Contains(thingid[0])) {
-                    continue;
-                
-                }
+
                 index++;
                 ///if there is other things with same name process them at the same time
                 List<string> sameThingsIDs = new List<string>();
-                foreach (string[] innerthingid in thingids)
-                {
-                    if (thingid[0] == innerthingid[0]) {
 
-                        processed.Add(innerthingid[0]);
-                        sameThingsIDs.Add(innerthingid[1]);
-                                        
-                    }
-                
-                }
-
-
-                    bool multiple = false;
-                if (sameThingsIDs.Count() > 1) {
+                bool multiple = false;
+                if (thingid.Length > 2) {
                     multiple = true;
-                    indexoffset += sameThingsIDs.Count() - 1;
+                    bool first = true;
+                    foreach (string id in thingid) {
+                        if (first) {
+                            first = false;
+                            continue;
+                        }
+                        sameThingsIDs.Add(id);
+                    
+                    
+                    }
                 }
 
-                if (thingid[0].Length + Cursor.Position.X + 5 > Width) {
+
+                if (thingid[0].Length + Cursor.Position.X > Width) {
                     Cursor.NewLine().Right(1);
                 }
 
-
-                if (!multiple) {
-                    if (thingid[0].ToLower()[0] == 'a' || thingid[0].ToLower()[0] == 'e')
-                    {
-
-                        Cursor.Print("an ");
-                    }
-                    else
-                    {
-
-                        Cursor.Print("a ");
-                    }
-                }
-                else
-                {
-
-                    Cursor.Print(Utility.ConvertWholeNumber(sameThingsIDs.Count().ToString())+" ");
-
-                }
                 Point pos = Cursor.Position;
                 if (!multiple)
                 {
@@ -158,34 +134,34 @@ namespace HeartSignal
                         Position = pos,
                         Theme = new ThingButtonTheme()
                     };
-                    button.MouseEnter += (s, a) => actionWindow.DisplayActions(thingid[0]+"("+thingid[1] + ")", pos + new Point(-3, 1));
+                    button.MouseEnter += (s, a) => actionWindow.DisplayActions(thingid[0]+"("+thingid[1] + ")", pos + new Point(-6, 1));
                     button.Click += (s, a) => actionWindow.ClickItem(thingid[1]);
                     Controls.Add(button);
                     Cursor.Right(thingid[0].Length);
                 }
                 else {
-                    string plural = Utility.GetPlural(thingid[0]);
-                    var button = new Button(plural.Length, 1)
+                    
+                    var button = new Button(thingid[0].Length, 1)
                     {
-                        Text = plural,
+                        Text = thingid[0],
                         Position = pos,
                         Theme = new ThingButtonTheme()
                     };
-                    button.MouseEnter += (s, a) => actionWindow.DisplayMultiItem(thingid[0], pos + new Point(-3, 1), sameThingsIDs);
+                    button.MouseEnter += (s, a) => actionWindow.DisplayMultiItem(thingid[0], pos + new Point(-6, 1), sameThingsIDs);
                    // button.Click += (s, a) => actionWindow.SetFocus(thing.Key);
                     Controls.Add(button);
-                    Cursor.Right(plural.Length);
+                    Cursor.Right(thingid[0].Length);
 
 
 
                 }
 
-                if (index >= thingids.Count()-indexoffset)
+                if (index >= thingids.Count())
                 {
 
 
                 }
-                else if (index == thingids.Count() - indexoffset - 1)
+                else if (index == thingids.Count() - 1)
                 {
 
                     Cursor.Print(" and ");
