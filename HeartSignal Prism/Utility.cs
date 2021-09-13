@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SadRogue.Primitives;
+using SadConsole.StringParser;
+using SadConsole;
 
 namespace HeartSignal
 {
@@ -215,5 +217,42 @@ namespace HeartSignal
 
 
         }
+
+
+
+        static public Dictionary<string, string> plurals = new Dictionary<string, string>();
+
+        static public string GetPlural(string name) {
+
+            if (plurals.ContainsKey(name))
+            {
+
+                return plurals[name];
+
+            }
+            else {
+                Program.SendNetworkMessage("pluralize " + name);
+                return name;
+            
+            
+            }
+        
+        }
+
+        public static ParseCommandBase CustomParseCommand(string command, string parameters, ColoredGlyph[] glyphString,
+                                                  ICellSurface surface, ParseCommandStacks commandStacks)
+        {
+            
+            switch (command)
+            {
+                case "gradanim":
+                case "g":
+                    return new ParseCommandGradientAnim(parameters, commandStacks);
+                default:
+                    return null; 
+            }
+        }
+
+
     }
 }

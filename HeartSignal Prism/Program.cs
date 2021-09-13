@@ -21,8 +21,7 @@ namespace HeartSignal
         static InventoryConsole InventoryConsole;
         static ThingConsole ThingConsole;
         public static ScreenObject root;
-        public static Dictionary<string, List<string>> actionDatabase = new Dictionary<string, List<string>>();
-        public static Dictionary<string, List<string>> argactionDatabase = new Dictionary<string, List<string>>();
+
         public static Client TelnetClient;
         [STAThread]
         private static void Main(string[] args)
@@ -52,6 +51,7 @@ namespace HeartSignal
 
             int MapConsoleWidth = 14;
             int roomConsoleWidth = (Game.Instance.ScreenCellsX - MapConsoleWidth) / 2;
+            int inventoryWidth = 30;
 
             ///todo: replace all hardcoded coordinates with variables since a lot of them counterdepend on other console sizes
 
@@ -59,7 +59,7 @@ namespace HeartSignal
             MainConsole.Position = new Point(0, 10);
 
 
-            InputConsole input = new InputConsole(Game.Instance.ScreenCellsX-20 , 2, MainConsole);
+            InputConsole input = new InputConsole(Game.Instance.ScreenCellsX- inventoryWidth, 2, MainConsole);
             MainConsole.Children.Add(input);
             input.Position = new Point(0, Game.Instance.ScreenCellsY - 12);
 
@@ -81,8 +81,8 @@ namespace HeartSignal
             MapConsole.Position = new Point(Game.Instance.ScreenCellsX-14,0);
             root.Children.Add(MapConsole);
 
-            InventoryConsole = new InventoryConsole(20, Game.Instance.ScreenCellsY-7);
-            InventoryConsole.Position = new Point(Game.Instance.ScreenCellsX - 20, 7);
+            InventoryConsole = new InventoryConsole(inventoryWidth, Game.Instance.ScreenCellsY-7);
+            InventoryConsole.Position = new Point(Game.Instance.ScreenCellsX - inventoryWidth, 7);
             root.Children.Add(InventoryConsole);
 
 
@@ -106,7 +106,7 @@ namespace HeartSignal
         public static bool SendNetworkMessage(string message) {
             if (needToSendMessage) {
 
-
+                System.Console.WriteLine("WARNING: message wasnt sent due to another one being queued, beg etet to implement proper message queues");
                 return false;
             }
             networkMessage = message;
@@ -249,8 +249,8 @@ namespace HeartSignal
                         cutstring = returned[0];
 
 
-                        actionDatabase[returned[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        //possibly turn this into a delegate later
+                        ActionWindow.actionDatabase[returned[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+       
                         RoomConsole.needRedraw = true;
                         InventoryConsole.needRedraw = true;
                         break;
@@ -259,8 +259,8 @@ namespace HeartSignal
                         cutstring = returned[0];
 
 
-                       argactionDatabase[returned[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        //possibly turn this into a delegate later
+                        ActionWindow.argactionDatabase[returned[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+
                         RoomConsole.needRedraw = true;
                         InventoryConsole.needRedraw = true;
                         break;
@@ -334,6 +334,12 @@ namespace HeartSignal
                         cutstring = returned[0];
                         List<string> args = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
                         AudioManager.ParseRequest(returned[1],args[0],args[1]);
+
+                        break;
+                    case "plural":
+                        returned = RemoveParseTag(cutstring);
+                        cutstring = returned[0];
+                        Utility.plurals[returned[1]] = cutstring.Substring(0, cutstring.IndexOf('}'));
 
                         break;
                     case "prompt":

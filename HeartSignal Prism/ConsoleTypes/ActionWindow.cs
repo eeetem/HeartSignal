@@ -10,15 +10,16 @@ using SadConsole.UI;
 
 namespace HeartSignal
 {
-    class Actionwindow : SadConsole.UI.ControlsConsole
+    class ActionWindow : SadConsole.UI.ControlsConsole
     {
-        public Actionwindow(int width, int height, Point position) : base(width, height)
+        public ActionWindow(int width, int height, Point position) : base(width, height)
         {
 
 
             this.Position = position;
         }
-
+        public static Dictionary<string, List<string>> actionDatabase = new Dictionary<string, List<string>>();
+        public static Dictionary<string, List<string>> argactionDatabase = new Dictionary<string, List<string>>();
         string lastitem = "";
         public void DisplayActions(string item, Point? newPosition = null)
         {
@@ -54,7 +55,7 @@ namespace HeartSignal
             this.DrawBox(new Rectangle(0, 0, Width, Height), boxShape);
             this.Print(1, 0, thing);
             this.Cursor.Position = new Point(1, 1);
-            foreach (string action in Program.actionDatabase[id])
+            foreach (string action in actionDatabase[id])
             {
 
 
@@ -74,7 +75,7 @@ namespace HeartSignal
                 this.Cursor.Right(action.Length + 1);
 
             }
-            foreach (string action in Program.argactionDatabase[id])
+            foreach (string action in argactionDatabase[id])
             {
 
                 string parsedAction = action.Replace(" [name]", "") + "...";
@@ -155,7 +156,7 @@ namespace HeartSignal
                     buttontext = buttontext + "th";
 
                 }
-                var button = new Button(buttontext.Length, 1)
+                var button = new Button(buttontext.Length, 1) 
                 {
                     Text = buttontext,
                     Position = pos,
@@ -213,7 +214,7 @@ namespace HeartSignal
 
             //this being outside the IF causes ex spam but currently it's needed for descriptions, definatelly possible to optimise this if needed
 
-            if (!Program.actionDatabase.ContainsKey(id) || Program.actionDatabase[id] == null)
+            if (!actionDatabase.ContainsKey(id) || actionDatabase[id] == null)
             {
 
                 Program.SendNetworkMessage("ex " + id);

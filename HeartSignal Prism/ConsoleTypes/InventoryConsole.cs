@@ -21,9 +21,10 @@ namespace HeartSignal
             Cursor.IsVisible = false;
 
             Cursor.DisableWordBreak = true;
-            actionWindow = new Actionwindow(30, 5, new Point(Game.Instance.ScreenCellsX - (20 + 30), Game.Instance.ScreenCellsY - (5 + 2)));
+            actionWindow = new ActionWindow(30, 5, new Point(Game.Instance.ScreenCellsX - (20 + 30), Game.Instance.ScreenCellsY - (5 + 2)));
             Program.root.Children.Add(actionWindow);
             actionWindow.IsVisible = false;
+            ColoredString.CustomProcessor = Utility.CustomParseCommand;
 
         }
         public string name { get; private set; }
@@ -93,7 +94,7 @@ namespace HeartSignal
                         Position = Cursor.Position,
                         Theme = new ThingButtonTheme()
                     };
-                    button.MouseEnter += (s, a) => actionWindow.DisplayActions(item, new Point(Game.Instance.ScreenCellsX - (20 + 30), Cursor.Position.Y+4));
+                    button.MouseEnter += (s, a) => actionWindow.DisplayActions(item, new Point(Game.Instance.ScreenCellsX - (Width + 30), Cursor.Position.Y+4));
                     button.Click += (s, a) => actionWindow.ClickItem(id);
                     Controls.Add(button);
                     Cursor.NewLine();
@@ -110,7 +111,7 @@ namespace HeartSignal
         }
         
 
-        Actionwindow actionWindow;
+        ActionWindow actionWindow;
 
         public bool needRedraw = false;
         public override void Update(TimeSpan delta)

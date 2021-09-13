@@ -22,9 +22,10 @@ namespace HeartSignal
 
             Cursor.DisableWordBreak = true;
             //since both inventory and room consoles use very similar actionWindows - turn it into a class at some point
-            actionWindow = new Actionwindow(30, 5, new Point(0, Cursor.Position.Y));
+            actionWindow = new ActionWindow(30, 5, new Point(0, Cursor.Position.Y));
             Children.Add(actionWindow);
             actionWindow.IsVisible = false;
+            ColoredString.CustomProcessor = Utility.CustomParseCommand;
 
         }
         public string name { get; private set; }
@@ -163,16 +164,17 @@ namespace HeartSignal
                     Cursor.Right(thingid[0].Length);
                 }
                 else {
-                    var button = new Button(thingid[0].Length+1, 1)
+                    string plural = Utility.GetPlural(thingid[0]);
+                    var button = new Button(plural.Length, 1)
                     {
-                        Text = thingid[0] + "s",
+                        Text = plural,
                         Position = pos,
                         Theme = new ThingButtonTheme()
                     };
                     button.MouseEnter += (s, a) => actionWindow.DisplayMultiItem(thingid[0], pos + new Point(-3, 1), sameThingsIDs);
                    // button.Click += (s, a) => actionWindow.SetFocus(thing.Key);
                     Controls.Add(button);
-                    Cursor.Right(thingid[0].Length+ 1);
+                    Cursor.Right(plural.Length);
 
 
 
@@ -215,7 +217,7 @@ namespace HeartSignal
 
         }
 
-        Actionwindow actionWindow;
+        ActionWindow actionWindow;
 
         public bool needRedraw = false;
 

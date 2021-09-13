@@ -21,6 +21,8 @@ namespace HeartSignal
             Cursor.IsVisible = false;
 
             Cursor.DisableWordBreak = true;
+            ColoredString.CustomProcessor = Utility.CustomParseCommand;
+            Cursor.UseStringParser = true;
 
 
         }
@@ -30,17 +32,20 @@ namespace HeartSignal
         {
             needRedraw = false;
             this.Clear();
-
+            this.Effects.RemoveAll();
 
             Controls.Clear();
             Cursor.Position = new Point(0, 0);
             Cursor.NewLine().NewLine().NewLine();
             foreach (string desc in new List<string>(lines))
             {
+
+           
                 Cursor.Print(desc);
                 Cursor.NewLine();
 
             }
+            
 
         }
 
