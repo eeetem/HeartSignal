@@ -15,6 +15,7 @@ namespace HeartSignal
         private int _counter;
 
 
+        public ColoredString GradientString;
 
         public int Length;
         Gradient grad;
@@ -38,7 +39,17 @@ namespace HeartSignal
                 for (int i = 1; i < parametersArray.Length - 1; i++)
                     steps.Add(Color.White.FromParser(parametersArray[i], out bool keep, out keep, out keep, out keep, out bool useDefault));
 
-                grad = new Gradient(steps.ToArray());
+                GradientString = new ColorGradient(steps.ToArray()).ToColoredString(new string(' ', Length));
+                Color[] colors = new Color[Length];
+                int index = 0;
+                foreach (ColoredString.ColoredGlyphEffect C in GradientString)
+				{
+                    colors[index] = C.Foreground;
+                    index++;
+     
+
+				}
+                grad = new Gradient(colors);
                 commandStack.TurnOnEffects = true;
 
             }
