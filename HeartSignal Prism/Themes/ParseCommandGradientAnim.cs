@@ -13,7 +13,7 @@ namespace HeartSignal
     {
 
         private int foregroundLenght;
-        private int backroundLenght;
+        private int? backroundLenght;
 
 
         public ColoredString GradientString;
@@ -31,7 +31,7 @@ namespace HeartSignal
             {
                 CommandType = CommandTypes.Effect;
                 int index = 0;
-                int backroundindex = 0;
+                int? backroundindex = null;
                 foreach (string param in parametersArray) {
                     if (param == "b") {
 
@@ -44,14 +44,36 @@ namespace HeartSignal
 
                     index++;
                 }
-                backroundLenght = int.Parse(parametersArray[parametersArray.Length - 1], CultureInfo.InvariantCulture);
-                foregroundLenght  = int.Parse(parametersArray[backroundindex-1], CultureInfo.InvariantCulture);
 
+                if (backroundindex != null)
+                {
+                    backroundLenght = int.Parse(parametersArray[parametersArray.Length - 1], CultureInfo.InvariantCulture);
+                    foregroundLenght = int.Parse(parametersArray[(int)backroundindex - 1], CultureInfo.InvariantCulture);
+                }
+                else {
+                    foregroundLenght = int.Parse(parametersArray[parametersArray.Length - 1], CultureInfo.InvariantCulture);
+                    backroundLenght = null;
+                }
 
                 List<Color> steps = new List<Color>();
 
-                for (int i = 1; i < backroundindex - 1; i++)
-                    steps.Add(Color.White.FromParser(parametersArray[i], out bool keep, out keep, out keep, out keep, out bool useDefault));
+
+                if (backroundindex != null)
+                {
+                    for (int i = 1; i < backroundindex - 1; i++)
+                        steps.Add(Color.White.FromParser(parametersArray[i], out bool keep, out keep, out keep, out keep, out bool useDefault));
+
+                }
+                else {
+
+
+
+                    for (int i = 1; i < parametersArray.Length - 1; i++)
+                        steps.Add(Color.White.FromParser(parametersArray[i], out bool keep, out keep, out keep, out keep, out bool useDefault));
+
+
+                }
+
 
                 GradientString = new ColorGradient(steps.ToArray()).ToColoredString(new string(' ', foregroundLenght));
                 Color[] colors = new Color[foregroundLenght];
@@ -65,22 +87,23 @@ namespace HeartSignal
 				}
                 foregrad = new Gradient(colors);
                 steps = new List<Color>();
-
-                for (int i = backroundindex+1; i < parametersArray.Length - 1; i++)
-                    steps.Add(Color.White.FromParser(parametersArray[i], out bool keep, out keep, out keep, out keep, out bool useDefault));
-
-                GradientString = new ColorGradient(steps.ToArray()).ToColoredString(new string(' ', backroundLenght));
-                colors = new Color[backroundLenght];
-                index = 0;
-                foreach (ColoredString.ColoredGlyphEffect C in GradientString)
+                if (backroundindex != null)
                 {
-                    colors[index] = C.Foreground;
-                    index++;
+                    for (int i = (int)backroundindex + 1; i < parametersArray.Length - 1; i++)
+                        steps.Add(Color.White.FromParser(parametersArray[i], out bool keep, out keep, out keep, out keep, out bool useDefault));
+
+                    GradientString = new ColorGradient(steps.ToArray()).ToColoredString(new string(' ', (int)backroundLenght));
+                    colors = new Color[(int)backroundLenght];
+                    index = 0;
+                    foreach (ColoredString.ColoredGlyphEffect C in GradientString)
+                    {
+                        colors[index] = C.Foreground;
+                        index++;
 
 
+                    }
+                    backgrad = new Gradient(colors);
                 }
-                backgrad= new Gradient(colors);
-
 
                 commandStack.TurnOnEffects = true;
 
@@ -124,7 +147,8 @@ namespace HeartSignal
 
             return gradEffect;
         }
-        int counter = 0;
+        int backcounter = 0;
+        int forecounter = 0;
         public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex,
             ICellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
         {
@@ -136,12 +160,22 @@ namespace HeartSignal
                 glyphState.Foreground = GradientString[Length - _counter].Foreground;
 
             */
-            glyphState.Effect = GenerateEffect(foregroundLenght - counter, backroundLenght - counter);
+
+            glyphState.Effect = GenerateEffect(foregroundLenght - forecounter, backroundLenght == null ? 0: (int)backroundLenght - backcounter);
 
 
-            counter++;
-            if (counter > backroundLenght && counter > foregroundLenght)
-                commandStack.RemoveSafe(this);
+            forecounter++;
+            backcounter++;
+            if (backcounter > backroundLenght) {
+
+                backcounter = 0;
+            }
+            if (forecounter > foregroundLenght)
+            {
+
+                forecounter = 0;
+            }
+
 
         }
     }

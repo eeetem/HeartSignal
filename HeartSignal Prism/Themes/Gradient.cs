@@ -32,11 +32,20 @@ namespace HeartSignal
 
         public override bool ApplyToCell(ColoredGlyph cell, ColoredGlyphState originalState)
         {
+            if(foregradient != null)
+			{
+                cell.Foreground = foregradient.Lerp(Counter);
 
-            cell.Foreground = foregradient.Lerp(Counter);
+            }
 
 
+            if (backgradient != null)
+            {
                 cell.Background = backgradient.Lerp(Counter);
+
+            }
+
+
 
 
             return true;        
