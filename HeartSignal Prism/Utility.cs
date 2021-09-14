@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SadRogue.Primitives;
 using SadConsole.StringParser;
 using SadConsole;
+using SadConsole.UI.Controls;
 
 namespace HeartSignal
 {
@@ -26,7 +27,7 @@ namespace HeartSignal
 
             
             string idstring = thingid.Substring(thingid.IndexOf("("), thingid.Length - thingid.IndexOf("("));
-            idstring = idstring.Replace("(", "").Replace(")", "");
+            idstring = idstring.Replace("(", "").Replace(")", "").Replace(".", "");
             string[] ids = idstring.Split(',');
                 
            string thing = thingid.Remove(thingid.IndexOf("("), thingid.Length - thingid.IndexOf("("));
@@ -57,6 +58,68 @@ namespace HeartSignal
             }
         }
 
+        public static void CreateButtonThingId(string[] thingid, SadConsole.UI.ControlsConsole console, ActionWindow ac) {
 
+            ///if there is other things with same name process them at the same time
+            List<string> sameThingsIDs = new List<string>();
+
+            bool multiple = false;
+            if (thingid.Length > 2)
+            {
+                multiple = true;
+                bool first = true;
+                foreach (string id in thingid)
+                {
+                    if (first)
+                    {
+                        first = false;
+                        continue;
+                    }
+                    sameThingsIDs.Add(id);
+
+
+                }
+            }
+
+
+            if (thingid[0].Length + console.Cursor.Position.X > console.Width)
+            {
+                console.Cursor.NewLine().Right(1);
+            }
+
+            Point pos = console.Cursor.Position;
+            if (!multiple)
+            {
+
+                var button = new Button(thingid[0].Length, 1)
+                {
+                    Text = thingid[0],
+                    Position = pos,
+                    Theme = new ThingButtonTheme()
+                };
+                button.MouseEnter += (s, a) => ac.DisplayActions(thingid[0] + "(" + thingid[1] + ")", pos + new Point(-6, 1));
+                button.Click += (s, a) => ac.ClickItem(thingid[1]);
+                console.Controls.Add(button);
+                console.Cursor.Right(thingid[0].Length);
+            }
+            else
+            {
+
+                var button = new Button(thingid[0].Length, 1)
+                {
+                    Text = thingid[0],
+                    Position = pos,
+                    Theme = new ThingButtonTheme()
+                };
+                button.MouseEnter += (s, a) => ac.DisplayMultiItem(thingid[0], pos + new Point(-6, 1), sameThingsIDs);
+                // button.Click += (s, a) => actionWindow.SetFocus(thing.Key);
+                console.Controls.Add(button);
+                console.Cursor.Right(thingid[0].Length);
+
+
+
+            }
+
+        }
     }
 }

@@ -53,7 +53,7 @@ namespace HeartSignal
             Controls.Clear();
             var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.Red, Color.Transparent));
             this.DrawBox(new Rectangle(0, 0, Width, Height), boxShape);
-           // this.Print(1, 0, thing);
+           this.Print(1, 0, "Actions");
             this.Cursor.Position = new Point(1, 1);
             foreach (string action in actionDatabase[id])
             {
@@ -95,6 +95,16 @@ namespace HeartSignal
                 this.Cursor.Right(action.Length + 1);
 
             }
+
+            var exit = new Button(1, 1)
+            {
+                Text = "x",
+                Position = new Point(Width-1,0),
+                Theme = new ThingButtonTheme()
+            };
+            exit.MouseButtonClicked += (s, a) => IsVisible = false;
+            exit.MouseButtonClicked += (s, a) => IsEnabled = false;
+            this.Controls.Add(exit);
             this.IsVisible = true;
             this.IsEnabled = true;
 
@@ -170,6 +180,15 @@ namespace HeartSignal
                 this.Cursor.Right(buttontext.Length + 1);
 
             }
+            var exit = new Button(1, 1)
+            {
+                Text = "x",
+                Position = new Point(Width - 1, 0),
+                Theme = new ThingButtonTheme()
+            };
+            exit.MouseButtonClicked += (s, a) => IsVisible = false;
+            exit.MouseButtonClicked += (s, a) => IsEnabled = false;
+            this.Controls.Add(exit);
 
 
             this.IsVisible = true;

@@ -21,16 +21,18 @@ namespace HeartSignal
             Cursor.IsVisible = false;
 
             Cursor.DisableWordBreak = true;
-            //since both inventory and room consoles use very similar actionWindows - turn it into a class at some point
+ 
             actionWindow = new ActionWindow(30, 5, new Point(0, Cursor.Position.Y));
             Children.Add(actionWindow);
             actionWindow.IsVisible = false;
             ColoredString.CustomProcessor = Utility.CustomParseCommand;
+            
 
         }
         public string name { get; private set; }
         public List<string> roomInfo = new List<string>();
         public List<string> thingInfo = new List<string>();
+        public List<string> fancyInfo = new List<string>();
         public List<string> bodyInfo = new List<string>();
 
 
@@ -42,6 +44,7 @@ namespace HeartSignal
             name = n;
             roomInfo = new List<string>();
             thingInfo = new List<string>();
+            fancyInfo = new List<string>();
             bodyInfo = new List<string>();
 
         }
@@ -60,19 +63,59 @@ namespace HeartSignal
 
             Controls.Clear();
             Cursor.Position = new Point(0, 0);
-            Cursor.NewLine().NewLine().NewLine();
-            Cursor.Print(name).NewLine();
+            Cursor.NewLine().Print(name).NewLine();
             foreach (string desc in new List<string>(roomInfo))
             {
-                Cursor.Print(desc);
+                Cursor.Print(desc).NewLine();
 
 
             }
-            Cursor.NewLine();
+
+
+
+            foreach (string fancy in new List<string>(fancyInfo)) {
+
+                string[] words = fancy.Split(" ");
+                bool combining = false;
+                string combined = "";
+                foreach (string word in words) {
+
+
+                    if (word[0] == '<')
+                    {
+                        combining = true;
+                        combined = "";
+                        combined += word;
+                    }
+                    else if(word[word.Length-1] == '>'|| word[word.Length - 2] == '>')//possibly just change it to "contains()"
+                    {
+                        combining = false;
+                        combined += " " + word;
+                        string thingid = combined.Replace("<", "").Replace(">", "");
+
+                        Utility.CreateButtonThingId(Utility.SplitThingID(thingid), this, actionWindow);
+                        Cursor.RightWrap(1);
+
+                    }
+                    else if (combining) {
+                        combined += " " + word;
+                    
+                    }
+                    else {
+
+                        Cursor.Print(word + " ");
+
+                    }
+
+                }
+                Cursor.NewLine();
+            
+            }
 
             DrawList(new List<string>(thingInfo));
 
             DrawList(new List<string>(bodyInfo));
+            Cursor.NewLine(); Cursor.NewLine(); Cursor.NewLine(); Cursor.NewLine(); Cursor.NewLine(); Cursor.NewLine(); Cursor.NewLine();
             this.IsFocused = true; 
         }
 
@@ -101,60 +144,9 @@ namespace HeartSignal
                 
 
                 index++;
-                ///if there is other things with same name process them at the same time
-                List<string> sameThingsIDs = new List<string>();
 
-                bool multiple = false;
-                if (thingid.Length > 2) {
-                    multiple = true;
-                    bool first = true;
-                    foreach (string id in thingid) {
-                        if (first) {
-                            first = false;
-                            continue;
-                        }
-                        sameThingsIDs.Add(id);
-                    
-                    
-                    }
-                }
-
-
-                if (thingid[0].Length + Cursor.Position.X > Width) {
-                    Cursor.NewLine().Right(1);
-                }
-
-                Point pos = Cursor.Position;
-                if (!multiple)
-                {
-                    
-                    var button = new Button(thingid[0].Length, 1)
-                    {
-                        Text = thingid[0],
-                        Position = pos,
-                        Theme = new ThingButtonTheme()
-                    };
-                    button.MouseEnter += (s, a) => actionWindow.DisplayActions(thingid[0]+"("+thingid[1] + ")", pos + new Point(-6, 1));
-                    button.Click += (s, a) => actionWindow.ClickItem(thingid[1]);
-                    Controls.Add(button);
-                    Cursor.Right(thingid[0].Length);
-                }
-                else {
-                    
-                    var button = new Button(thingid[0].Length, 1)
-                    {
-                        Text = thingid[0],
-                        Position = pos,
-                        Theme = new ThingButtonTheme()
-                    };
-                    button.MouseEnter += (s, a) => actionWindow.DisplayMultiItem(thingid[0], pos + new Point(-6, 1), sameThingsIDs);
-                   // button.Click += (s, a) => actionWindow.SetFocus(thing.Key);
-                    Controls.Add(button);
-                    Cursor.Right(thingid[0].Length);
-
-
-
-                }
+                Utility.CreateButtonThingId(thingid, this, actionWindow);
+               
 
                 if (index >= thingids.Count())
                 {

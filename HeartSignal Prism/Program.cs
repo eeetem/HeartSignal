@@ -48,28 +48,29 @@ namespace HeartSignal
         private static void Init()
         {
             root = new ScreenObject();
-
+            
             int MapConsoleWidth = 14;
             int roomConsoleWidth = (Game.Instance.ScreenCellsX - MapConsoleWidth) / 2;
             int inventoryWidth = 30;
+            int topconsolerowheight = 15;
+            int inputHeigth = 2;
 
             ///todo: replace all hardcoded coordinates with variables since a lot of them counterdepend on other console sizes
 
-            MainConsole = new ClassicConsole(Game.Instance.ScreenCellsX, SadConsole.Game.Instance.ScreenCellsY-12);
-            MainConsole.Position = new Point(0, 10);
+            MainConsole = new ClassicConsole(Game.Instance.ScreenCellsX, SadConsole.Game.Instance.ScreenCellsY- (topconsolerowheight+ inputHeigth));
+            MainConsole.Position = new Point(0, topconsolerowheight);
 
 
-            InputConsole input = new InputConsole(Game.Instance.ScreenCellsX- inventoryWidth, 2, MainConsole);
+            InputConsole input = new InputConsole(Game.Instance.ScreenCellsX- inventoryWidth, inputHeigth, MainConsole);
             MainConsole.Children.Add(input);
-            input.Position = new Point(0, Game.Instance.ScreenCellsY - 12);
+            input.Position = new Point(0, Game.Instance.ScreenCellsY - (topconsolerowheight + inputHeigth));
 
             root.Children.Add(MainConsole);
             
             
-            RoomConsole = new RoomConsole(roomConsoleWidth, 10);
+            RoomConsole = new RoomConsole(roomConsoleWidth, topconsolerowheight);
             root.Children.Add(RoomConsole);
-
-            ThingConsole = new ThingConsole(roomConsoleWidth, 10);
+            ThingConsole = new ThingConsole(roomConsoleWidth, topconsolerowheight);
             ThingConsole.Position = new Point(roomConsoleWidth, 0);
             root.Children.Add(ThingConsole);
 
@@ -103,19 +104,16 @@ namespace HeartSignal
 
 
         }
+        static List<string> messageQueue = new List<string>();
         public static bool SendNetworkMessage(string message) {
-            if (needToSendMessage) {
 
-                System.Console.WriteLine("WARNING: message wasnt sent due to another one being queued, beg etet to implement proper message queues");
-                return false;
-            }
-            networkMessage = message;
+            messageQueue.Add(message);
             needToSendMessage = true;
             System.Console.WriteLine(message);
             return true;
 
         }
-        static string networkMessage = "";
+
         static bool needToSendMessage = false;
 
 
@@ -223,6 +221,14 @@ namespace HeartSignal
 
 
                         RoomConsole.roomInfo = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+                        RoomConsole.needRedraw = true;
+                        break;
+                    case "fancy":
+
+                        returned = RemoveParseTag(cutstring);
+                        cutstring = returned[0];
+
+                        RoomConsole.fancyInfo = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
                         RoomConsole.needRedraw = true;
                         break;
                     case "things":
@@ -412,8 +418,10 @@ namespace HeartSignal
                 while (true) {
 
                     if (needToSendMessage) {
-
-                        await client.WriteLine(networkMessage);
+                        foreach (string message in messageQueue) {
+                            await client.WriteLine(message);
+                        }
+                        messageQueue.Clear();
                         needToSendMessage = false;
 
                     }
