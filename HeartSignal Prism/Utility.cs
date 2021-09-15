@@ -94,10 +94,12 @@ namespace HeartSignal
                 var button = new Button(thingid[0].Length, 1)
                 {
                     Text = thingid[0],
-                    Position = pos,
+                    Position = console.Cursor.Position,
                     Theme = new ThingButtonTheme()
                 };
-                button.MouseEnter += (s, a) => ac.DisplayActions(thingid[0] + "(" + thingid[1] + ")", pos + new Point(-6, 1));
+                pos = new Point(Math.Clamp(pos.X - 5, 0, console.Width - ac.Width),pos.Y+1);
+                
+                button.MouseEnter += (s, a) => ac.DisplayActions(thingid[0] + "(" + thingid[1] + ")", pos);
                 button.Click += (s, a) => ac.ClickItem(thingid[1]);
                 console.Controls.Add(button);
                 console.Cursor.Right(thingid[0].Length);
@@ -108,10 +110,11 @@ namespace HeartSignal
                 var button = new Button(thingid[0].Length, 1)
                 {
                     Text = thingid[0],
-                    Position = pos,
+                    Position = console.Cursor.Position,
                     Theme = new ThingButtonTheme()
                 };
-                button.MouseEnter += (s, a) => ac.DisplayMultiItem(thingid[0], pos + new Point(-6, 1), sameThingsIDs);
+                pos = new Point(Math.Clamp(pos.X - 5, 0, console.Width - ac.Width), pos.Y +1);
+                button.MouseEnter += (s, a) => ac.DisplayMultiItem(thingid[0], pos, sameThingsIDs);
                 // button.Click += (s, a) => actionWindow.SetFocus(thing.Key);
                 console.Controls.Add(button);
                 console.Cursor.Right(thingid[0].Length);

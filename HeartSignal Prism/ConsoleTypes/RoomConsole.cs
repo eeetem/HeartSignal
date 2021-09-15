@@ -90,11 +90,15 @@ namespace HeartSignal
                     else if(word[word.Length-1] == '>'|| word[word.Length - 2] == '>')//possibly just change it to "contains()"
                     {
                         combining = false;
-                        combined += " " + word;
-                        string thingid = combined.Replace("<", "").Replace(">", "");
+                        string thingid = word.Substring(0, word.IndexOf(">"));
+                        string unreleated = word.Substring(word.IndexOf(">")+1, word.Length - word.IndexOf(">")-1);
+                        
+                        combined += " " + thingid;
+                        thingid = combined.Replace("<", "").Replace(">", "");
 
                         Utility.CreateButtonThingId(Utility.SplitThingID(thingid), this, actionWindow);
-                        Cursor.RightWrap(1);
+                        Cursor.Print(unreleated + " ");
+        
 
                     }
                     else if (combining) {
