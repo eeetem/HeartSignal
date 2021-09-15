@@ -30,7 +30,7 @@ namespace HeartSignal
             idstring = idstring.Replace("(", "").Replace(")", "").Replace(".", "");
             string[] ids = idstring.Split(',');
                 
-           string thing = thingid.Remove(thingid.IndexOf("("), thingid.Length - thingid.IndexOf("("));
+           string thing = thingid.Remove(thingid.IndexOf("("), thingid.IndexOf(")") - thingid.IndexOf("(")+1);
 
             string[] output = new string[ids.Length + 1];
             output[0] = thing;

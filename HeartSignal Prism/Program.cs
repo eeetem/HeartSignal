@@ -322,6 +322,8 @@ namespace HeartSignal
                         returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
 
+
+
                         holding[returned[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
 
                             if (cutstring.Contains('{'))///this if statement is horrible however the entire parser is a bit of a mess already and will need a refactor in the future to be a bit more consistent
