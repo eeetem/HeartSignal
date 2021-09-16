@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using SadConsole.UI.Controls;
 using SadConsole.UI.Themes;
 using SadConsole.UI;
+using System.Text.RegularExpressions;
 
 namespace HeartSignal
 {
@@ -187,16 +188,16 @@ namespace HeartSignal
 
         }
         private static void ParseServerInput(string input) {
+            
 
-
-            int idx = input.IndexOf(':');
+        int idx = input.IndexOf(':');
             if (idx > 0 && idx < 11)//hardcoded max lenght, kinda cringe but whatever for now
             {
 
                 string sub = input.Substring(0, idx);
                 string cutstring = input;
                 string[] returned;
-              //  System.Console.WriteLine(input);
+                //  System.Console.WriteLine(input);
                 switch (sub)
                 {
 
@@ -206,7 +207,7 @@ namespace HeartSignal
                         returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
 
-                     
+
 
 
                         ThingConsole.lines = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
@@ -256,7 +257,7 @@ namespace HeartSignal
 
 
                         ActionWindow.actionDatabase[returned[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-       
+
                         RoomConsole.needRedraw = true;
                         InventoryConsole.needRedraw = true;
                         break;
@@ -288,53 +289,41 @@ namespace HeartSignal
                         MapConsole.cexists = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
                         MapConsole.DrawMap();
                         break;
-                    case "inventory":
+                     case "inventory":
 
-                        Dictionary<string, List<string>> inventory = new Dictionary<string, List<string>>();
+                      
                         returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
+
+                        List<NestedInfo> info2 = new List<NestedInfo>();
+
                         while (cutstring.Contains('{'))
                         {
-
-                            returned = RemoveParseTag(cutstring);
-                            cutstring = returned[0];
-
-                            inventory[returned[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-
-                            if (cutstring.Contains('{'))///this if statement is horrible however the entire parser is a bit of a mess already and will need a refactor in the future to be a bit more consistent
-                            {
-                                cutstring = cutstring.Remove(0, cutstring.IndexOf('}') + 3);
-                            }
-                            else
-                            {
-                                cutstring = cutstring.Remove(0, cutstring.IndexOf('}') + 2);
-                            }
+                            NestedInfo innerinfo = GetNestedBrackets(cutstring);
+                            info2.Add(innerinfo);
+                            int[] innerindexes = GetOutermostBrackets(cutstring);
+                            cutstring = cutstring.Remove(0, innerindexes[1]+2).Replace(",", "").Trim();
                         }
-                        InventoryConsole.inventoryInfo = inventory;
+
+                        InventoryConsole.inventoryInfo = info2;
                         InventoryConsole.needRedraw = true;
                         break;
-                   case "holding":
-                        Dictionary<string, List<string>> holding = new Dictionary<string, List<string>>();
-                        returned = RemoveParseTag(cutstring);
-                        cutstring = returned[0];
-                        while (cutstring.Contains('{')) { 
-
+                    case "holding":
+             
                         returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
 
+                        List<NestedInfo> info = new List<NestedInfo>();
 
-
-                        holding[returned[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-
-                            if (cutstring.Contains('{'))///this if statement is horrible however the entire parser is a bit of a mess already and will need a refactor in the future to be a bit more consistent
-                            {
-                                cutstring = cutstring.Remove(0, cutstring.IndexOf('}') + 3);
-                            }
-                            else {
-                                cutstring = cutstring.Remove(0, cutstring.IndexOf('}') + 2);
-                            }
+                        while (cutstring.Contains('{'))
+                        {
+                            NestedInfo innerinfo = GetNestedBrackets(cutstring);
+                            info.Add(innerinfo);
+                            int[] innerindexes = GetOutermostBrackets(cutstring);
+                            cutstring = cutstring.Remove(0, innerindexes[1]+2).Replace(",", "").Trim();
                         }
-                        InventoryConsole.holdingInfo = holding;
+
+                        InventoryConsole.holdingInfo = info;
                         InventoryConsole.needRedraw = true;
                         break;
                     case "sound":
@@ -386,6 +375,71 @@ namespace HeartSignal
 
                 
             
+        }
+        private static NestedInfo GetNestedBrackets(string text) {
+
+            
+            int[] indexes = GetOutermostBrackets(text);
+            string thingid = text.Substring(0, indexes[0]);
+            NestedInfo info = new NestedInfo(thingid,null);
+            string innerbracket = text.Substring(indexes[0]+1, indexes[1] - (indexes[0]+1));
+
+           while (innerbracket.Contains('{'))
+            {
+               NestedInfo innerinfo = GetNestedBrackets(innerbracket);
+                info.Contents.Add(innerinfo);
+                int[] innerindexes = GetOutermostBrackets(innerbracket);
+                innerbracket = innerbracket.Remove(0, innerindexes[1]);
+            }
+
+
+
+            if (innerbracket.Length > 1) {
+
+                info.Contents.Add(new NestedInfo(innerbracket,null));
+            }
+
+            return info;
+        }
+        private static int[] GetOutermostBrackets(string text) {
+
+            int first = text.IndexOf('{');
+            int layers = -1;
+            int counter = first;
+            int last = -1;
+            while (counter < text.Length)
+            {
+                if (text[counter] == '}')
+                {
+                    if (layers == 0)
+                    {
+                        last = counter;
+                        break;
+
+                    }
+                    else
+                    {
+
+                        layers--;
+                    }
+
+
+                }
+                else if (text[counter] == '{')
+                {
+
+                    layers++;
+                    if (layers > 3)
+                    {
+                        System.Console.WriteLine("ERROR: MORE THAN 3 LAYERS, YELL AT ETET");
+
+                    }
+                }
+                counter++;
+
+            }
+            return new int[] { first, last };
+
         }
         private static string[] RemoveParseTag(string s) {
 

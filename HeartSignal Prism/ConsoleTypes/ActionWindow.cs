@@ -79,7 +79,7 @@ namespace HeartSignal
             {
 
                 string parsedAction = action.Replace(" [name]", "") + "...";
-                if (Cursor.Position.X + parsedAction.Length + 1 > Width)
+                if (Cursor.Position.X + parsedAction.Length+1 > Width)
                 {
                     Cursor.NewLine().Right(1);
                 }
@@ -92,7 +92,7 @@ namespace HeartSignal
                 };
                 button.MouseButtonClicked += (s, a) => DoArgAction(id, action);
                 this.Controls.Add(button);
-                this.Cursor.Right(action.Length + 1);
+                this.Cursor.Right(parsedAction.Length + 1);
 
             }
 

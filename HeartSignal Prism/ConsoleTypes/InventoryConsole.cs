@@ -28,8 +28,11 @@ namespace HeartSignal
 
         }
         public string name { get; private set; }
-        public Dictionary<string,List<string>> inventoryInfo = new Dictionary<string, List<string>>();
-        public Dictionary<string, List<string>> holdingInfo = new Dictionary<string, List<string>>();
+
+
+
+        public List<NestedInfo> inventoryInfo = new List<NestedInfo>();
+        public List<NestedInfo> holdingInfo = new List<NestedInfo>();
 
 
 
@@ -49,28 +52,20 @@ namespace HeartSignal
 
             Controls.Clear();
             Cursor.Position = new Point(0, 0);
-            //this could be re-used for self-description
-            /* Cursor.NewLine().NewLine().NewLine();
-             Cursor.Print(name).NewLine();
-             foreach (string desc in new List<string>(roomInfo))
-             {
-                 Cursor.Print(desc);
 
-
-             }
-             Cursor.NewLine();*/
             Cursor.Print("My Body:").NewLine();
-            DrawList(new Dictionary<string, List<string>>(inventoryInfo));
+            DrawNestedInfo(inventoryInfo);
             Cursor.Print("I can hold with:").NewLine();
-            DrawList(new Dictionary<string, List<string>>(holdingInfo));
+            DrawNestedInfo(holdingInfo);
             this.IsFocused = true; 
+            
         }
 
 
 
 
 
-        private void DrawList(Dictionary<string, List<string>> ls)
+        private void DrawNestedInfo(List<NestedInfo> ls)
         {
 
 
@@ -79,37 +74,45 @@ namespace HeartSignal
 
             if (ls.Count == 0) { return; }
 
-            foreach (KeyValuePair<string, List<string>> info in ls)
+            foreach (NestedInfo info in ls)
             {
                
                 
-                Cursor.Print(info.Key + ":").NewLine();
-                foreach (string item in info.Value) {
-                    string[] returned = Utility.SplitThingID(item);
-                    string thing = returned[0];
-                    string id = returned[1];
-                    var button = new Button(thing.Length, 1)
-                    {
-                        Text = thing,
-                        Position = Cursor.Position,
-                        Theme = new ThingButtonTheme()
-                    };
-                    button.MouseEnter += (s, a) => actionWindow.DisplayActions(item, new Point(Game.Instance.ScreenCellsX - (Width + 30), Cursor.Position.Y+4));
-                    button.Click += (s, a) => actionWindow.ClickItem(id);
-                    Controls.Add(button);
-                    Cursor.NewLine();
+                Cursor.Print(info.Header+":").NewLine();
+
+                foreach (NestedInfo item in info.Contents)
+                {
+                    DrawContents(item, 1);
 
 
                 }
-
-
-
-
-
             }
             Cursor.NewLine();
         }
-        
+        private void DrawContents(NestedInfo info,int layer) {
+   
+                string[] returned = Utility.SplitThingID(info.Header);
+                string thing = returned[0];
+                string id = returned[1];
+                this.DrawLine(Cursor.Position, Cursor.Position + new Point(layer, 0), ICellSurface.ConnectedLineThin[1]);
+                 Cursor.Right(layer);
+                 var button = new Button(thing.Length, 1)
+                {
+                    Text = thing,
+                    Position = Cursor.Position,
+                    Theme = new ThingButtonTheme()
+                };
+                button.MouseEnter += (s, a) => actionWindow.DisplayActions(info.Header, new Point(Game.Instance.ScreenCellsX - (Width + 30), Cursor.Position.Y + 4));
+                button.Click += (s, a) => actionWindow.ClickItem(id);
+                Controls.Add(button);
+                Cursor.NewLine();
+            foreach (NestedInfo innerinfo in info.Contents) {
+                DrawContents(innerinfo, layer + 1);
+
+
+            }
+
+        }
 
         ActionWindow actionWindow;
 
@@ -129,6 +132,31 @@ namespace HeartSignal
 
 
 
+    }
+    public struct NestedInfo
+    {
+        public NestedInfo(string header = null, List<NestedInfo> contents = null)
+        {
+            Header = header;
+            if (contents != null)
+            {
+                Contents = contents;
+
+
+
+            }
+            else {
+                Contents = new List<NestedInfo>();
+
+
+
+            }
+        }
+
+        public string Header;
+        public List<NestedInfo> Contents;
+
+       // public override string ToString() => $"({X}, {Y})";
     }
 
 }
