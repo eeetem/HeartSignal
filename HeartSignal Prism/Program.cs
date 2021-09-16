@@ -16,10 +16,10 @@ namespace HeartSignal
     static class Program
     {
        static ClassicConsole MainConsole;
-        static RoomConsole RoomConsole;
+        public static RoomConsole RoomConsole;
         static MapConsole MapConsole;
         static PromptWindow PromptWindow;
-        static InventoryConsole InventoryConsole;
+        public static InventoryConsole InventoryConsole;
         static ThingConsole ThingConsole;
         public static ScreenObject root;
 

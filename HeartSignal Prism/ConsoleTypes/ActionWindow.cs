@@ -202,6 +202,7 @@ namespace HeartSignal
         {
             //index++;///arrays starting at 1 momment
             Program.SendNetworkMessage(action + " " + id);
+
         }
 
         static bool awaitingItemClick = false;
@@ -225,6 +226,7 @@ namespace HeartSignal
             {
                 Program.SendNetworkMessage(PendingArgMessage + " " + item);
                 awaitingItemClick = false;
+             
                 return;
             }
         }

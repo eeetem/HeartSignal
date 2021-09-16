@@ -58,9 +58,10 @@ namespace HeartSignal
            needRedraw = false;
             this.Clear();
 
+            actionWindow.IsVisible = false;
             actionWindow.Clear();
             actionWindow.Controls.Clear();
-
+            
             Controls.Clear();
             Cursor.Position = new Point(0, 0);
             Cursor.NewLine().Print(name).NewLine();
@@ -106,7 +107,9 @@ namespace HeartSignal
                     
                     }
                     else {
-
+                        if (Cursor.Position.X + word.Length > Width) {
+                            Cursor.NewLine();
+                        }
                         Cursor.Print(word + " ");
 
                     }
