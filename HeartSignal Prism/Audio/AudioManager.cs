@@ -151,7 +151,6 @@ namespace HeartSignal
 				path = "sfx/" + path;
 				//TODO IMPLEMENT OTHER PLATFORMS ALSO TURN THIS INTO COMPILE TIME IF RATHER THAN RUNTIME
 
-				///todo try catch for corrupted wav files and inform the user to clear cache
 				if (OperatingSystem.IsWindows())
 				{
 					SoundPlayer player;
@@ -187,9 +186,12 @@ namespace HeartSignal
 			catch (Exception e) {
 
 				System.Console.WriteLine("audio error:" + e);
-			
-			
-			
+				Program.MainConsole.DrawMessage("An error has occured trying to play audio file: " + path);
+				Program.MainConsole.DrawMessage("clearing audio cache may fix this - if the problem persists please inform the developers");
+#if DEBUG
+				Program.MainConsole.DrawMessage("the exception has been printed into dev console.");
+#endif
+
 			}
 			
 			

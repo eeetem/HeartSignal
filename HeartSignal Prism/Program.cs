@@ -15,13 +15,13 @@ namespace HeartSignal
 {
     static class Program
     {
-       static ClassicConsole MainConsole;
+        public static ClassicConsole MainConsole;
         public static RoomConsole RoomConsole;
         static MapConsole MapConsole;
         static PromptWindow PromptWindow;
         public static InventoryConsole InventoryConsole;
         static ThingConsole ThingConsole;
-        public static ScreenObject root;
+        public static Console root;
 
         public static Client TelnetClient;
         [STAThread]
@@ -32,14 +32,16 @@ namespace HeartSignal
 
             SadConsole.Settings.WindowTitle = "HeartSignal Prism";
             SadConsole.Settings.UseDefaultExtendedFont = true;
-           
-           // SadConsole.Settings.AllowWindowResize = false;
+
+            SadConsole.Settings.AllowWindowResize = true;
             SadConsole.UI.Themes.Library.Default.Colors.Lines = new AdjustableColor(Color.Red, "red");
 
+            
 
             SadConsole.Game.Create(SCREEN_WIDTH, SCREEN_HEIGHT);
             SadConsole.Game.Instance.OnStart = Init;
-            SadConsole.Game.Instance.Run();//STILL NOT FIXED TODO FIX
+            SadConsole.Game.Instance.Run();
+
             SadConsole.Game.Instance.Dispose();
 
         }
@@ -48,7 +50,7 @@ namespace HeartSignal
 
         private static void Init()
         {
-            root = new ScreenObject();
+            root = new Console(Game.Instance.ScreenCellsX, Game.Instance.ScreenCellsY);
             
             int MapConsoleWidth = 14;
             int roomConsoleWidth = (Game.Instance.ScreenCellsX - MapConsoleWidth) / 2;
@@ -98,6 +100,10 @@ namespace HeartSignal
             // This is needed because we replaced the initial screen object with our own.
             Game.Instance.DestroyDefaultStartingConsole();
 
+
+            Settings.ResizeMode = Settings.WindowResizeOptions.Fit;
+            SadConsole.Game.Instance.MonoGameInstance.Window.ClientSizeChanged += Program_WindowResized;
+
             ServerLoop();
 
 
@@ -105,6 +111,13 @@ namespace HeartSignal
 
 
         }
+
+        private static void Program_WindowResized(object sender, EventArgs e)
+        {
+            root.Resize(1,1,1,1,true);
+        }
+
+
         static List<string> messageQueue = new List<string>();
         public static bool SendNetworkMessage(string message) {
 
