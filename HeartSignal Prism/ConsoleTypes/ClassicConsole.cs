@@ -25,7 +25,8 @@ namespace HeartSignal
             Cursor.IsVisible = false;
 
             Cursor.DisableWordBreak = true;
-
+            ColoredString.CustomProcessor = Utility.CustomParseCommand;
+            Cursor.UseStringParser = true;
             SadComponents.Add(new CopyPasteMouse());
 
         }
@@ -51,8 +52,9 @@ namespace HeartSignal
         }
         public void ReciveExternalInput(string value) {
             DrawMessage(value);
-            
-            
+           // DrawMessage("[c:ga f:black:red:white:5:b:red:orange:yellow:green:blue:purple:blue:green:yellow:orange:red:200]Wow, a strip of human meat![c:u]");
+
+
 
 
         }
@@ -112,12 +114,7 @@ namespace HeartSignal
 
             }
 
-            bool succses = Program.SendNetworkMessage(value);
-            if (!succses) {
-                Cursor.Print("Message wasn't sent as previous one was processing, slow down").NewLine();
-
-
-            }
+            Program.SendNetworkMessage(value);
 
         }
     }

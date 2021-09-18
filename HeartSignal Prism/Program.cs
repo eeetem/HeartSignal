@@ -102,7 +102,6 @@ namespace HeartSignal
 
 
             Settings.ResizeMode = Settings.WindowResizeOptions.Fit;
-            SadConsole.Game.Instance.MonoGameInstance.Window.ClientSizeChanged += Program_WindowResized;
 
             ServerLoop();
 
@@ -112,11 +111,7 @@ namespace HeartSignal
 
         }
 
-        private static void Program_WindowResized(object sender, EventArgs e)
-        {
-            root.Resize(1,1,1,1,true);
-        }
-
+       
 
         static List<string> messageQueue = new List<string>();
         public static bool SendNetworkMessage(string message) {
@@ -402,7 +397,7 @@ namespace HeartSignal
                NestedInfo innerinfo = GetNestedBrackets(innerbracket);
                 info.Contents.Add(innerinfo);
                 int[] innerindexes = GetOutermostBrackets(innerbracket);
-                innerbracket = innerbracket.Remove(0, innerindexes[1]);
+                innerbracket = innerbracket.Remove(0, innerindexes[1]+1).Replace(",", "").Trim();
             }
 
 
@@ -442,11 +437,7 @@ namespace HeartSignal
                 {
 
                     layers++;
-                    if (layers > 3)
-                    {
-                        System.Console.WriteLine("ERROR: MORE THAN 3 LAYERS, YELL AT ETET");
 
-                    }
                 }
                 counter++;
 

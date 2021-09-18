@@ -138,6 +138,7 @@ namespace HeartSignal
                 Array.Copy(colors, backoffset, colors, 0, colors.Length - backoffset);
                 Array.Copy(loopedAround, 0, colors, colors.Length - backoffset, backoffset);
                 backgengrad = new Gradient(colors);
+                
             }
 
             GradientEffect gradEffect = new GradientEffect();
