@@ -32,7 +32,7 @@ namespace HeartSignal
 
 
 
-        public List<NestedInfo> inventoryInfo = new List<NestedInfo>();
+        public NestedInfo inventoryInfo = new NestedInfo();
         public List<NestedInfo> holdingInfo = new List<NestedInfo>();
 
 
@@ -56,6 +56,8 @@ namespace HeartSignal
 
             Cursor.Print("My Body:").NewLine();
             DrawNestedInfo(inventoryInfo);
+            this.DrawLine(Cursor.Position, Cursor.Position + new Point(Width, 0), ICellSurface.ConnectedLineThin[1]);
+            Cursor.NewLine();
             Cursor.Print("I can hold with:").NewLine();
             DrawNestedInfo(holdingInfo);
             this.IsFocused = true; 
@@ -63,10 +65,19 @@ namespace HeartSignal
         }
 
 
+        private void DrawNestedInfo(NestedInfo info)
+        {
+            foreach (NestedInfo item in info.Contents)
+            {
+                DrawContents(item, 0);
+                Cursor.NewLine();
 
 
+            }
 
-        private void DrawNestedInfo(List<NestedInfo> ls)
+
+        }
+            private void DrawNestedInfo(List<NestedInfo> ls)
         {
 
 
@@ -77,16 +88,17 @@ namespace HeartSignal
 
             foreach (NestedInfo info in ls)
             {
+
                
+                    Cursor.Print(info.Header + ":").NewLine();
+
+                    foreach (NestedInfo item in info.Contents)
+                    {
+                        DrawContents(item, 1);
+
+
+                    }
                 
-                Cursor.Print(info.Header+":").NewLine();
-
-                foreach (NestedInfo item in info.Contents)
-                {
-                    DrawContents(item, 1);
-
-
-                }
             }
             Cursor.NewLine();
         }
@@ -105,8 +117,13 @@ namespace HeartSignal
                 };
                 button.MouseEnter += (s, a) => actionWindow.DisplayActions(info.Header, new Point(Game.Instance.ScreenCellsX - (Width + 30), Cursor.Position.Y + 4));
                 button.Click += (s, a) => actionWindow.ClickItem(id);
+
                 Controls.Add(button);
-                Cursor.NewLine();
+            if (layer == 0)
+            {
+                Cursor.Right(thing.Length).Print(":");
+            }
+            Cursor.NewLine();
             foreach (NestedInfo innerinfo in info.Contents) {
                 DrawContents(innerinfo, layer + 1);
 

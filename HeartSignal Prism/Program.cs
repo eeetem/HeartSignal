@@ -304,12 +304,12 @@ namespace HeartSignal
                         returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
 
-                        List<NestedInfo> info2 = new List<NestedInfo>();
+                        NestedInfo info2 = new NestedInfo(null,null);
 
                         while (cutstring.Contains('{'))
                         {
                             NestedInfo innerinfo = GetNestedBrackets(cutstring);
-                            info2.Add(innerinfo);
+                            info2.Contents.Add(innerinfo);
                             int[] innerindexes = GetOutermostBrackets(cutstring);
                             cutstring = cutstring.Remove(0, innerindexes[1] + 2).Replace(",", "").Trim();
                         }
