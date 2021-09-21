@@ -23,6 +23,7 @@ namespace HeartSignal
             Cursor.DisableWordBreak = true;
             ColoredString.CustomProcessor = Utility.CustomParseCommand;
             Cursor.UseStringParser = true;
+            SadComponents.Add(new AnimatedBorderComponent());
 
 
         }

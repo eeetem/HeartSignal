@@ -78,7 +78,7 @@ namespace HeartSignal
             foreach (string action in argactionDatabase[id])
             {
 
-                string parsedAction = action.Replace(" [name]", "") + "...";
+                string parsedAction = action.Replace(" [name]", "").Replace("_","") + "...";
                 if (Cursor.Position.X + parsedAction.Length+1 > Width)
                 {
                     Cursor.NewLine().Right(1);

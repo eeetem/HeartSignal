@@ -53,6 +53,7 @@ namespace HeartSignal
             root = new Console(Game.Instance.ScreenCellsX, Game.Instance.ScreenCellsY);
             
             int MapConsoleWidth = 14;
+            int MapConsoleHeight = 7;
             int roomConsoleWidth = (Game.Instance.ScreenCellsX - MapConsoleWidth) / 2;
             int inventoryWidth = 30;
             int topconsolerowheight = 15;
@@ -81,12 +82,12 @@ namespace HeartSignal
             PromptWindow = new PromptWindow(30,10,new Point(Game.Instance.ScreenCellsX/2-15, Game.Instance.ScreenCellsY/2-5));
             root.Children.Add(PromptWindow);
 
-            MapConsole = new MapConsole(MapConsoleWidth, 7);
+            MapConsole = new MapConsole(MapConsoleWidth, MapConsoleHeight);
             MapConsole.Position = new Point(Game.Instance.ScreenCellsX-14,0);
             root.Children.Add(MapConsole);
 
-            InventoryConsole = new InventoryConsole(inventoryWidth, Game.Instance.ScreenCellsY-7);
-            InventoryConsole.Position = new Point(Game.Instance.ScreenCellsX - inventoryWidth, 7);
+            InventoryConsole = new InventoryConsole(inventoryWidth, Game.Instance.ScreenCellsY- MapConsoleHeight+1);
+            InventoryConsole.Position = new Point(Game.Instance.ScreenCellsX - inventoryWidth, MapConsoleHeight+1);
             root.Children.Add(InventoryConsole);
 
 
@@ -297,9 +298,9 @@ namespace HeartSignal
                         MapConsole.cexists = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
                         MapConsole.DrawMap();
                         break;
-                     case "inventory":
+                    case "inventory":
 
-                      
+
                         returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
 
@@ -310,14 +311,14 @@ namespace HeartSignal
                             NestedInfo innerinfo = GetNestedBrackets(cutstring);
                             info2.Add(innerinfo);
                             int[] innerindexes = GetOutermostBrackets(cutstring);
-                            cutstring = cutstring.Remove(0, innerindexes[1]+2).Replace(",", "").Trim();
+                            cutstring = cutstring.Remove(0, innerindexes[1] + 2).Replace(",", "").Trim();
                         }
 
                         InventoryConsole.inventoryInfo = info2;
                         InventoryConsole.needRedraw = true;
                         break;
                     case "holding":
-             
+
                         returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
 
@@ -328,7 +329,7 @@ namespace HeartSignal
                             NestedInfo innerinfo = GetNestedBrackets(cutstring);
                             info.Add(innerinfo);
                             int[] innerindexes = GetOutermostBrackets(cutstring);
-                            cutstring = cutstring.Remove(0, innerindexes[1]+2).Replace(",", "").Trim();
+                            cutstring = cutstring.Remove(0, innerindexes[1] + 2).Replace(",", "").Trim();
                         }
 
                         InventoryConsole.holdingInfo = info;
@@ -338,10 +339,18 @@ namespace HeartSignal
                         returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
                         List<string> args = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        AudioManager.ParseRequest(returned[1],args[0],args[1]);
+                        AudioManager.ParseRequest(returned[1], args[0], args[1]);
 
                         break;
 
+                    case "recolor":
+                        cutstring = cutstring.Remove(0, cutstring.IndexOf(":")+1);
+                       
+                        bool keep = false;
+                        AnimatedBorderComponent._borderCellStyle = new ColoredGlyph(Color.White.FromParser(cutstring,out keep, out keep, out keep, out keep, out keep), Color.Black);
+
+
+                        break;
                     case "prompt":
                        
                         returned = RemoveParseTag(cutstring);
@@ -461,11 +470,12 @@ namespace HeartSignal
         private static async void ServerLoop() {
 
 
-            
 
+            MainConsole.Cursor.NewLine();
             string login = await MainConsole.AskForInput("Enter Login");
             string pass = await MainConsole.AskForInput("Enter Password");
             MainConsole.Clear();
+            MainConsole.Cursor.NewLine();
             MainConsole.Cursor.Print("Attempting server connection....").NewLine();
             using (Client client = new Client("deathcult.today", 6666, new System.Threading.CancellationToken()))
             {

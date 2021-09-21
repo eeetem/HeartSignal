@@ -22,6 +22,7 @@ namespace HeartSignal
             UsePrintProcessor = true;
             Cursor.DisableWordBreak = true;
             SadComponents.Add(new MouseHandler());
+            SadComponents.Add(new AnimatedBorderComponent());
 
 
         }
