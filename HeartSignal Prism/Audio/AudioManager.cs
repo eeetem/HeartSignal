@@ -20,8 +20,11 @@ namespace HeartSignal
 		
 		public static void ParseRequest(string ID, string sfxFile, string request)
 		{
-
-
+			float param = 0;
+			if (request.Contains("-")) {
+				param = float.Parse(request.Substring(request.IndexOf("-"), request.Length - request.IndexOf("-")));
+				request = request.Remove(request.IndexOf("-"), request.Length - request.IndexOf("-"));
+			}
 			switch (request)
 			{
 				case "preload":
@@ -90,6 +93,33 @@ namespace HeartSignal
 
 					}
 					break;
+				case "reasign":
+					if (Sounds.ContainsKey(ID))
+					{
+						Sounds[param.ToString()] = Sounds[ID];
+						Sounds[ID] = null;
+					}
+					break;
+				case "pan":
+					if (Sounds.ContainsKey(ID))
+					{
+						Sounds[ID].Pan = param;
+					}
+					break;
+
+				case "pitch":
+					if (Sounds.ContainsKey(ID))
+					{
+						Sounds[ID].Pitch = param;
+					}
+					break;
+				case "volume":
+					if (Sounds.ContainsKey(ID))
+					{
+						Sounds[ID].Volume = param;
+					}
+					break;
+
 
 
 			}
