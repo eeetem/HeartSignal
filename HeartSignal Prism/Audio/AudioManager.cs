@@ -94,7 +94,7 @@ namespace HeartSignal
 					if (Sounds.ContainsKey(ID))
 					{
 						Sounds[param.ToString()] = Sounds[ID];
-						Sounds[ID] = null;
+						Sounds.Remove(ID);
 					}
 					break;
 				case "pan":
