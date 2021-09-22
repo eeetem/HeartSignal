@@ -22,8 +22,8 @@ namespace HeartSignal
 		{
 			float param = 0;
 			if (request.Contains("=")) {
-				param = float.Parse(request.Substring(request.IndexOf("-")+1, request.Length - request.IndexOf("-")+1));
-				request = request.Remove(request.IndexOf("-"), request.Length - request.IndexOf("-"));
+				param = float.Parse(request.Substring(request.IndexOf("=") +1, request.Length - request.IndexOf("=") +1));
+				request = request.Remove(request.IndexOf("="), request.Length - request.IndexOf("="));
 			}
 			switch (request)
 			{
