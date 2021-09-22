@@ -128,11 +128,11 @@ namespace HeartSignal
 
 
         }
-        
+        string lastname;
         public void DisplayMultiItem(string name, Point? newPosition = null, List<string> IDs = null)
         {
             //if (awaitingItemClick) { return; }
-            if (lastitem != name)
+            if (lastname != name)
             {
                 foreach (string id in IDs)
                 {
@@ -141,7 +141,7 @@ namespace HeartSignal
 
 
                 }
-                lastitem = name;
+                lastname = name;
             }
             if (newPosition != null)
             {

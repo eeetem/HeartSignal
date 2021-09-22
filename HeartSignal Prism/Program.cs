@@ -267,8 +267,6 @@ namespace HeartSignal
 
                         ActionWindow.actionDatabase[returned[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
 
-                        RoomConsole.needRedraw = true;
-                        InventoryConsole.needRedraw = true;
                         break;
                     case "argactions":
                         returned = RemoveParseTag(cutstring);
@@ -277,8 +275,6 @@ namespace HeartSignal
 
                         ActionWindow.argactionDatabase[returned[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
 
-                        RoomConsole.needRedraw = true;
-                        InventoryConsole.needRedraw = true;
                         break;
                     case "map":
 
@@ -488,12 +484,14 @@ namespace HeartSignal
                 while (true) {
 
                     if (needToSendMessage) {
-                        foreach (string message in messageQueue) {
+                        foreach (string message in new List<string>(messageQueue)) {
                             await client.WriteLine(message);
+                            messageQueue.Remove(message);
                         }
-                        messageQueue.Clear();
-                        needToSendMessage = false;
-
+                        if (messageQueue.Count < 1)
+                        {
+                            needToSendMessage = false;
+                        }
                     }
                     response = await client.ReadAsync(TimeSpan.FromMilliseconds(50));
                     if (response.Length >1) {

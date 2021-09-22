@@ -9,6 +9,8 @@ using System.Media;
 using System.ComponentModel;
 using csvorbis;
 using csogg;
+using Microsoft.Xna.Framework.Audio;
+
 namespace HeartSignal
 {
 	static class AudioManager
@@ -56,7 +58,8 @@ namespace HeartSignal
 				case "loop":
 					if (Sounds.ContainsKey(ID))
 					{
-						Sounds[ID].PlayLooping();
+						Sounds[ID].IsLooped = true;
+						Sounds[ID].Play();
 
 
 					}
@@ -66,7 +69,7 @@ namespace HeartSignal
 					}
 					else
 					{
-						DownloadAwaiters.Add(new string[] { ID, sfxFile });
+						DownloadAwaiters.Add(new string[] { ID, sfxFile ,"loop"});
 
 					}
 					break;
@@ -130,9 +133,10 @@ namespace HeartSignal
 		{
 			foreach (string[] downloadAwaiter in new List<string[]>(DownloadAwaiters))
 			{
+				
 				if (File.Exists("sfx/" + downloadAwaiter[1]))
 				{
-					playSound(downloadAwaiter[0], downloadAwaiter[1]);
+					playSound(downloadAwaiter[0], downloadAwaiter[1], downloadAwaiter[2] =="loop");
 					DownloadAwaiters.Remove(downloadAwaiter);
 
 
@@ -142,7 +146,7 @@ namespace HeartSignal
 			}
 
 		}
-		static Dictionary<string, SoundPlayer> Sounds = new Dictionary<string, SoundPlayer>();
+		static Dictionary<string, SoundEffectInstance> Sounds = new Dictionary<string, SoundEffectInstance>();
 
 
 		private static void playSound(string id, string path,bool loop =false)
@@ -154,31 +158,28 @@ namespace HeartSignal
 
 				if (OperatingSystem.IsWindows())
 				{
-					SoundPlayer player;
+					SoundEffectInstance player;
 					if (path.EndsWith(".ogg"))
 					{
 						using (var file = new FileStream(path, FileMode.Open, FileAccess.Read))
 						{
-							player = new SoundPlayer(new OggDecoder.OggDecodeStream(file));
+							player = SoundEffect.FromStream((new OggDecoder.OggDecodeStream(file))).CreateInstance();
 
 						}
 					}
 					else
 					{
 
-						player = new System.Media.SoundPlayer();
-						player.SoundLocation = path;
+						player = SoundEffect.FromFile(path).CreateInstance();
 					}
-					player.Load();
 					if (loop)
 					{
-						player.PlayLooping();
+						player.IsLooped = true;
 					}
-					else
-					{
+				
 						player.Play();
 
-					}
+					
 
 					Sounds.Add(id, player);
 

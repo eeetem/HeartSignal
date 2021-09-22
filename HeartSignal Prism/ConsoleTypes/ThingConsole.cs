@@ -36,7 +36,6 @@ namespace HeartSignal
         {
             needRedraw = false;
             this.Clear();
-            this.Effects.RemoveAll();
             actionWindow.Clear();
             actionWindow.Controls.Clear();
             actionWindow.IsVisible = false;
@@ -114,6 +113,7 @@ namespace HeartSignal
             base.Update(delta);
             if (needRedraw)
             {
+                this.Effects.RemoveAll();
                 DrawThing();
 
 
