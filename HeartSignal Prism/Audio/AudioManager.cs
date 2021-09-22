@@ -18,17 +18,13 @@ namespace HeartSignal
 
 
 		
-		public static void ParseRequest(string ID, string sfxFile, string request)
+		public static void ParseRequest(string ID, string request, string param)
 		{
-			float param = 0;
-			if (request.Contains("=")) {
-				param = float.Parse(request.Substring(request.IndexOf("=") +1, request.Length - request.IndexOf("=") +1));
-				request = request.Remove(request.IndexOf("="), request.Length - request.IndexOf("="));
-			}
+
 			switch (request)
 			{
 				case "preload":
-					download(sfxFile);
+					download(param);
 					break;
 				case "play":
 					if (Sounds.ContainsKey(ID)) {
@@ -36,9 +32,9 @@ namespace HeartSignal
 					
 					
 					}
-					else if (download(sfxFile))
+					else if (download(param))
 					{
-						playSound(ID, sfxFile);
+						playSound(ID, param);
 					}
 					break;
 				case "forceplay":
@@ -48,13 +44,13 @@ namespace HeartSignal
 
 
 					}
-					else if(download(sfxFile, true))
+					else if(download(param, true))
 					{
-						playSound(ID, sfxFile);
+						playSound(ID, param);
 					}
 					else
 					{
-						DownloadAwaiters.Add(new string[] { ID, sfxFile });
+						DownloadAwaiters.Add(new string[] { ID, param });
 
 					}
 					break;
@@ -66,20 +62,20 @@ namespace HeartSignal
 
 
 					}
-					else if(download(sfxFile, true))
+					else if(download(param, true))
 					{
-						playSound(ID, sfxFile,true);
+						playSound(ID, param, true);
 					}
 					else
 					{
-						DownloadAwaiters.Add(new string[] { ID, sfxFile ,"loop"});
+						DownloadAwaiters.Add(new string[] { ID, param ,"loop"});
 
 					}
 					break;
 				case "pause":
 					if (Sounds.ContainsKey(ID))
 					{
-						Sounds[ID].Stop();
+						Sounds[ID].Pause();
 
 
 					}
@@ -88,6 +84,7 @@ namespace HeartSignal
 					if (Sounds.ContainsKey(ID))
 					{
 						Sounds[ID].Stop();
+						//Sounds[ID]
 						Sounds[ID].Dispose();
 						Sounds.Remove(ID);
 
@@ -103,20 +100,20 @@ namespace HeartSignal
 				case "pan":
 					if (Sounds.ContainsKey(ID))
 					{
-						Sounds[ID].Pan = param;
+						Sounds[ID].Pan = float.Parse(param) ;
 					}
 					break;
 
 				case "pitch":
 					if (Sounds.ContainsKey(ID))
 					{
-						Sounds[ID].Pitch = param;
+						Sounds[ID].Pitch = float.Parse(param);
 					}
 					break;
 				case "volume":
 					if (Sounds.ContainsKey(ID))
 					{
-						Sounds[ID].Volume = param;
+						Sounds[ID].Volume = float.Parse(param);
 					}
 					break;
 
