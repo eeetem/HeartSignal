@@ -58,7 +58,7 @@ namespace HeartSignal
             }
         }
 
-        public static void CreateButtonThingId(string[] thingid, SadConsole.UI.ControlsConsole console, ActionWindow ac) {
+        public static void CreateButtonThingId(string[] thingid, SadConsole.UI.ControlsConsole console, ActionWindow ac,bool explicitlook = false) {
 
             ///if there is other things with same name process them at the same time
             List<string> sameThingsIDs = new List<string>();
@@ -99,7 +99,7 @@ namespace HeartSignal
                 };
                 pos = new Point(Math.Clamp(pos.X - 5, 0, console.Width - ac.Width),pos.Y+1);
                 
-                button.MouseEnter += (s, a) => ac.DisplayActions(thingid[0] + "(" + thingid[1] + ")", pos);
+                button.MouseEnter += (s, a) => ac.DisplayActions(thingid[0] + "(" + thingid[1] + ")", pos, explicitlook);
                 button.Click += (s, a) => ac.ClickItem(thingid[1]);
                 console.Controls.Add(button);
                 console.Cursor.Right(thingid[0].Length);

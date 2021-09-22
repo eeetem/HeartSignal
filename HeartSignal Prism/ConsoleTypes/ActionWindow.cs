@@ -21,7 +21,7 @@ namespace HeartSignal
         public static Dictionary<string, List<string>> actionDatabase = new Dictionary<string, List<string>>();
         public static Dictionary<string, List<string>> argactionDatabase = new Dictionary<string, List<string>>();
         string lastitem = "";
-        public void DisplayActions(string item, Point? newPosition = null)
+        public void DisplayActions(string item, Point? newPosition = null, bool expilcitlook = false)
         {
             //if (focusitem != null) { item = focusitem; }
             if (awaitingItemClick) { return; }
@@ -32,15 +32,17 @@ namespace HeartSignal
             string thing = returned[0];
             string id = returned[1];
 
-            if (!GetActions(id))
-            {
-                return;
-
-            }
             if (lastitem != item)
             {
-                GetDesc(id);
+                if (!expilcitlook)
+                {
+                    GetDesc(id);
+                }
+                if (!GetActions(id))
+                {
+                    return;
 
+                }
                 lastitem = item;
             }
 
@@ -104,6 +106,21 @@ namespace HeartSignal
             };
             exit.MouseButtonClicked += (s, a) => IsVisible = false;
             exit.MouseButtonClicked += (s, a) => IsEnabled = false;
+            if (expilcitlook)
+            {
+                var look = new Button(4, 1)
+                {
+                    Text = "look",
+                    Position = new Point(9, 0),
+                    Theme = new ThingButtonTheme()
+                };
+                look.MouseButtonClicked += (s, a) => IsVisible = false;
+                look.MouseButtonClicked += (s, a) => IsEnabled = false;
+                look.MouseButtonClicked += (s, a) => GetDesc(id);
+                this.Controls.Add(look);
+
+
+            }
             this.Controls.Add(exit);
             this.IsVisible = true;
             this.IsEnabled = true;
@@ -111,18 +128,21 @@ namespace HeartSignal
 
 
         }
+        
         public void DisplayMultiItem(string name, Point? newPosition = null, List<string> IDs = null)
         {
             //if (awaitingItemClick) { return; }
-
-            foreach (string id in IDs)
+            if (lastitem != name)
             {
+                foreach (string id in IDs)
+                {
 
-                GetActions(id);
+                    GetActions(id);
 
 
+                }
+                lastitem = name;
             }
-
             if (newPosition != null)
             {
 
@@ -234,11 +254,11 @@ namespace HeartSignal
         {
 
             //this being outside the IF causes ex spam but currently it's needed for descriptions, definatelly possible to optimise this if needed
-
+            Program.SendNetworkMessage("ex " + id);
             if (!actionDatabase.ContainsKey(id) || actionDatabase[id] == null)
             {
 
-                Program.SendNetworkMessage("ex " + id);
+                
                 return false;
             }
             return true;

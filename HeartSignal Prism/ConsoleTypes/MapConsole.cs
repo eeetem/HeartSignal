@@ -21,6 +21,7 @@ namespace HeartSignal
             Cursor.IsVisible = false;
             UsePrintProcessor = true;
             Cursor.DisableWordBreak = true;
+            ColoredString.CustomProcessor = Utility.CustomParseCommand;
             SadComponents.Add(new MouseHandler());
             SadComponents.Add(new AnimatedBorderComponent());
 

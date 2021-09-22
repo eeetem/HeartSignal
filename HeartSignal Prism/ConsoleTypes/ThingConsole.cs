@@ -23,30 +23,85 @@ namespace HeartSignal
             Cursor.DisableWordBreak = true;
             ColoredString.CustomProcessor = Utility.CustomParseCommand;
             Cursor.UseStringParser = true;
+            actionWindow = new ActionWindow(30, 5, new Point(0, Cursor.Position.Y));
+            Children.Add(actionWindow);
+            actionWindow.IsVisible = false;
             SadComponents.Add(new AnimatedBorderComponent());
 
 
         }
-
+        ActionWindow actionWindow;
         public List<string> lines = new List<string>();
         public void DrawThing()
         {
             needRedraw = false;
             this.Clear();
             this.Effects.RemoveAll();
-
+            actionWindow.Clear();
+            actionWindow.Controls.Clear();
+            actionWindow.IsVisible = false;
             Controls.Clear();
             Cursor.Position = new Point(0, 0);
             Cursor.NewLine().NewLine().NewLine();
-            foreach (string desc in new List<string>(lines))
+            foreach (string fancy in new List<string>(lines))
             {
+                if (fancy.Contains("<"))
+                {
+                    string[] words = fancy.Split(" ");
+                    bool combining = false;
+                    string combined = "";
 
-           
-                Cursor.Print(desc);
+                    foreach (string word in words)
+                    {
+                        if (word.Length < 1) { continue; }
+
+                        if (word[0] == '<')
+                        {
+                            combining = true;
+                            combined = "";
+                        }
+                        if (word.Contains('>'))
+                        {
+                            combining = false;
+                            string thingid = word.Substring(0, word.IndexOf(">"));
+                            string unreleated = word.Substring(word.IndexOf(">") + 1, word.Length - word.IndexOf(">") - 1);
+
+                            combined += " " + thingid;
+                            combined = combined.Trim();
+                            thingid = combined.Replace("<", "").Replace(">", "");
+
+                            Utility.CreateButtonThingId(Utility.SplitThingID(thingid), this, actionWindow,true);
+                            Cursor.Print(unreleated + " ");
+
+
+                        }
+                        else if (combining)
+                        {
+                            combined += " " + word;
+
+                        }
+                        else
+                        {
+                            if (Cursor.Position.X + word.Length > Width)
+                            {
+                                Cursor.NewLine();
+                            }
+                            Cursor.Print(word + " ");
+
+                        }
+
+                    }
+                    
+                }
+                else {
+
+                    Cursor.Print(fancy);
+
+                }
                 Cursor.NewLine();
 
             }
-            
+
 
         }
 

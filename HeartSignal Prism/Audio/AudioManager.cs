@@ -81,6 +81,7 @@ namespace HeartSignal
 				case "stop":
 					if (Sounds.ContainsKey(ID))
 					{
+						Sounds[ID].Stop();
 						Sounds[ID].Dispose();
 						Sounds.Remove(ID);
 
