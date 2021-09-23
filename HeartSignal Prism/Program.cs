@@ -87,7 +87,7 @@ namespace HeartSignal
             root.Children.Add(PromptWindow);
 
             ThingConsole = new ThingConsole(roomConsoleWidth - 1, topconsolerowheight);
-            ThingConsole.Position = new Point(inventoryWidth * 2 + roomConsoleWidth, 0);
+            ThingConsole.Position = new Point(inventoryWidth * 2 + roomConsoleWidth+2, 0);
             root.Children.Add(ThingConsole);
 
 
