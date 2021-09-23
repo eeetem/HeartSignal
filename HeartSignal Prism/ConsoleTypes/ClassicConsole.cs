@@ -28,7 +28,7 @@ namespace HeartSignal
             ColoredString.CustomProcessor = Utility.CustomParseCommand;
             Cursor.UseStringParser = true;
             SadComponents.Add(new CopyPasteMouse());
-            SadComponents.Add(new AnimatedBorderComponent());
+          //  SadComponents.Add(new AnimatedBorderComponent());
 
         }
 

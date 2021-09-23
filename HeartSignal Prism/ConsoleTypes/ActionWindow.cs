@@ -7,6 +7,7 @@ using SadRogue.Primitives;
 using SadConsole.UI.Controls;
 using SadConsole.UI.Themes;
 using SadConsole.UI;
+using SadConsole.Input;
 
 namespace HeartSignal
 {
@@ -17,10 +18,20 @@ namespace HeartSignal
 
 
             this.Position = position;
+
         }
         public static Dictionary<string, List<string>> actionDatabase = new Dictionary<string, List<string>>();
         public static Dictionary<string, List<string>> argactionDatabase = new Dictionary<string, List<string>>();
         string lastitem = "";
+
+        protected override void OnMouseExit(MouseScreenObjectState state) {
+            IsVisible = false;
+            IsEnabled = false;
+        
+        
+        }
+
+
         public void DisplayActions(string item, Point? newPosition = null, bool expilcitlook = false)
         {
             //if (focusitem != null) { item = focusitem; }
@@ -97,7 +108,7 @@ namespace HeartSignal
                 this.Cursor.Right(parsedAction.Length + 1);
 
             }
-
+            /*
             var exit = new Button(1, 1)
             {
                 Text = "x",
@@ -106,6 +117,8 @@ namespace HeartSignal
             };
             exit.MouseButtonClicked += (s, a) => IsVisible = false;
             exit.MouseButtonClicked += (s, a) => IsEnabled = false;
+            this.Controls.Add(exit);
+             */
             if (expilcitlook)
             {
                 var look = new Button(4, 1)
@@ -121,7 +134,7 @@ namespace HeartSignal
 
 
             }
-            this.Controls.Add(exit);
+            
             this.IsVisible = true;
             this.IsEnabled = true;
 
@@ -200,6 +213,7 @@ namespace HeartSignal
                 this.Cursor.Right(buttontext.Length + 1);
 
             }
+            /*
             var exit = new Button(1, 1)
             {
                 Text = "x",
@@ -214,7 +228,7 @@ namespace HeartSignal
             this.IsVisible = true;
             this.IsEnabled = true;
 
-
+            */
 
         }
 

@@ -21,11 +21,13 @@ namespace HeartSignal
             Cursor.IsVisible = false;
 
             Cursor.DisableWordBreak = true;
+            SadComponents.Add(new AnimatedBorderComponent());
             actionWindow = new ActionWindow(30, 5, new Point(0,0));
-            Program.root.Children.Add(actionWindow);
+            Children.Add(actionWindow);
+          //  actionWindow.la
             actionWindow.IsVisible = false;
             ColoredString.CustomProcessor = Utility.CustomParseCommand;
-            SadComponents.Add(new AnimatedBorderComponent());
+            
 
         }
         public string name { get; private set; }
@@ -33,10 +35,9 @@ namespace HeartSignal
 
 
         public NestedInfo inventoryInfo = new NestedInfo();
-        public List<NestedInfo> holdingInfo = new List<NestedInfo>();
-
-
-
+        public string tagline = "";
+        public bool clickableFirstLayer = true;
+        public Point ActionOffset = new Point(0,0);
 
 
 
@@ -55,12 +56,16 @@ namespace HeartSignal
             Controls.Clear();
             Cursor.Position = new Point(0, 0);
 
-            Cursor.Print("My Body:").NewLine();
-            DrawNestedInfo(inventoryInfo);
-            this.DrawLine(Cursor.Position, Cursor.Position + new Point(Width, 0), ICellSurface.ConnectedLineThin[1]);
-            Cursor.NewLine();
-            Cursor.Print("I can hold with:").NewLine();
-            DrawNestedInfo(holdingInfo);
+            Cursor.Print(tagline+":").NewLine();
+            if (clickableFirstLayer)
+            {
+                DrawNestedInfo(inventoryInfo);
+            }
+            else {
+
+                DrawNestedInfo(inventoryInfo.Contents);
+
+            }
             this.IsFocused = true; 
             
         }
@@ -70,13 +75,15 @@ namespace HeartSignal
             
         {
             if (info.Contents == null) { return; }
-            foreach (NestedInfo item in info.Contents)
-            {
-                DrawContents(item, 0);
-                Cursor.NewLine();
+
+                foreach (NestedInfo item in info.Contents)
+                {
+                    DrawContents(item, 0);
+                    Cursor.NewLine();
 
 
-            }
+                }
+			
 
 
         }
@@ -119,7 +126,7 @@ namespace HeartSignal
                     Position = Cursor.Position,
                     Theme = new ThingButtonTheme()
                 };
-                button.MouseEnter += (s, a) => actionWindow.DisplayActions(info.Header, new Point(Game.Instance.ScreenCellsX - (Width + 30), y + 4));
+                button.MouseEnter += (s, a) => actionWindow.DisplayActions(info.Header, new Point(0, y)+ ActionOffset);
                 button.Click += (s, a) => actionWindow.ClickItem(id);
 
                 Controls.Add(button);

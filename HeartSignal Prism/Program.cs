@@ -20,6 +20,8 @@ namespace HeartSignal
         static MapConsole MapConsole;
         static PromptWindow PromptWindow;
         public static InventoryConsole InventoryConsole;
+        public static InventoryConsole ExamInventoryConsole;
+        public static InventoryConsole GrasperConsole;
         static ThingConsole ThingConsole;
         public static Console root;
 
@@ -27,8 +29,8 @@ namespace HeartSignal
         [STAThread]
         private static void Main(string[] args)
         {
-            var SCREEN_WIDTH = 96*2;
-            var SCREEN_HEIGHT = 54;
+            var SCREEN_WIDTH = (96*2)+30;
+            var SCREEN_HEIGHT = 54+5;
 
             SadConsole.Settings.WindowTitle = "HeartSignal Prism";
             SadConsole.Settings.UseDefaultExtendedFont = true;
@@ -52,43 +54,63 @@ namespace HeartSignal
         {
             root = new Console(Game.Instance.ScreenCellsX, Game.Instance.ScreenCellsY);
             
-            int MapConsoleWidth = 14;
+  
             int MapConsoleHeight = 7;
-            int roomConsoleWidth = (Game.Instance.ScreenCellsX - MapConsoleWidth) / 2;
-            int inventoryWidth = 30;
-            int topconsolerowheight = 15;
+            int inventoryWidth = 28;
+            int roomConsoleWidth = (Game.Instance.ScreenCellsX  - (inventoryWidth*3)) / 2;
+            
+            int topconsolerowheight = 16;
             int inputHeigth = 2;
 
             ///todo: replace all hardcoded coordinates with variables since a lot of them counterdepend on other console sizes
 
-            MainConsole = new ClassicConsole(Game.Instance.ScreenCellsX, SadConsole.Game.Instance.ScreenCellsY- (topconsolerowheight+ inputHeigth));
-            MainConsole.Position = new Point(0, topconsolerowheight);
+
+            MainConsole = new ClassicConsole(Game.Instance.ScreenCellsX - (inventoryWidth * 2)-2, SadConsole.Game.Instance.ScreenCellsY- (topconsolerowheight+ inputHeigth)-2);
+            MainConsole.Position = new Point(inventoryWidth+1, topconsolerowheight);
 
 
-            InputConsole input = new InputConsole(Game.Instance.ScreenCellsX- inventoryWidth, inputHeigth, MainConsole);
+            InputConsole input = new InputConsole(Game.Instance.ScreenCellsX- (inventoryWidth * 2)-2, inputHeigth, MainConsole);
             MainConsole.Children.Add(input);
             input.Position = new Point(0, Game.Instance.ScreenCellsY - (topconsolerowheight + inputHeigth));
 
             root.Children.Add(MainConsole);
-            
-            
-            RoomConsole = new RoomConsole(roomConsoleWidth, topconsolerowheight);
+            MapConsole = new MapConsole(inventoryWidth / 2, MapConsoleHeight);
+            MapConsole.Position = new Point((Game.Instance.ScreenCellsX / 2) - (inventoryWidth / 2), 0);
+            root.Children.Add(MapConsole);
+
+            RoomConsole = new RoomConsole(roomConsoleWidth-1, topconsolerowheight);
+            RoomConsole.Position = new Point(inventoryWidth+1,0);
             root.Children.Add(RoomConsole);
-            ThingConsole = new ThingConsole(roomConsoleWidth, topconsolerowheight);
-            ThingConsole.Position = new Point(roomConsoleWidth, 0);
-            root.Children.Add(ThingConsole);
 
             ///currently there is a single static window however this could be later turned in multiple dymanically created ones
             PromptWindow = new PromptWindow(30,10,new Point(Game.Instance.ScreenCellsX/2-15, Game.Instance.ScreenCellsY/2-5));
             root.Children.Add(PromptWindow);
 
-            MapConsole = new MapConsole(MapConsoleWidth, MapConsoleHeight);
-            MapConsole.Position = new Point(Game.Instance.ScreenCellsX-14,0);
-            root.Children.Add(MapConsole);
+            ThingConsole = new ThingConsole(roomConsoleWidth - 1, topconsolerowheight);
+            ThingConsole.Position = new Point(inventoryWidth * 2 + roomConsoleWidth, 0);
+            root.Children.Add(ThingConsole);
 
-            InventoryConsole = new InventoryConsole(inventoryWidth, Game.Instance.ScreenCellsY- MapConsoleHeight+1);
-            InventoryConsole.Position = new Point(Game.Instance.ScreenCellsX - inventoryWidth, MapConsoleHeight+1);
+
+            InventoryConsole = new InventoryConsole(inventoryWidth, Game.Instance.ScreenCellsY);
+            InventoryConsole.Position = new Point(0, 0);
+            InventoryConsole.tagline = "My Body:";
+            InventoryConsole.ActionOffset = new Point(10, 1);
             root.Children.Add(InventoryConsole);
+
+            ExamInventoryConsole = new InventoryConsole(inventoryWidth, Game.Instance.ScreenCellsY - (MapConsoleHeight * 2)-1);
+            ExamInventoryConsole.Position = new Point(Game.Instance.ScreenCellsX - inventoryWidth, (MapConsoleHeight * 2)+1);
+            ExamInventoryConsole.tagline = "Their Body:";
+            ExamInventoryConsole.ActionOffset = new Point(Game.Instance.ScreenCellsX - inventoryWidth, 4);
+            root.Children.Add(ExamInventoryConsole);
+
+
+            GrasperConsole = new InventoryConsole(inventoryWidth, topconsolerowheight);
+            GrasperConsole.Position = new Point(inventoryWidth+roomConsoleWidth+1,0);
+            GrasperConsole.tagline = "I can hold with:";
+            GrasperConsole.ActionOffset = new Point(0, 1);
+            GrasperConsole.clickableFirstLayer = false;
+
+            root.Children.Add(GrasperConsole);
 
 
 
@@ -266,7 +288,6 @@ namespace HeartSignal
 
 
                         ActionWindow.actionDatabase[returned[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-
                         break;
                     case "argactions":
                         returned = RemoveParseTag(cutstring);
@@ -274,7 +295,6 @@ namespace HeartSignal
 
 
                         ActionWindow.argactionDatabase[returned[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-
                         break;
                     case "map":
 
@@ -283,7 +303,7 @@ namespace HeartSignal
                         cutstring = returned[0];
 
                         MapConsole.mapdata = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        MapConsole.DrawMap();
+                        MapConsole.needRedraw = true;
                         break;
                     case "cexits":
 
@@ -292,7 +312,7 @@ namespace HeartSignal
 
 
                         MapConsole.cexists = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        MapConsole.DrawMap();
+                        MapConsole.needRedraw = true;
                         break;
                     case "inventory":
 
@@ -309,27 +329,45 @@ namespace HeartSignal
                             int[] innerindexes = GetOutermostBrackets(cutstring);
                             cutstring = cutstring.Remove(0, innerindexes[1] + 2).Replace(",", "").Trim();
                         }
-
+                        InventoryConsole.tagline = returned[1];
                         InventoryConsole.inventoryInfo = info2;
                         InventoryConsole.needRedraw = true;
-                        break;
-                    case "holding":
+						break;
+                    case "examine":
+
 
                         returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
 
-                        List<NestedInfo> info = new List<NestedInfo>();
+                        NestedInfo info3 = new NestedInfo(null, null);
 
                         while (cutstring.Contains('{'))
                         {
                             NestedInfo innerinfo = GetNestedBrackets(cutstring);
-                            info.Add(innerinfo);
+                            info3.Contents.Add(innerinfo);
                             int[] innerindexes = GetOutermostBrackets(cutstring);
                             cutstring = cutstring.Remove(0, innerindexes[1] + 2).Replace(",", "").Trim();
                         }
+                        ExamInventoryConsole.tagline = returned[1];
+                        ExamInventoryConsole.inventoryInfo = info3;
+                        ExamInventoryConsole.needRedraw = true;
+                        break;
+                    case "holding":
+                        
+                        returned = RemoveParseTag(cutstring);
+                        cutstring = returned[0];
+                        NestedInfo info = new NestedInfo(null, null);
 
-                        InventoryConsole.holdingInfo = info;
-                        InventoryConsole.needRedraw = true;
+                        while (cutstring.Contains('{'))
+                        {
+                            NestedInfo innerinfo = GetNestedBrackets(cutstring);
+                            info.Contents.Add(innerinfo);
+                            int[] innerindexes = GetOutermostBrackets(cutstring);
+                            cutstring = cutstring.Remove(0, innerindexes[1] + 2).Replace(",", "").Trim();
+                        }
+                        GrasperConsole.tagline = returned[1];
+                        GrasperConsole.inventoryInfo = info;
+                        GrasperConsole.needRedraw = true;
                         break;
                     case "sound":
                         returned = RemoveParseTag(cutstring);

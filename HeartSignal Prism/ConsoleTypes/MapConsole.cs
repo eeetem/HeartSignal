@@ -24,8 +24,9 @@ namespace HeartSignal
             Cursor.DisableWordBreak = true;
             ColoredString.CustomProcessor = Utility.CustomParseCommand;
             Cursor.UseStringParser = true;
+            FontSize = Font.GetFontSize(IFont.Sizes.Two);
             SadComponents.Add(new MouseHandler());
-            SadComponents.Add(new AnimatedBorderComponent());
+          // SadComponents.Add(new AnimatedBorderComponent());
 
 
         }
@@ -86,7 +87,7 @@ namespace HeartSignal
 
         public void DrawMap()
         {
-            
+            needRedraw = false;
              this.Clear();
 
             
@@ -149,7 +150,19 @@ namespace HeartSignal
 
 
         }
+        public bool needRedraw;
+        public override void Update(TimeSpan delta)
+        {
+            base.Update(delta);
+            if (needRedraw)
+            {
+                DrawMap();
 
+
+
+            }
+
+        }
 
 
 
