@@ -15,8 +15,6 @@ namespace HeartSignal
         public RoomConsole(int width, int height) : base(width, height)
         {
 
-
-            // Disable the cursor since our keyboard handler will do the work.
             Cursor.IsEnabled = false;
             Cursor.IsVisible = false;
 

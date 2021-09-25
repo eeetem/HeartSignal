@@ -11,14 +11,16 @@ namespace HeartSignal
     {
         public string Prompt { get; set; }
 
-        // This console domonstrates a classic MS-DOS or Windows Command Prompt style console.
         public ClassicConsole(int width,int height): base(width, height)
         {
+             input = new InputConsole(width, 2, this);
+         
+            input.Position = new Point(0, 0);
+            Children.Add(input);
 
-            
 
-                        // Startup description
-             ClearText();
+            // Startup description
+            ClearText();
 
            // Disable the cursor since our keyboard handler will do the work.
             Cursor.IsEnabled = false;
@@ -29,9 +31,17 @@ namespace HeartSignal
             Cursor.UseStringParser = true;
             SadComponents.Add(new CopyPasteMouse());
           //  SadComponents.Add(new AnimatedBorderComponent());
-
+          
         }
 
+        InputConsole input;
+        //this may be elegant or maybe be omega shitcode
+        public InputConsole GetInputSource() {
+
+            return input;
+        
+        
+        }
         public void ClearText()
         {
             this.Clear();

@@ -15,8 +15,6 @@ namespace HeartSignal
         public InventoryConsole(int width, int height) : base(width, height)
         {
 
-
-            // Disable the cursor since our keyboard handler will do the work.
             Cursor.IsEnabled = false;
             Cursor.IsVisible = false;
 
@@ -24,7 +22,7 @@ namespace HeartSignal
             SadComponents.Add(new AnimatedBorderComponent());
             actionWindow = new ActionWindow(30, 5, new Point(0,0));
             Children.Add(actionWindow);
-          //  actionWindow.la
+
             actionWindow.IsVisible = false;
             ColoredString.CustomProcessor = Utility.CustomParseCommand;
             
@@ -41,9 +39,6 @@ namespace HeartSignal
 
 
 
-
-
-        //a bunch of repeating code, might be worth moving into "drawlist" fucntion
         public void DrawInventory()
         {
             needRedraw = false;

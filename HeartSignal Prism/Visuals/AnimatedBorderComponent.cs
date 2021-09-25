@@ -33,11 +33,7 @@ new int[] {177,177,177,177,177,177,177,177,177,177,177,177,177,},
            
         }
 
-        public void UpdateSize(Console console)
-        {
-            _borderConsole.Resize(console.Width + 2, console.Height + 2, console.Width + 2, console.Height + 2, true);
-            _borderConsole.DrawBox(new Rectangle(0, 0, _borderConsole.Width, _borderConsole.Height), _borderCellStyle, null, _borderGlyphs[0]);
-        }
+
 
         public override void OnAdded(IScreenObject screenObject)
         {
@@ -72,12 +68,15 @@ new int[] {177,177,177,177,177,177,177,177,177,177,177,177,177,},
 
         double counter = 0;
         public override void Update(IScreenObject console, TimeSpan delta) {
+            Console con = (Console)console;
+            _borderConsole.Resize(con.Width + 2, con.Height + 2, con.Width + 2, con.Height + 2, true);///this might cause performance issues
             if (_borderConsole != null)
             {
                 counter += delta.TotalSeconds/2;
                 if (counter > 4) { counter = 0; }
                 _borderConsole.DrawBox(new Rectangle(0, 0, _borderConsole.Width, _borderConsole.Height), _borderCellStyle, null, _borderGlyphs[(int)counter]);
             }
+
         }
     }
     /*

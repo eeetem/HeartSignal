@@ -52,81 +52,134 @@ namespace HeartSignal
 
         private static void Init()
         {
-            root = new Console(Game.Instance.ScreenCellsX, Game.Instance.ScreenCellsY);
-            
-  
-            int MapConsoleHeight = 7;
-            int inventoryWidth = 28;
-            int roomConsoleWidth = (Game.Instance.ScreenCellsX  - (inventoryWidth*3)) / 2;
-            
-            int topconsolerowheight = 16;
-            int inputHeigth = 2;
 
-            ///todo: replace all hardcoded coordinates with variables since a lot of them counterdepend on other console sizes
-
-
-            MainConsole = new ClassicConsole(Game.Instance.ScreenCellsX - (inventoryWidth * 2)-2, SadConsole.Game.Instance.ScreenCellsY- (topconsolerowheight+ inputHeigth)-2);
-            MainConsole.Position = new Point(inventoryWidth+1, topconsolerowheight);
-
-
-            InputConsole input = new InputConsole(Game.Instance.ScreenCellsX- (inventoryWidth * 2)-2, inputHeigth, MainConsole);
-            MainConsole.Children.Add(input);
-            input.Position = new Point(0, Game.Instance.ScreenCellsY - (topconsolerowheight + inputHeigth));
-
+            root = new Console(1, 1);
+            MainConsole = new ClassicConsole(1,1);
             root.Children.Add(MainConsole);
-            MapConsole = new MapConsole(inventoryWidth / 2, MapConsoleHeight);
-            MapConsole.Position = new Point((Game.Instance.ScreenCellsX / 2) - (inventoryWidth / 2), 0);
+            MapConsole = new MapConsole(1, 1);
             root.Children.Add(MapConsole);
-
-            RoomConsole = new RoomConsole(roomConsoleWidth-1, topconsolerowheight);
-            RoomConsole.Position = new Point(inventoryWidth+1,0);
+            RoomConsole = new RoomConsole(1, 1);
             root.Children.Add(RoomConsole);
-
-            ///currently there is a single static window however this could be later turned in multiple dymanically created ones
-            PromptWindow = new PromptWindow(30,10,new Point(Game.Instance.ScreenCellsX/2-15, Game.Instance.ScreenCellsY/2-5));
-            root.Children.Add(PromptWindow);
-
-            ThingConsole = new ThingConsole(roomConsoleWidth - 1, topconsolerowheight);
-            ThingConsole.Position = new Point(inventoryWidth * 2 + roomConsoleWidth+2, 0);
+            ThingConsole = new ThingConsole(1,1);
             root.Children.Add(ThingConsole);
-
-
-            InventoryConsole = new InventoryConsole(inventoryWidth, Game.Instance.ScreenCellsY);
-            InventoryConsole.Position = new Point(0, 0);
-            InventoryConsole.tagline = "My Body:";
-            InventoryConsole.ActionOffset = new Point(10, 1);
+            InventoryConsole = new InventoryConsole(1,1);
+            InventoryConsole.tagline = "My Body";
             root.Children.Add(InventoryConsole);
-
-            ExamInventoryConsole = new InventoryConsole(inventoryWidth, Game.Instance.ScreenCellsY - (MapConsoleHeight * 2)-1);
-            ExamInventoryConsole.Position = new Point(Game.Instance.ScreenCellsX - inventoryWidth, (MapConsoleHeight * 2)+1);
-            ExamInventoryConsole.tagline = "Their Body:";
-            ExamInventoryConsole.ActionOffset = new Point(Game.Instance.ScreenCellsX - inventoryWidth, 4);
+            ExamInventoryConsole = new InventoryConsole(1, 1);
+            ExamInventoryConsole.tagline = "Their Body";
             root.Children.Add(ExamInventoryConsole);
-
-
-            GrasperConsole = new InventoryConsole(inventoryWidth, topconsolerowheight);
-            GrasperConsole.Position = new Point(inventoryWidth+roomConsoleWidth+1,0);
-            GrasperConsole.tagline = "I can hold with:";
-            GrasperConsole.ActionOffset = new Point(0, 1);
-            GrasperConsole.clickableFirstLayer = false;
-
+            GrasperConsole = new InventoryConsole(1, 1);
+            GrasperConsole.tagline = "I can hold with";
             root.Children.Add(GrasperConsole);
 
 
 
 
+
+
+
+            PromptWindow = new PromptWindow(30, 10, new Point(WIDTH / 2 - 15, HEIGHT / 2 - 5));
+
+            root.Children.Add(PromptWindow);
+
+
+
+            PositionConsoles();
             Game.Instance.Screen = root;
-
-          
-
-
             // This is needed because we replaced the initial screen object with our own.
             Game.Instance.DestroyDefaultStartingConsole();
 
-
-            Settings.ResizeMode = Settings.WindowResizeOptions.Fit;
-
+           // SadConsole.WIDTH = 100;
+            Settings.ResizeMode = Settings.WindowResizeOptions.None;
+            SadConsole.Game.Instance.MonoGameInstance.WindowResized += (s,a) => PositionConsoles();
             ServerLoop();
+
+
+
+
+
+        }
+
+        public static int WIDTH = 0;
+        public static int HEIGHT = 0;
+
+
+        ///TODO: TURN needRedraw into something that's part of a one parent console instead of each console having that
+        static void PositionConsoles() {
+
+            WIDTH = Game.Instance.MonoGameInstance.WindowWidth / root.FontSize.X;
+            HEIGHT = Game.Instance.MonoGameInstance.WindowHeight / root.FontSize.Y;
+            root.Resize(WIDTH, HEIGHT, WIDTH, HEIGHT, false);
+
+
+            int MapConsoleHeight = 7;
+            int inventoryWidth = 28;
+            int roomConsoleWidth = (WIDTH - (inventoryWidth * 3)) / 2;
+
+            int topconsolerowheight = 16;
+
+
+            ///todo: replace all hardcoded coordinates with variables since a lot of them counterdepend on other console sizes
+            //ScreenSurface.
+            int width = WIDTH - (inventoryWidth * 2) - 2;
+            int height =HEIGHT - (topconsolerowheight + 2) - 2;
+            MainConsole.Resize(width,height,width,height,false);
+            MainConsole.Position = new Point(inventoryWidth + 1, topconsolerowheight);
+
+            //cringus
+            MainConsole.GetInputSource().Resize(width, 2, width, 2, false);
+            MainConsole.GetInputSource().Position = new Point(0, height +2);
+            MainConsole.GetInputSource().Cursor.Position = new Point(0, 0);
+            MainConsole.GetInputSource().Clear();
+            MainConsole.GetInputSource().Cursor.Print(">");
+
+            width = inventoryWidth / 2;
+            height = MapConsoleHeight;
+            MapConsole.Resize(width,height,width,height,false);
+            MapConsole.Position = new Point((WIDTH / 2) - (inventoryWidth / 2), 0);
+            MapConsole.needRedraw = true;
+
+            width = roomConsoleWidth - 1;
+            height = topconsolerowheight;
+            RoomConsole.Resize(width, height,width,height,true);
+            RoomConsole.Position = new Point(inventoryWidth + 1, 0);
+            RoomConsole.needRedraw = true;
+
+
+            PromptWindow.Position = new Point(WIDTH / 2 - 15, HEIGHT / 2 - 5);
+
+            width = roomConsoleWidth - 1;
+            height = topconsolerowheight;
+            ThingConsole.Resize(width, height, width, height, false);
+            ThingConsole.Position = new Point(inventoryWidth * 2 + roomConsoleWidth + 2, 0);
+            ThingConsole.needRedraw = true;
+
+
+             width = inventoryWidth;
+            height = HEIGHT;
+            InventoryConsole.Resize(width, height, width, height, true);
+            InventoryConsole.Position = new Point(0, 0);
+            InventoryConsole.ActionOffset = new Point(10, 1);
+            InventoryConsole.needRedraw = true;
+
+            width = inventoryWidth;
+            height = HEIGHT - (MapConsoleHeight * 2) - 1;
+            ExamInventoryConsole.Resize(width, height, width, height, true);
+            ExamInventoryConsole.Position = new Point(WIDTH - inventoryWidth, (MapConsoleHeight * 2) + 1);
+            ExamInventoryConsole.ActionOffset = new Point(WIDTH - inventoryWidth, 4);
+            ExamInventoryConsole.needRedraw = true;
+
+
+            width = inventoryWidth;
+            height = topconsolerowheight;
+            GrasperConsole.Resize(width, height, width, height, false);
+            GrasperConsole.Position = new Point(inventoryWidth + roomConsoleWidth + 1, 0);
+            GrasperConsole.ActionOffset = new Point(0, 1);
+            GrasperConsole.clickableFirstLayer = false;
+            ExamInventoryConsole.needRedraw = true;
+
+
+
 
 
 

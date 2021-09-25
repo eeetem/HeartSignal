@@ -9,5 +9,6 @@ namespace HeartSignal
     interface ITextInputReciver
     {
         void ReciveInput(string text);
+        InputConsole GetInputSource();
     }
 }
