@@ -104,7 +104,7 @@ namespace HeartSignal
         public static int HEIGHT = 0;
 
 
-        ///TODO: TURN needRedraw into something that's part of a one parent console instead of each console having that
+        ///TODO: TURN needRedraw into something that's part of a one inheritable console instead of each console having that
         static void PositionConsoles() {
 
             WIDTH = Game.Instance.MonoGameInstance.WindowWidth / root.FontSize.X;

@@ -25,6 +25,7 @@ namespace HeartSignal
             actionWindow.IsVisible = false;
             ColoredString.CustomProcessor = Utility.CustomParseCommand;
             SadComponents.Add(new AnimatedBorderComponent());
+            name = "";
 
 
         }
