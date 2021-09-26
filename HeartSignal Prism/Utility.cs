@@ -62,7 +62,7 @@ namespace HeartSignal
 
             ///if there is other things with same name process them at the same time
             List<string> sameThingsIDs = new List<string>();
-
+           
             bool multiple = false;
             if (thingid.Length > 2)
             {
@@ -86,7 +86,7 @@ namespace HeartSignal
             {
                 console.Cursor.NewLine().Right(1);
             }
-
+            ActionWindow.GetActions(thingid[1]);
             Point pos = console.Cursor.Position;
             if (!multiple)
             {

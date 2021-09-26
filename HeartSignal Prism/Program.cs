@@ -148,7 +148,7 @@ namespace HeartSignal
 
             PromptWindow.Position = new Point(WIDTH / 2 - 15, HEIGHT / 2 - 5);
 
-            width = roomConsoleWidth - 1;
+            width = roomConsoleWidth - 3;
             height = topconsolerowheight;
             ThingConsole.Resize(width, height, width, height, false);
             ThingConsole.Position = new Point(inventoryWidth * 2 + roomConsoleWidth + 2, 0);

@@ -71,27 +71,27 @@ namespace HeartSignal
             foreach (string action in actionDatabase[id])
             {
 
-
-                if (Cursor.Position.X + action.Length + 1 > Width)
+                string parsedAction = action.Replace(" [name]", "").Replace("_", " ");
+                if (Cursor.Position.X + parsedAction.Length + 1 > Width)
                 {
                     Cursor.NewLine().Right(1);
                 }
                 Point pos = this.Cursor.Position;
-                var button = new Button(action.Length, 1)
+                var button = new Button(parsedAction.Length, 1)
                 {
-                    Text = action,
+                    Text = parsedAction,
                     Position = pos,
                     Theme = new ThingButtonTheme()
                 };
                 button.MouseButtonClicked += (s, a) => DoAction(id, action);
                 this.Controls.Add(button);
-                this.Cursor.Right(action.Length + 1);
+                this.Cursor.Right(parsedAction.Length + 1);
 
             }
             foreach (string action in argactionDatabase[id])
             {
 
-                string parsedAction = action.Replace(" [name]", "").Replace("_","") + "...";
+                string parsedAction = action.Replace(" [name]", "").Replace("_"," ") + "...";
                 if (Cursor.Position.X + parsedAction.Length+1 > Width)
                 {
                     Cursor.NewLine().Right(1);
