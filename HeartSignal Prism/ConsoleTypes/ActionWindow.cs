@@ -22,7 +22,7 @@ namespace HeartSignal
         }
         public static Dictionary<string, List<string>> actionDatabase = new Dictionary<string, List<string>>();
         public static Dictionary<string, List<string>> argactionDatabase = new Dictionary<string, List<string>>();
-        string lastitem = "";
+        static string lastitem = "";
 
         protected override void OnMouseExit(MouseScreenObjectState state) {
             IsVisible = false;
