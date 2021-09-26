@@ -10,22 +10,11 @@ using SadConsole.UI;
 
 namespace HeartSignal
 {
-    class InventoryConsole : SadConsole.UI.ControlsConsole
+    class InventoryConsole : BaseConsole
     {
         public InventoryConsole(int width, int height) : base(width, height)
         {
 
-            Cursor.IsEnabled = false;
-            Cursor.IsVisible = false;
-
-            Cursor.DisableWordBreak = true;
-            SadComponents.Add(new AnimatedBorderComponent());
-            actionWindow = new ActionWindow(30, 5, new Point(0,0));
-            Children.Add(actionWindow);
-
-            actionWindow.IsVisible = false;
-            ColoredString.CustomProcessor = Utility.CustomParseCommand;
-            
 
         }
         public string name { get; private set; }
@@ -39,17 +28,10 @@ namespace HeartSignal
 
 
 
-        public void DrawInventory()
+        protected override void DrawConsole()
         {
-            needRedraw = false;
-            this.Clear();
-          //  actionWindow.ClearFocus();
-            actionWindow.Clear();
-            actionWindow.Controls.Clear();
-            actionWindow.IsVisible = false;
+            
 
-            Controls.Clear();
-            Cursor.Position = new Point(0, 0);
 
             Cursor.Print(tagline+":").NewLine();
             if (clickableFirstLayer)
@@ -89,7 +71,7 @@ namespace HeartSignal
 
 
 
-            if (ls.Count == 0) { return; }
+            if (ls ==null || ls.Count == 0) { return; }
 
             foreach (NestedInfo info in ls)
             {
@@ -114,20 +96,10 @@ namespace HeartSignal
                 string id = returned[1];
                 this.DrawLine(Cursor.Position, Cursor.Position + new Point(layer, 0), ICellSurface.ConnectedLineThin[1]);
                  Cursor.Right(layer);
-            int y = Cursor.Position.Y;
-                 var button = new Button(thing.Length, 1)
-                {
-                    Text = thing,
-                    Position = Cursor.Position,
-                    Theme = new ThingButtonTheme()
-                };
-                button.MouseEnter += (s, a) => actionWindow.DisplayActions(info.Header, new Point(0, y)+ ActionOffset);
-                button.Click += (s, a) => actionWindow.ClickItem(id);
-
-                Controls.Add(button);
+            Utility.CreateButtonThingId(returned, this, actionWindow, false,ActionOffset);
             if (layer == 0)
             {
-                Cursor.Right(thing.Length).Print(":");
+                Cursor.Print(":");
             }
             Cursor.NewLine();
             foreach (NestedInfo innerinfo in info.Contents) {
@@ -138,21 +110,6 @@ namespace HeartSignal
 
         }
 
-        ActionWindow actionWindow;
-
-        public bool needRedraw = false;
-        public override void Update(TimeSpan delta)
-        {
-            base.Update(delta);
-            if (needRedraw)
-            {
-                DrawInventory();
-
-
-
-            }
-
-        }
 
 
 

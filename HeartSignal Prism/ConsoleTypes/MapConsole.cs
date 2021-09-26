@@ -10,23 +10,16 @@ using SadConsole.UI;
 
 namespace HeartSignal
 {
-    class MapConsole : SadConsole.UI.ControlsConsole, IMouseInputReciver
+    class MapConsole : BaseConsole, IMouseInputReciver
     {
-        public MapConsole(int width, int height) : base(width, height)
+        public MapConsole(int width, int height) : base(width, height,false)
         {
 
 
-            // Disable the cursor since our keyboard handler will do the work.
-            Cursor.IsEnabled = false;
-            Cursor.IsVisible = false;
-            UsePrintProcessor = true;
-            Cursor.DisableWordBreak = true;
-            Cursor.DisableWordBreak = true;
-            ColoredString.CustomProcessor = Utility.CustomParseCommand;
-            Cursor.UseStringParser = true;
+
             FontSize = Font.GetFontSize(IFont.Sizes.Two);
             SadComponents.Add(new MouseHandler());
-          // SadComponents.Add(new AnimatedBorderComponent());
+
 
 
         }
@@ -85,9 +78,9 @@ namespace HeartSignal
         public List<string> cexists = new List<string>();
         public List<string> mapdata = new List<string>();
 
-        public void DrawMap()
+        protected override void DrawConsole()
         {
-            needRedraw = false;
+           
              this.Clear();
 
             
@@ -148,19 +141,6 @@ namespace HeartSignal
 
             }
 
-
-        }
-        public bool needRedraw;
-        public override void Update(TimeSpan delta)
-        {
-            base.Update(delta);
-            if (needRedraw)
-            {
-                DrawMap();
-
-
-
-            }
 
         }
 

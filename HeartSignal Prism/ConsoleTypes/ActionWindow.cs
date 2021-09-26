@@ -49,12 +49,11 @@ namespace HeartSignal
                 {
                     GetDesc(id);
                 }
-                if (!GetActions(id))
-                {
-                    return;
 
-                }
                 lastitem = item;
+            }
+            if (!actionDatabase.ContainsKey(id)) {
+                return;
             }
 
             if (newPosition != null)
@@ -141,21 +140,11 @@ namespace HeartSignal
 
 
         }
-        string lastname;
+
         public void DisplayMultiItem(string name, Point? newPosition = null, List<string> IDs = null)
         {
             //if (awaitingItemClick) { return; }
-            if (lastname != name)
-            {
-                foreach (string id in IDs)
-                {
 
-                    GetActions(id);
-
-
-                }
-                lastname = name;
-            }
             if (newPosition != null)
             {
 
@@ -264,20 +253,7 @@ namespace HeartSignal
                 return;
             }
         }
-        public static bool GetActions(string id)
-        {
 
-            //this being outside the IF causes ex spam but currently it's needed for descriptions, definatelly possible to optimise this if needed
-            Program.SendNetworkMessage("ex " + id);
-            if (!actionDatabase.ContainsKey(id) || actionDatabase[id] == null)
-            {
-
-                
-                return false;
-            }
-            return true;
-
-        }
         public static void GetDesc(string id)
         {
             Program.SendNetworkMessage("look " + id);

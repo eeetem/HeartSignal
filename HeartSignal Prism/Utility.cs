@@ -58,7 +58,7 @@ namespace HeartSignal
             }
         }
 
-        public static void CreateButtonThingId(string[] thingid, SadConsole.UI.ControlsConsole console, ActionWindow ac,bool explicitlook = false) {
+        public static void CreateButtonThingId(string[] thingid, SadConsole.UI.ControlsConsole console, ActionWindow ac,bool explicitlook = false, Point? offset = null,bool clampactionwindow = false) {
 
             ///if there is other things with same name process them at the same time
             List<string> sameThingsIDs = new List<string>();
@@ -80,14 +80,32 @@ namespace HeartSignal
 
                 }
             }
+            Point Offset = new Point(-5, 1);//default offset
+            if (offset != null) {
+                Offset = (Point)offset;
 
 
+            }
+            
             if (thingid[0].Length + console.Cursor.Position.X > console.Width)
             {
                 console.Cursor.NewLine().Right(1);
             }
-            ActionWindow.GetActions(thingid[1]);
+            if (!ActionWindow.actionDatabase.ContainsKey(thingid[1]))
+            {
+                InitThingId(thingid[1]);
+            }
             Point pos = console.Cursor.Position;
+            if (clampactionwindow)
+            {
+                pos = new Point(Math.Clamp(pos.X + Offset.X,0,console.Width), pos.Y + Offset.Y);
+            }
+			else
+			{
+                pos = new Point(pos.X + Offset.X, pos.Y + Offset.Y);
+
+
+            }
             if (!multiple)
             {
 
@@ -97,8 +115,8 @@ namespace HeartSignal
                     Position = console.Cursor.Position,
                     Theme = new ThingButtonTheme()
                 };
-                pos = new Point(Math.Clamp(pos.X - 5, 0, console.Width - ac.Width),pos.Y+1);
-                
+
+
                 button.MouseEnter += (s, a) => ac.DisplayActions(thingid[0] + "(" + thingid[1] + ")", pos, explicitlook);
                 button.Click += (s, a) => ac.ClickItem(thingid[1]);
                 console.Controls.Add(button);
@@ -113,7 +131,7 @@ namespace HeartSignal
                     Position = console.Cursor.Position,
                     Theme = new ThingButtonTheme()
                 };
-                pos = new Point(Math.Clamp(pos.X - 5, 0, console.Width - ac.Width), pos.Y +1);
+
                 button.MouseEnter += (s, a) => ac.DisplayMultiItem(thingid[0], pos, sameThingsIDs);
                 // button.Click += (s, a) => actionWindow.SetFocus(thing.Key);
                 console.Controls.Add(button);
@@ -122,6 +140,14 @@ namespace HeartSignal
 
 
             }
+
+        }
+        public static void InitThingId(string id)
+        {
+
+            //this being outside the IF causes ex spam but currently it's needed for descriptions, definatelly possible to optimise this if needed
+            Program.SendNetworkMessage("ex " + id);
+
 
         }
     }

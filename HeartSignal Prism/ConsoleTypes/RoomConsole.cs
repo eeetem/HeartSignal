@@ -10,21 +10,13 @@ using SadConsole.UI;
 
 namespace HeartSignal
 {
-    class RoomConsole : SadConsole.UI.ControlsConsole
+    class RoomConsole : BaseConsole
     {
+
+        ///TODO: room console and thing console could be children to a singl console due to a lot of similarities
         public RoomConsole(int width, int height) : base(width, height)
         {
 
-            Cursor.IsEnabled = false;
-            Cursor.IsVisible = false;
-
-            Cursor.DisableWordBreak = true;
- 
-            actionWindow = new ActionWindow(30, 5, new Point(0, Cursor.Position.Y));
-            Children.Add(actionWindow);
-            actionWindow.IsVisible = false;
-            ColoredString.CustomProcessor = Utility.CustomParseCommand;
-            SadComponents.Add(new AnimatedBorderComponent());
             name = "";
 
 
@@ -52,18 +44,9 @@ namespace HeartSignal
 
 
 
-        //a bunch of repeating code, might be worth moving into "drawlist" fucntion
-        public void DrawRoom()
+        protected override void DrawConsole()
         {
-           needRedraw = false;
-            this.Clear();
 
-            actionWindow.IsVisible = false;
-            actionWindow.Clear();
-            actionWindow.Controls.Clear();
-            
-            Controls.Clear();
-            Cursor.Position = new Point(0, 0);
             Cursor.NewLine().Print(name).NewLine();
             foreach (string desc in new List<string>(roomInfo))
             {
@@ -97,7 +80,7 @@ namespace HeartSignal
                         combined += " " + thingid;
                         thingid = combined.Replace("<", "").Replace(">", "");
 
-                        Utility.CreateButtonThingId(Utility.SplitThingID(thingid), this, actionWindow);
+                        Utility.CreateButtonThingId(Utility.SplitThingID(thingid), this, actionWindow,false,null,true);
                         Cursor.Print(unreleated + " ");
         
 
@@ -179,23 +162,9 @@ namespace HeartSignal
             }
             Cursor.NewLine();
         }
-        public override void Update(TimeSpan delta)
-        {
-            base.Update(delta);
-            if (needRedraw)
-            {
-                DrawRoom();
 
 
-
-            }
-
-        }
-
-        ActionWindow actionWindow;
-
-        public bool needRedraw = false;
-
+      
 
 
 

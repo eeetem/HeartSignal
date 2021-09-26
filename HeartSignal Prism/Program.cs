@@ -137,13 +137,13 @@ namespace HeartSignal
             height = MapConsoleHeight;
             MapConsole.Resize(width,height,width,height,false);
             MapConsole.Position = new Point((WIDTH / 2) - (inventoryWidth / 2), 0);
-            MapConsole.needRedraw = true;
+            MapConsole.ReDraw();
 
             width = roomConsoleWidth - 1;
             height = topconsolerowheight;
             RoomConsole.Resize(width, height,width,height,true);
             RoomConsole.Position = new Point(inventoryWidth + 1, 0);
-            RoomConsole.needRedraw = true;
+            RoomConsole.ReDraw();
 
 
             PromptWindow.Position = new Point(WIDTH / 2 - 15, HEIGHT / 2 - 5);
@@ -152,22 +152,22 @@ namespace HeartSignal
             height = topconsolerowheight;
             ThingConsole.Resize(width, height, width, height, false);
             ThingConsole.Position = new Point(inventoryWidth * 2 + roomConsoleWidth + 2, 0);
-            ThingConsole.needRedraw = true;
+            ThingConsole.ReDraw();
 
 
-             width = inventoryWidth;
+            width = inventoryWidth;
             height = HEIGHT;
             InventoryConsole.Resize(width, height, width, height, true);
             InventoryConsole.Position = new Point(0, 0);
             InventoryConsole.ActionOffset = new Point(10, 1);
-            InventoryConsole.needRedraw = true;
+            InventoryConsole.ReDraw();
 
             width = inventoryWidth;
             height = HEIGHT - (MapConsoleHeight * 2) - 1;
             ExamInventoryConsole.Resize(width, height, width, height, true);
             ExamInventoryConsole.Position = new Point(WIDTH - inventoryWidth, (MapConsoleHeight * 2) + 1);
-            ExamInventoryConsole.ActionOffset = new Point(WIDTH - inventoryWidth, 4);
-            ExamInventoryConsole.needRedraw = true;
+            ExamInventoryConsole.ActionOffset = new Point(-30, 1);
+            ExamInventoryConsole.ReDraw();
 
 
             width = inventoryWidth;
@@ -176,7 +176,7 @@ namespace HeartSignal
             GrasperConsole.Position = new Point(inventoryWidth + roomConsoleWidth + 1, 0);
             GrasperConsole.ActionOffset = new Point(0, 1);
             GrasperConsole.clickableFirstLayer = false;
-            ExamInventoryConsole.needRedraw = true;
+            GrasperConsole.ReDraw();
 
 
 
@@ -295,7 +295,7 @@ namespace HeartSignal
 
 
                         ThingConsole.lines = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        ThingConsole.needRedraw = true;
+                        ThingConsole.ReDraw();
                         break;
                     case "room":
 
@@ -306,7 +306,7 @@ namespace HeartSignal
 
 
                         RoomConsole.roomInfo = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        RoomConsole.needRedraw = true;
+                        RoomConsole.ReDraw();
                         break;
                     case "fancy":
 
@@ -314,7 +314,7 @@ namespace HeartSignal
                         cutstring = returned[0];
 
                         RoomConsole.fancyInfo = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        RoomConsole.needRedraw = true;
+                        RoomConsole.ReDraw();
                         break;
                     case "things":
 
@@ -323,7 +323,7 @@ namespace HeartSignal
 
 
                         RoomConsole.thingInfo = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        RoomConsole.needRedraw = true;
+                        RoomConsole.ReDraw();
                         break;
                     case "bodies":
 
@@ -331,7 +331,7 @@ namespace HeartSignal
                         cutstring = returned[0];
 
                         RoomConsole.bodyInfo = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        RoomConsole.needRedraw = true;
+                        RoomConsole.ReDraw();
                         break;
 
 
@@ -356,7 +356,7 @@ namespace HeartSignal
                         cutstring = returned[0];
 
                         MapConsole.mapdata = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        MapConsole.needRedraw = true;
+                        MapConsole.ReDraw();
                         break;
                     case "cexits":
 
@@ -365,7 +365,7 @@ namespace HeartSignal
 
 
                         MapConsole.cexists = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        MapConsole.needRedraw = true;
+                        MapConsole.ReDraw();
                         break;
                     case "inventory":
 
@@ -384,7 +384,7 @@ namespace HeartSignal
                         }
                         InventoryConsole.tagline = returned[1];
                         InventoryConsole.inventoryInfo = info2;
-                        InventoryConsole.needRedraw = true;
+                        InventoryConsole.ReDraw();
 						break;
                     case "examine":
 
@@ -403,7 +403,7 @@ namespace HeartSignal
                         }
                         ExamInventoryConsole.tagline = returned[1];
                         ExamInventoryConsole.inventoryInfo = info3;
-                        ExamInventoryConsole.needRedraw = true;
+                        ExamInventoryConsole.ReDraw();
                         break;
                     case "holding":
                         
@@ -420,7 +420,7 @@ namespace HeartSignal
                         }
                         GrasperConsole.tagline = returned[1];
                         GrasperConsole.inventoryInfo = info;
-                        GrasperConsole.needRedraw = true;
+                        GrasperConsole.ReDraw();
                         break;
                     case "sound":
                         returned = RemoveParseTag(cutstring);

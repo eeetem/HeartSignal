@@ -10,37 +10,21 @@ using SadConsole.UI;
 
 namespace HeartSignal
 {
-    class ThingConsole : SadConsole.UI.ControlsConsole
+    class ThingConsole : BaseConsole
     {
         public ThingConsole(int width, int height) : base(width, height)
         {
 
 
-            // Disable the cursor since our keyboard handler will do the work.
-            Cursor.IsEnabled = false;
-            Cursor.IsVisible = false;
-
-            Cursor.DisableWordBreak = true;
-            ColoredString.CustomProcessor = Utility.CustomParseCommand;
-            Cursor.UseStringParser = true;
-            actionWindow = new ActionWindow(30, 5, new Point(0, Cursor.Position.Y));
-            Children.Add(actionWindow);
-            actionWindow.IsVisible = false;
-            SadComponents.Add(new AnimatedBorderComponent());
 
 
         }
-        ActionWindow actionWindow;
+
         public List<string> lines = new List<string>();
-        public void DrawThing()
+        protected override void DrawConsole()
         {
-            needRedraw = false;
-            this.Clear();
-            actionWindow.Clear();
-            actionWindow.Controls.Clear();
-            actionWindow.IsVisible = false;
-            Controls.Clear();
-            Cursor.Position = new Point(0, 0);
+
+         
             Cursor.NewLine().NewLine().NewLine();
             foreach (string fancy in new List<string>(lines))
             {
@@ -69,7 +53,7 @@ namespace HeartSignal
                             combined = combined.Trim();
                             thingid = combined.Replace("<", "").Replace(">", "");
 
-                            Utility.CreateButtonThingId(Utility.SplitThingID(thingid), this, actionWindow,true);
+                            Utility.CreateButtonThingId(Utility.SplitThingID(thingid), this, actionWindow,true,null,true);
                             Cursor.Print(unreleated + " ");
 
 
@@ -103,30 +87,6 @@ namespace HeartSignal
 
 
         }
-
-
-
-
-
-        public override void Update(TimeSpan delta)
-        {
-            base.Update(delta);
-            if (needRedraw)
-            {
-                this.Effects.RemoveAll();
-                DrawThing();
-
-
-
-            }
-
-        }
-
-
-
-        public bool needRedraw = false;
-
-
 
 
 
