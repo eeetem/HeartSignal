@@ -43,7 +43,7 @@ namespace HeartSignal
                 DrawNestedInfo(inventoryInfo.Contents);
 
             }
-            this.IsFocused = true; 
+
             
         }
 

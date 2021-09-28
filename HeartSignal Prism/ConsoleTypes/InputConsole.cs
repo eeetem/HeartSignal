@@ -12,7 +12,7 @@ namespace HeartSignal
     internal class InputConsole : Console
     {//ONLY EVER SHOULD EXIST AS A CHILD OF ANOTHER CONSOLE
         readonly KeyboardHandler keyboard;
-        readonly CopyPasteMouse mouse;
+
         ITextInputReciver ReciverParent;
         List<string> commands = new List<string>();
         public InputConsole(int width, int height, ITextInputReciver parent) : base(width, height)
@@ -27,10 +27,9 @@ namespace HeartSignal
             keyboard.UpPressed += UpCommand;
             keyboard.DownPressed += DownCommand;
             ReciverParent = parent;
-            mouse = new CopyPasteMouse();
-                
+     
             SadComponents.Add(keyboard);
-            SadComponents.Add(mouse);
+
             Cursor.Print(">");
 
 

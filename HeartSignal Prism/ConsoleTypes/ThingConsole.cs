@@ -28,9 +28,11 @@ namespace HeartSignal
             Cursor.NewLine().NewLine().NewLine();
             foreach (string fancy in new List<string>(lines))
             {
+                string[] words = fancy.Split(" ");
+                //this if statement is omega cringe but will do for now
                 if (fancy.Contains("<"))
                 {
-                    string[] words = fancy.Split(" ");
+
                     bool combining = false;
                     string combined = "";
 
@@ -53,13 +55,14 @@ namespace HeartSignal
                             combined = combined.Trim();
                             thingid = combined.Replace("<", "").Replace(">", "");
 
-                            Utility.CreateButtonThingId(Utility.SplitThingID(thingid), this, actionWindow,true,null,true);
+                            Utility.CreateButtonThingId(Utility.SplitThingID(thingid), this, actionWindow, true, null, true);
                             Cursor.Print(unreleated + " ");
 
 
                         }
                         else if (combining)
                         {
+
                             combined += " " + word;
 
                         }
@@ -74,15 +77,28 @@ namespace HeartSignal
                         }
 
                     }
-                    
-                }
-                else {
 
+                }
+				else if(fancy.Contains(":"))
+                {
                     Cursor.Print(fancy);
 
                 }
-                Cursor.NewLine();
+                else
+                {
 
+                    foreach (string word in words)
+                    {
+                        if (Cursor.Position.X + word.Length > Width)
+                        {
+                            Cursor.NewLine();
+                        }
+                        Cursor.Print(word + " ");
+                    }
+                    
+
+                }
+                Cursor.NewLine();
             }
 
 

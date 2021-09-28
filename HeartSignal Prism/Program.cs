@@ -24,6 +24,7 @@ namespace HeartSignal
         public static InventoryConsole GrasperConsole;
         static ThingConsole ThingConsole;
         public static Console root;
+        public static bool verboseDebug = false;
 
         public static Client TelnetClient;
         [STAThread]
@@ -194,7 +195,10 @@ namespace HeartSignal
 
             messageQueue.Add(message);
             needToSendMessage = true;
-            System.Console.WriteLine(message);
+            if (verboseDebug)
+            {
+                System.Console.WriteLine("Sending Message: " + message);
+            }
             return true;
 
         }
@@ -559,6 +563,14 @@ namespace HeartSignal
 
 
             MainConsole.Cursor.NewLine();
+#if DEBUG
+            MainConsole.ReciveExternalInput("This is a debug build of HeartSignal, report to developers if you see this message");
+            string ans = await MainConsole.AskForInput("Do you want verbose logging?(y/n)");
+            if (ans == "y") {
+                verboseDebug = true;
+            }
+
+#endif
             string login = await MainConsole.AskForInput("Enter Login");
             string pass = await MainConsole.AskForInput("Enter Password");
             MainConsole.Clear();
@@ -589,9 +601,10 @@ namespace HeartSignal
                         SplitInput(response);
 #if DEBUG
 
-
-                        System.Console.WriteLine(response);
-
+                        if (verboseDebug)
+                        {
+                            System.Console.WriteLine(response);
+                        }
 
 
 #endif

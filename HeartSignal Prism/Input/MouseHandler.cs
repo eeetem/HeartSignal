@@ -24,31 +24,22 @@ namespace HeartSignal
         }
 
 
-        bool holding = false;
         public override void ProcessMouse(IScreenObject host, MouseScreenObjectState state, out bool handled)
         {
+            handled = false;
             if (!state.IsOnScreenObject)
             {
-                handled = false;
+                
                 return;
             }
 
-            if (state.Mouse.LeftButtonDown &&!holding) {
-                holding = true;
+            if (state.Mouse.LeftButtonDown ) {
                 owner.Clicked(state.CellPosition);
             
             
             }
-            else if (holding&& !state.Mouse.LeftButtonDown)
-            {
-
-                holding = false;
 
 
-            }
-
-
-            handled = true;
         }
 
 

@@ -26,8 +26,8 @@ namespace HeartSignal
         public int CursorLastY = 0;
         public override void OnAdded(IScreenObject host)
         {
-          //  var console = (Console)host;
-
+            //  var console = (Console)host;
+            host.UseKeyboard = true;
         }
         
         public override void ProcessKeyboard(IScreenObject consoleObject, Keyboard info, out bool handled)
@@ -59,8 +59,7 @@ namespace HeartSignal
 
                         
                         console.Cursor.Print(data);
-                        
-                        System.Console.WriteLine(data);
+
                         }
                         handled = true;
                         return;

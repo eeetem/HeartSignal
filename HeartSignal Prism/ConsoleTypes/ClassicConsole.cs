@@ -13,10 +13,7 @@ namespace HeartSignal
 
         public ClassicConsole(int width,int height): base(width, height)
         {
-             input = new InputConsole(width, 2, this);
-         
-            input.Position = new Point(0, 0);
-            Children.Add(input);
+
 
 
             // Startup description
@@ -29,9 +26,15 @@ namespace HeartSignal
             Cursor.DisableWordBreak = true;
             ColoredString.CustomProcessor = Utility.CustomParseCommand;
             Cursor.UseStringParser = true;
-            SadComponents.Add(new CopyPasteMouse());
-          //  SadComponents.Add(new AnimatedBorderComponent());
-          
+           // UseKeyboard = true;
+
+            input = new InputConsole(width, 2, this);
+
+            input.Position = new Point(0, 0);
+            Children.Add(input);
+
+            //  SadComponents.Add(new AnimatedBorderComponent());
+
         }
 
         InputConsole input;
@@ -71,6 +74,11 @@ namespace HeartSignal
         }
         public void DrawMessage(string value) {
             Cursor.Print(value).NewLine();
+            if (!Program.verboseDebug) //if verbose debug is not set then all other prints would be disbaled so do a debug print here
+            {
+
+                System.Console.WriteLine(value);
+            }
 
         
         
@@ -94,7 +102,7 @@ namespace HeartSignal
 
 
 
-            DrawMessage(value);
+            DrawMessage("[c:r f:darkgray]" + value);
 
             value = value.Replace(">", "");
             if (awaitingInput) {

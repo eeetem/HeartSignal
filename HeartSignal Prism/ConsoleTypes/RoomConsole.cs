@@ -106,7 +106,7 @@ namespace HeartSignal
 
             DrawList(new List<string>(bodyInfo));
             Cursor.NewLine(); Cursor.NewLine(); Cursor.NewLine(); Cursor.NewLine(); Cursor.NewLine(); Cursor.NewLine(); Cursor.NewLine();
-            this.IsFocused = true; 
+
         }
 
 
