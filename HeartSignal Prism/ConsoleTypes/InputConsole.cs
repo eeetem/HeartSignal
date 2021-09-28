@@ -39,9 +39,11 @@ namespace HeartSignal
 
         private void SendCommand() {
             int startingIndex = 0;
+            string data = this.GetString(startingIndex, 2048);///textbox is capped at 2048 characters. arbitrary -  might need adjustment latyer
+#if RELEASE
+data = data.Replace("\0", "");
+#endif
 
-            string data = this.GetString(startingIndex, 100);///textbox is capped at 100 characters. arbitrary -  might need adjustment latyer
-            data = data.Replace("\0", "");
 
             string input = this.GetString(startingIndex, data.Length);
             ReciverParent.ReciveInput(data);
