@@ -55,10 +55,22 @@ namespace HeartSignal
                         {
                             // Yes it is, so display it in a text box.
                             data = (String)iData.GetData(DataFormats.Text);
-                       
 
-                        
-                        console.Cursor.Print(data);
+
+
+                            string[] lines = data.Split("\n");
+                            if (lines.Length > 1)
+                            {
+                                foreach (string line in lines)
+                                {
+                                    console.Cursor.Print(line).NewLine();
+
+                                }
+                            }
+                            else {
+
+                                console.Cursor.Print(data);
+                            }
 
                         }
                         handled = true;

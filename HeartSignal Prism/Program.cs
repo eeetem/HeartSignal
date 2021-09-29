@@ -128,7 +128,7 @@ namespace HeartSignal
             MainConsole.Position = new Point(inventoryWidth + 1, topconsolerowheight);
 
             //cringus
-            MainConsole.GetInputSource().Resize(width, 2, width, 2, false);
+            MainConsole.GetInputSource().Resize(width, 30, width, 30, false);//fun fact: input console is gigantic - just hidden under
             MainConsole.GetInputSource().Position = new Point(0, height +2);
             MainConsole.GetInputSource().Cursor.Position = new Point(0, 0);
             MainConsole.GetInputSource().Clear();
