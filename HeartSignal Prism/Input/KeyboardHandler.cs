@@ -60,7 +60,7 @@ namespace HeartSignal
 
                             string[] lines = data.Split("\n");
                             for (int i = 0; i < lines.Length; i++) {
-                                if ( i != 0&&i != lines.Length - 1) {
+                                if ( i != 0) {
                                     console.Cursor.NewLine();
                                 }
 
