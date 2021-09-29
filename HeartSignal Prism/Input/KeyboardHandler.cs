@@ -59,18 +59,18 @@ namespace HeartSignal
 
 
                             string[] lines = data.Split("\n");
-                            if (lines.Length > 1)
-                            {
-                                foreach (string line in lines)
-                                {
-                                    console.Cursor.Print(line).NewLine();
-
+                            for (int i = 0; i < lines.Length; i++) {
+                                if ( i != 0&&i != lines.Length - 1) {
+                                    console.Cursor.NewLine();
                                 }
-                            }
-                            else {
 
-                                console.Cursor.Print(data);
+                                  console.Cursor.Print(lines[i]);
+                                
+                            
                             }
+
+
+
 
                         }
                         handled = true;

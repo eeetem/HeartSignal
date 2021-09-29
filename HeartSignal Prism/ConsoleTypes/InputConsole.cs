@@ -45,7 +45,7 @@ namespace HeartSignal
         }
         private void SendCommand() {
 
-            string data = this.GetString(0,( Width*(Cursor.Position.Y+ 1))+Cursor.Position.X);
+            string data = this.GetString(0,( Width*Cursor.Position.Y)+Cursor.Position.X);
 
             ReciverParent.ReciveInput(data);
 
