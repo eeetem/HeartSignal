@@ -65,6 +65,7 @@ namespace HeartSignal
             root.Children.Add(ThingConsole);
             InventoryConsole = new InventoryConsole(1,1);
             InventoryConsole.tagline = "My Body";
+            InventoryConsole.self = true;
             root.Children.Add(InventoryConsole);
             ExamInventoryConsole = new InventoryConsole(1, 1);
             ExamInventoryConsole.tagline = "Their Body";
@@ -162,6 +163,7 @@ namespace HeartSignal
             InventoryConsole.Position = new Point(0, 0);
             InventoryConsole.ActionOffset = new Point(10, 1);
             InventoryConsole.ReDraw();
+
 
             width = inventoryWidth;
             height = HEIGHT - (MapConsoleHeight * 2) - 1;

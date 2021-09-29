@@ -26,14 +26,25 @@ namespace HeartSignal
         public bool clickableFirstLayer = true;
         public Point ActionOffset = new Point(0,0);
 
+        public bool self = false;//cringe 
 
 
         protected override void DrawConsole()
         {
+
+
+            if (self) {
+
+
+                Utility.CreateButtonThingId(new string[] { tagline, "me" }, this, actionWindow, false, ActionOffset);
             
+            }
+            else
+            {
+                Cursor.Print(tagline);
 
-
-            Cursor.Print(tagline+":").NewLine();
+            }
+            Cursor.Print(":").NewLine();
             if (clickableFirstLayer)
             {
                 DrawNestedInfo(inventoryInfo);
