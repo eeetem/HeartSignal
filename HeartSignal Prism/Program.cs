@@ -118,7 +118,7 @@ namespace HeartSignal
             int inventoryWidth = 28;
             int roomConsoleWidth = (WIDTH - (inventoryWidth * 3)) / 2;
 
-            int topconsolerowheight = 16;
+            int topconsolerowheight = 20;
 
 
             ///todo: replace all hardcoded coordinates with variables since a lot of them counterdepend on other console sizes

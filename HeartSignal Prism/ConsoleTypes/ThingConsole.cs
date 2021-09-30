@@ -17,15 +17,14 @@ namespace HeartSignal
 
 
 
-
+            
         }
 
         public List<string> lines = new List<string>();
         protected override void DrawConsole()
         {
 
-         
-            Cursor.NewLine().NewLine().NewLine();
+
             foreach (string fancy in new List<string>(lines))
             {
                 string[] words = fancy.Split(" ");
