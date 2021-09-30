@@ -52,10 +52,16 @@ namespace HeartSignal
                     }
                     else if (word.Contains("<"))
                     {
-                        string text2;
-                        text2 = word.Replace("<", "").Replace(">", "");
+                        string text2 = word;
+                        string leftover="";
+                        if (text2.Length > text2.IndexOf('>'))
+                        {
+                            leftover = text2.Substring(text2.IndexOf('>') + 1, text2.Length - (text2.IndexOf('>') + 1));
+                        }
+                        text2 = text2.Remove(text2.IndexOf('>'), text2.Length - text2.IndexOf('>'));
+                        text2 = text2.Replace("<", "").Replace(">", "");
                         Utility.CreateButtonThingId(Utility.SplitThingID(text2.Replace("_", " ")),this,actionWindow,true,null,true);
-                        Cursor.Right(1);
+                        Cursor.Print(leftover).Right(1);
 
                     }
                     else {
