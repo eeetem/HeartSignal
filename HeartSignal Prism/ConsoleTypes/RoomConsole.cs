@@ -57,55 +57,62 @@ namespace HeartSignal
 
 
 
-            foreach (string fancy in new List<string>(fancyInfo)) {
-
+            foreach (string fancy in new List<string>(fancyInfo))
+            {
                 string[] words = fancy.Split(" ");
-                bool combining = false;
-                string combined = "";
-                foreach (string word in words) {
-
-
-                    if (word[0] == '<')
+                foreach (string word in words)
+                {
+                    if (word.Contains("+"))
                     {
-                        combining = true;
-                        combined = "";
-                        combined += word;
+                        string text;
+                        text = word.Replace("+", "");
+                        string tip = text.Substring(text.IndexOf('(') + 1, text.Length - (text.IndexOf('(') + 3));
+                        text = text.Remove(text.IndexOf('('), text.Length - text.IndexOf('('));
+
+                        var button = new Button(text.Length, 1)
+                        {
+                            Text = text,
+                            Position = Cursor.Position,
+                            Theme = new ThingButtonTheme(new Gradient(Color.Green, Color.LimeGreen, Color.Green))
+                        };
+
+
+                        button.MouseEnter += (s, a) => actionWindow.ShowTooltip(tip, Cursor.Position + new Point(0, 0));
+
+                        Controls.Add(button);
+                        Cursor.Right(word.Length);
                     }
-                    else if(word[word.Length-1] == '>'|| word[word.Length - 2] == '>')//possibly just change it to "contains()"
+                    else if (word.Contains("<"))
                     {
-                        combining = false;
-                        string thingid = word.Substring(0, word.IndexOf(">"));
-                        string unreleated = word.Substring(word.IndexOf(">")+1, word.Length - word.IndexOf(">")-1);
-                        
-                        combined += " " + thingid;
-                        thingid = combined.Replace("<", "").Replace(">", "");
-
-                        Utility.CreateButtonThingId(Utility.SplitThingID(thingid), this, actionWindow,false,null,true);
-                        Cursor.Print(unreleated + " ");
-        
+                        string text2;
+                        text2 = word.Replace("<", "").Replace(">", "");
+                        Utility.CreateButtonThingId(Utility.SplitThingID(text2.Replace("_", " ")), this, actionWindow, false, null, true);
+                        Cursor.Right(1);
 
                     }
-                    else if (combining) {
-                        combined += " " + word;
-                    
-                    }
-                    else {
-                        if (Cursor.Position.X + word.Length > Width) {
+                    else
+                    {
+
+                        if (Cursor.Position.X + word.Length > Width && !word.Contains("["))
+                        {
                             Cursor.NewLine();
                         }
-                        Cursor.Print(word + " ");
+                        Cursor.Print(word.Replace("_", " ") + " ");
 
                     }
+
+
+
+
 
                 }
                 Cursor.NewLine();
-            
             }
 
             DrawList(new List<string>(thingInfo));
 
             DrawList(new List<string>(bodyInfo));
-            Cursor.NewLine(); Cursor.NewLine(); Cursor.NewLine(); Cursor.NewLine(); Cursor.NewLine(); Cursor.NewLine(); Cursor.NewLine();
+           
 
         }
 

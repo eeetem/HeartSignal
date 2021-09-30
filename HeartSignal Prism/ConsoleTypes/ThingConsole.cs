@@ -55,6 +55,7 @@ namespace HeartSignal
                         string text2;
                         text2 = word.Replace("<", "").Replace(">", "");
                         Utility.CreateButtonThingId(Utility.SplitThingID(text2.Replace("_", " ")),this,actionWindow,true,null,true);
+                        Cursor.Right(1);
 
                     }
                     else {
