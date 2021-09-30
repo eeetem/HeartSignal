@@ -152,7 +152,7 @@ namespace HeartSignal
 
             width = roomConsoleWidth - 3;
             height = topconsolerowheight;
-            ThingConsole.Resize(width, height, width, height, false);
+            ThingConsole.Resize(width, height, width, height, true);
             ThingConsole.Position = new Point(inventoryWidth * 2 + roomConsoleWidth + 2, 0);
             ThingConsole.ReDraw();
 
