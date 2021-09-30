@@ -14,6 +14,14 @@ namespace HeartSignal
 
         Gradient grad;
         float gradientCounter;
+
+        public ThingButtonTheme(Gradient grad = null) : base() {
+
+            if (grad != null)
+            {
+                this.grad = grad;
+            }
+        }
         public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
             if (!(control is Button button)) return;

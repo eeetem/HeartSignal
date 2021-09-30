@@ -26,6 +26,12 @@ namespace HeartSignal
 
         public override void ProcessMouse(IScreenObject host, MouseScreenObjectState state, out bool handled)
         {
+            handled = false;
+            if (!state.IsOnScreenObject)
+            {
+ 
+                return;
+            }
             if (state.Mouse.LeftButtonDown && !holding)
             {
                 holding = true;
@@ -42,7 +48,7 @@ namespace HeartSignal
             }
 
 
-            handled = false;
+           
 
 
         }

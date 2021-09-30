@@ -31,13 +31,38 @@ namespace HeartSignal
         
         }
 
+        //a lot fo reapeating code in here, integrate this better at some point
+        public void ShowTooltip(string text, Point? newPosition = null) {
+            this.Resize(40, 12, 40, 12, false);
+            if (newPosition != null)
+            {
 
+                Position = (Point)newPosition;
+            }
+            this.Clear();
+            Controls.Clear();
+            var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.Green, Color.Transparent));
+            this.DrawBox(new Rectangle(0, 0, Width, Height), boxShape);
+            this.Cursor.Position = new Point(1, 1);
+            string[] words = text.Split("_");
+            foreach (string word in words)
+            {
+                if (Cursor.Position.X + word.Length + 2 > Width)
+                {
+                    Cursor.NewLine().Right(1);
+                }
+                Cursor.Print(word).Right(1);
+            }
+
+            this.IsVisible = true;
+            this.IsEnabled = true;
+        }
         public void DisplayActions(string item, Point? newPosition = null, bool expilcitlook = false)
         {
             //if (focusitem != null) { item = focusitem; }
             if (awaitingItemClick) { return; }
 
-
+            this.Resize(30, 5, 30, 5, false);
 
             string[] returned = Utility.SplitThingID(item);
             string thing = returned[0];

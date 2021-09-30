@@ -16,6 +16,7 @@ namespace HeartSignal
         {
 
 
+            
 
             
         }
@@ -28,74 +29,48 @@ namespace HeartSignal
             foreach (string fancy in new List<string>(lines))
             {
                 string[] words = fancy.Split(" ");
-                //this if statement is omega cringe but will do for now
-                if (fancy.Contains("<"))
-                {
-
-                    bool combining = false;
-                    string combined = "";
-
-                    foreach (string word in words)
+                foreach (string word in words) {
+                    if (word.Contains("+"))
                     {
-                        if (word.Length < 1) { continue; }
+                        string text;
+                        text = word.Replace("+", "");
+                        string tip = text.Substring(text.IndexOf('(')+1, text.Length - (text.IndexOf('(')+3));
+                        text =  text.Remove(text.IndexOf('('), text.Length - text.IndexOf('('));
 
-                        if (word[0] == '<')
+                        var button = new Button(text.Length, 1)
                         {
-                            combining = true;
-                            combined = "";
-                        }
-                        if (word.Contains('>'))
-                        {
-                            combining = false;
-                            string thingid = word.Substring(0, word.IndexOf(">"));
-                            string unreleated = word.Substring(word.IndexOf(">") + 1, word.Length - word.IndexOf(">") - 1);
-
-                            combined += " " + thingid;
-                            combined = combined.Trim();
-                            thingid = combined.Replace("<", "").Replace(">", "");
-
-                            Utility.CreateButtonThingId(Utility.SplitThingID(thingid), this, actionWindow, true, null, true);
-                            Cursor.Print(unreleated + " ");
+                            Text = text,
+                            Position = Cursor.Position,
+                            Theme = new ThingButtonTheme(new Gradient(Color.Green, Color.LimeGreen,Color.Green))
+                        };
 
 
-                        }
-                        else if (combining)
-                        {
+                        button.MouseEnter += (s, a) => actionWindow.ShowTooltip(tip,Cursor.Position + new Point(0,0));
 
-                            combined += " " + word;
-
-                        }
-                        else
-                        {
-                            if (Cursor.Position.X + word.Length > Width)
-                            {
-                                Cursor.NewLine();
-                            }
-                            Cursor.Print(word + " ");
-
-                        }
+                        Controls.Add(button);
+                        Cursor.Right(word.Length);
+                    }
+                    else if (word.Contains("<"))
+                    {
+                        string text2;
+                        text2 = word.Replace("<", "").Replace(">", "");
+                        Utility.CreateButtonThingId(Utility.SplitThingID(text2.Replace("_", " ")),this,actionWindow,true,null,true);
 
                     }
+                    else {
 
-                }
-				else if(fancy.Contains(":"))
-                {
-                    Cursor.Print(fancy);
-
-                }
-                else
-                {
-
-                    foreach (string word in words)
-                    {
-                        if (Cursor.Position.X + word.Length > Width)
+                        if (Cursor.Position.X + word.Length > Width && !word.Contains("["))
                         {
                             Cursor.NewLine();
                         }
-                        Cursor.Print(word + " ");
-                    }
-                    
+                        Cursor.Print(word.Replace("_"," ") + " ");
 
+                    }
+                
+                
+                
+                
+                
                 }
                 Cursor.NewLine();
             }
