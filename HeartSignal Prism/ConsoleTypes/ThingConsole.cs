@@ -34,7 +34,7 @@ namespace HeartSignal
                     {
                         string text;
                         text = word.Replace("+", "");
-                        string tip = text.Substring(text.IndexOf('(')+1, text.Length - (text.IndexOf('(')+3));
+                        string tip = text.Substring(text.IndexOf('(')+1, text.Length - (text.IndexOf('(')+2));
                         text =  text.Remove(text.IndexOf('('), text.Length - text.IndexOf('('));
 
                         var button = new Button(text.Length, 1)
@@ -48,7 +48,7 @@ namespace HeartSignal
                         button.MouseEnter += (s, a) => actionWindow.ShowTooltip(tip,Cursor.Position + new Point(0,0));
 
                         Controls.Add(button);
-                        Cursor.Right(word.Length);
+                        Cursor.Right(text.Length+1);
                     }
                     else if (word.Contains("<"))
                     {
