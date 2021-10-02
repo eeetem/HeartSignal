@@ -12,7 +12,7 @@ namespace HeartSignal
 {
     class ThingConsole : BaseConsole
     {
-        public ThingConsole(int width, int height) : base(width, height)
+        public ThingConsole(int width, int height) : base(width, height, true, true)
         {
 
 

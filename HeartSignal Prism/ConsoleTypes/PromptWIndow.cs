@@ -18,6 +18,7 @@ namespace HeartSignal
 
             this.Position = position;
             Cursor.DisableWordBreak = false;
+            IsVisible = false;
         }
 
 
@@ -30,7 +31,8 @@ namespace HeartSignal
 
         public void DisplayPrompt()
         {
-            needsDraw = false;
+      
+               needsDraw = false;
             this.Clear();
             Controls.Clear();
             var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.LightGray, Color.Transparent));

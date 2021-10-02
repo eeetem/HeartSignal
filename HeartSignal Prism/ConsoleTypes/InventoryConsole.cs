@@ -12,7 +12,7 @@ namespace HeartSignal
 {
     class InventoryConsole : BaseConsole
     {
-        public InventoryConsole(int width, int height) : base(width, height)
+        public InventoryConsole(int width, int height) : base(width, height,true,true)
         {
 
 

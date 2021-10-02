@@ -10,7 +10,7 @@ namespace HeartSignal
     internal class BaseConsole : SadConsole.UI.ControlsConsole
     {
 
-        public BaseConsole(int width, int height, bool border= true) : base(width, height)
+        public BaseConsole(int width, int height, bool border= true, bool actionW=false) : base(width, height)
         {
 
             // Disable the cursor since our keyboard handler will do the work.
@@ -26,10 +26,13 @@ namespace HeartSignal
             {
                 SadComponents.Add(new AnimatedBorderComponent());
             }
-            actionWindow = new ActionWindow(30, 5, new Point(0, 0));
-            Children.Add(actionWindow);
+            if (actionW) {
+                actionWindow = new ActionWindow(30, 5, new Point(0, 0));
+                Children.Add(actionWindow);
 
-            actionWindow.IsVisible = false;
+                actionWindow.IsVisible = false;
+                actionWindow.IsEnabled = false;
+                }
         }
         protected ActionWindow actionWindow;
 
@@ -49,9 +52,12 @@ namespace HeartSignal
             if (needRedraw)
             {
                 this.Clear();
-                actionWindow.Clear();
-                actionWindow.Controls.Clear();
-                actionWindow.IsVisible = false;
+                if (actionWindow != null)
+                {
+                    actionWindow.Clear();
+                    actionWindow.Controls.Clear();
+                    actionWindow.IsVisible = false;
+                }
 
                 Controls.Clear();
                 Cursor.Position = new Point(0, 0);

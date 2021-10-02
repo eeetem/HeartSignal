@@ -14,7 +14,7 @@ namespace HeartSignal
     {
 
         ///TODO: room console and thing console could be children to a singl console due to a lot of similarities
-        public RoomConsole(int width, int height) : base(width, height)
+        public RoomConsole(int width, int height) : base(width, height, true, true)
         {
 
             name = "";

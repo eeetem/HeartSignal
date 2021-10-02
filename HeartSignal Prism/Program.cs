@@ -23,6 +23,7 @@ namespace HeartSignal
         public static InventoryConsole ExamInventoryConsole;
         public static InventoryConsole GrasperConsole;
         static ThingConsole ThingConsole;
+        static BarConsole BarConsole;
         public static Console root;
         public static bool verboseDebug = false;
 
@@ -76,7 +77,8 @@ namespace HeartSignal
             GrasperConsole = new InventoryConsole(1, 1);
             GrasperConsole.tagline = "I can hold with";
             root.Children.Add(GrasperConsole);
-
+            BarConsole = new BarConsole(1, 1);
+            root.Children.Add(BarConsole);
 
 
 
@@ -120,16 +122,16 @@ namespace HeartSignal
             int MapConsoleHeight = 7;
             int inventoryWidth = 28;
             int roomConsoleWidth = (WIDTH - (inventoryWidth * 3)) / 2;
-
+            int barConsoleHeight = 5;
             int topconsolerowheight = 20;
 
 
             ///todo: replace all hardcoded coordinates with variables since a lot of them counterdepend on other console sizes
             //ScreenSurface.
             int width = WIDTH - (inventoryWidth * 2) - 2;
-            int height =HEIGHT - (topconsolerowheight + 2) - 2;
+            int height =HEIGHT - (topconsolerowheight+barConsoleHeight+4);
             MainConsole.Resize(width,height,width,height,false);
-            MainConsole.Position = new Point(inventoryWidth + 1, topconsolerowheight);
+            MainConsole.Position = new Point(inventoryWidth + 1, topconsolerowheight+barConsoleHeight);
 
             //cringus
             MainConsole.GetInputSource().Resize(width, 30, width, 30, false);//fun fact: input console is gigantic - just hidden under
@@ -141,13 +143,13 @@ namespace HeartSignal
             width = inventoryWidth / 2;
             height = MapConsoleHeight;
             MapConsole.Resize(width,height,width,height,false);
-            MapConsole.Position = new Point((WIDTH / 2) - (inventoryWidth / 2), 0);
+            MapConsole.Position = new Point((WIDTH / 2) - (inventoryWidth / 2), barConsoleHeight/2);
             MapConsole.ReDraw();
 
             width = roomConsoleWidth - 1;
             height = topconsolerowheight;
             RoomConsole.Resize(width, height,width,height,true);
-            RoomConsole.Position = new Point(inventoryWidth + 1, 0);
+            RoomConsole.Position = new Point(inventoryWidth + 1, barConsoleHeight);
             RoomConsole.ReDraw();
 
 
@@ -156,14 +158,14 @@ namespace HeartSignal
             width = roomConsoleWidth - 3;
             height = topconsolerowheight;
             ThingConsole.Resize(width, height, width, height, true);
-            ThingConsole.Position = new Point(inventoryWidth * 2 + roomConsoleWidth + 2, 0);
+            ThingConsole.Position = new Point(inventoryWidth * 2 + roomConsoleWidth + 2, barConsoleHeight);
             ThingConsole.ReDraw();
 
 
             width = inventoryWidth;
             height = HEIGHT;
             InventoryConsole.Resize(width, height, width, height, true);
-            InventoryConsole.Position = new Point(0, 0);
+            InventoryConsole.Position = new Point(0, barConsoleHeight);
             InventoryConsole.ActionOffset = new Point(10, 1);
             InventoryConsole.ReDraw();
 
@@ -171,7 +173,7 @@ namespace HeartSignal
             width = inventoryWidth;
             height = HEIGHT - (MapConsoleHeight * 2) - 1;
             ExamInventoryConsole.Resize(width, height, width, height, true);
-            ExamInventoryConsole.Position = new Point(WIDTH - inventoryWidth, (MapConsoleHeight * 2) + 1);
+            ExamInventoryConsole.Position = new Point(WIDTH - inventoryWidth, (MapConsoleHeight * 2) + 1 + barConsoleHeight);
             ExamInventoryConsole.ActionOffset = new Point(-30, 1);
             ExamInventoryConsole.ReDraw();
 
@@ -179,12 +181,15 @@ namespace HeartSignal
             width = inventoryWidth;
             height = topconsolerowheight;
             GrasperConsole.Resize(width, height, width, height, false);
-            GrasperConsole.Position = new Point(inventoryWidth + roomConsoleWidth + 1, 0);
+            GrasperConsole.Position = new Point(inventoryWidth + roomConsoleWidth + 1, barConsoleHeight);
             GrasperConsole.ActionOffset = new Point(0, 1);
             GrasperConsole.clickableFirstLayer = false;
             GrasperConsole.ReDraw();
 
-
+            width = WIDTH;
+            height = barConsoleHeight-1;
+            BarConsole.Resize(width, height, width, height, true);
+            BarConsole.ReDraw();
 
 
 
@@ -357,6 +362,13 @@ namespace HeartSignal
 
 
                         ActionWindow.argactionDatabase[returned[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+                        break;
+                    case "bars":
+                        returned = RemoveParseTag(cutstring);
+                        cutstring = returned[0];
+
+
+                        BarConsole.AddBar(returned[1],  ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));
                         break;
                     case "map":
 
@@ -569,7 +581,8 @@ namespace HeartSignal
         private static async void ServerLoop() {
 
 
-
+            ParseServerInput("bars:Corpus{\"brown:hunger:25\",\"blue:thirst:10\",\"64,64,64:testtest:35\"}");
+            ParseServerInput("bars:Psyche{\"brown:hunger:25\",\"blue:thirst:10\",\"64,64,64:testtest:35\"}");
             MainConsole.Cursor.NewLine();
 #if DEBUG
             MainConsole.ReciveExternalInput("This is a debug build of HeartSignal, report to developers if you see this message");
