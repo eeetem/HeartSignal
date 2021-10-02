@@ -59,7 +59,7 @@ namespace HeartSignal
 
                     if (a.name.Length < (glyphsPerBar - 3) / 100 * a.percentage)
                     {
-                        Surface.Print(((glyphsPerBar + 1) * index + 1) + (glyphsPerBar - 3) / 100 * percentage, y, new ColoredString(a.name, a.color, Color.Black));
+                        Surface.Print(((glyphsPerBar + 1) * index + 1) + (glyphsPerBar - 3) / 100 * percentage, 2, new ColoredString(a.name, a.color, Color.Black));
 
                     }
 
