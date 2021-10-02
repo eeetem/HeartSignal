@@ -44,7 +44,7 @@ namespace HeartSignal
             var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.Green, Color.Transparent));
             this.DrawBox(new Rectangle(0, 0, Width, Height), boxShape);
             this.Cursor.Position = new Point(1, 1);
-            string[] words = text.Split("_");
+            string[] words = text.Split(" ");
             foreach (string word in words)
             {
                 if (Cursor.Position.X + word.Length + 2 > Width)

@@ -30,6 +30,9 @@ namespace HeartSignal
         [STAThread]
         private static void Main(string[] args)
         {
+
+
+
             var SCREEN_WIDTH = (96*2)+30;
             var SCREEN_HEIGHT = 54+5;
 
