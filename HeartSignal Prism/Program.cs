@@ -353,15 +353,23 @@ namespace HeartSignal
                         returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
 
-
-                        ActionWindow.actionDatabase[returned[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+                        string[] args = returned[1].Split("-");
+                        if (!ActionWindow.actionDatabase.ContainsKey(args[0])) {
+                            ActionWindow.actionDatabase[args[0]] = new Dictionary<string, List<string>>();
+                        }
+                        
+                        ActionWindow.actionDatabase[args[0]][args[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
                         break;
                     case "argactions":
                         returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
 
-
-                        ActionWindow.argactionDatabase[returned[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+                        string[] args2 = returned[1].Split("-");
+                        if (!ActionWindow.argactionDatabase.ContainsKey(args2[0]))
+                        {
+                            ActionWindow.argactionDatabase[args2[0]] = new Dictionary<string, List<string>>();
+                        }
+                        ActionWindow.argactionDatabase[args2[0]][args2[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
                         break;
                     case "bars":
                         returned = RemoveParseTag(cutstring);
@@ -446,8 +454,8 @@ namespace HeartSignal
                     case "sound":
                         returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
-                        List<string> args = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        AudioManager.ParseRequest(returned[1], args[0], args[1]);
+                        List<string> args3 = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+                        AudioManager.ParseRequest(returned[1], args3[0], args3[1]);
 
                         break;
 
@@ -465,10 +473,10 @@ namespace HeartSignal
                         cutstring = returned[0];
 
                         PromptWindow.toptext = returned[1];
-                        List<string> args2 = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        PromptWindow.middletext = args2[0];
+                        List<string> args4 = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+                        PromptWindow.middletext = args4[0];
                         //cringe
-                        if (args2[1] == "binary") {
+                        if (args4[1] == "binary") {
 
                             PromptWindow.binary = true;
 						}
@@ -581,8 +589,6 @@ namespace HeartSignal
         private static async void ServerLoop() {
 
 
-            ParseServerInput("bars:Corpus{\"brown:hunger:25\",\"blue:thirst:10\",\"64,64,64:testtest:35\"}");
-            ParseServerInput("bars:Psyche{\"brown:hunger:25\",\"blue:thirst:10\",\"64,64,64:testtest:35\"}");
             MainConsole.Cursor.NewLine();
 #if DEBUG
             MainConsole.ReciveExternalInput("This is a debug build of HeartSignal, report to developers if you see this message");

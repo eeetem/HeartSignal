@@ -20,10 +20,10 @@ namespace HeartSignal
             this.Position = position;
 
         }
-        public static Dictionary<string, List<string>> actionDatabase = new Dictionary<string, List<string>>();
-        public static Dictionary<string, List<string>> argactionDatabase = new Dictionary<string, List<string>>();
+        public static Dictionary<string, Dictionary<string, List<string>>> actionDatabase = new Dictionary<string, Dictionary<string, List<string>>>();
+        public static Dictionary<string, Dictionary<string, List<string>>> argactionDatabase = new Dictionary<string, Dictionary<string, List<string>>>();
         static string lastitem = "";
-
+        public string selectedTab = "";
         protected override void OnMouseExit(MouseScreenObjectState state) {
             IsVisible = false;
             IsEnabled = false;
@@ -62,7 +62,7 @@ namespace HeartSignal
             //if (focusitem != null) { item = focusitem; }
             if (awaitingItemClick) { return; }
 
-            this.Resize(30, 5, 30, 5, false);
+            this.Resize(40, 5, 40, 5, false);
 
             string[] returned = Utility.SplitThingID(item);
             string thing = returned[0];
@@ -90,65 +90,78 @@ namespace HeartSignal
             Controls.Clear();
             var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.Red, Color.Transparent));
             this.DrawBox(new Rectangle(0, 0, Width, Height), boxShape);
-           this.Print(1, 0, "Actions");
-            this.Cursor.Position = new Point(1, 1);
-            foreach (string action in actionDatabase[id])
-            {
+            this.Cursor.Position = new Point(0, 0);
+            Cursor.Print("Actions").Right(1);
+            //if the action menu does not contain currently selected tab - switch to the first one
+            if (!actionDatabase[id].ContainsKey(selectedTab) && !argactionDatabase[id].ContainsKey(selectedTab))
+			{
+                var first = actionDatabase[id].First();
+                selectedTab = first.Key;
 
-                string parsedAction = action.Replace(" [name]", "").Replace("_", " ");
-                if (Cursor.Position.X + parsedAction.Length + 1 > Width)
-                {
-                    Cursor.NewLine().Right(1);
-                }
-                Point pos = this.Cursor.Position;
-                var button = new Button(parsedAction.Length, 1)
-                {
-                    Text = parsedAction,
-                    Position = pos,
-                    Theme = new ThingButtonTheme()
-                };
-                button.MouseButtonClicked += (s, a) => DoAction(id, action);
-                this.Controls.Add(button);
-                this.Cursor.Right(parsedAction.Length + 1);
 
             }
-            foreach (string action in argactionDatabase[id])
+
+
+            foreach (KeyValuePair<string, List<string>> tabs in actionDatabase[id])
             {
 
-                string parsedAction = action.Replace(" [name]", "").Replace("_"," ") + "...";
-                if (Cursor.Position.X + parsedAction.Length+1 > Width)
+                if (tabs.Key == selectedTab)
                 {
-                    Cursor.NewLine().Right(1);
+                    Surface.SetDecorator(Cursor.Position.X, Cursor.Position.Y, tabs.Key.Length, new GlyphDefinition(ICellSurface.ConnectedLineThinExtended[7], Mirror.None).CreateCellDecorator(Color.White));
+                    Cursor.Print(tabs.Key).Right(1);
+                   
+
                 }
-                Point pos = this.Cursor.Position;
-                var button = new Button(parsedAction.Length, 1)
+                else
                 {
-                    Text = parsedAction,
-                    Position = pos,
-                    Theme = new ThingButtonTheme()
-                };
-                button.MouseButtonClicked += (s, a) => DoArgAction(id, action);
-                this.Controls.Add(button);
-                this.Cursor.Right(parsedAction.Length + 1);
+                    var tab = new Button(tabs.Key.Length, 1)
+                    {
+                        Text = tabs.Key,
+                        Position = Cursor.Position,
+                        Theme = new ThingButtonTheme()
+                    };
+                    tab.MouseButtonClicked += (s, a) => selectedTab = tabs.Key;
+                    tab.MouseButtonClicked += (s, a) => DisplayActions(item, newPosition, expilcitlook);
+                    this.Controls.Add(tab);
+                    Cursor.Right(tabs.Key.Length+1);
+                }
+
 
             }
-            /*
-            var exit = new Button(1, 1)
+            //this double loop is a bit cringe
+            foreach (KeyValuePair<string, List<string>> tabs in argactionDatabase[id])
             {
-                Text = "x",
-                Position = new Point(Width-1,0),
-                Theme = new ThingButtonTheme()
-            };
-            exit.MouseButtonClicked += (s, a) => IsVisible = false;
-            exit.MouseButtonClicked += (s, a) => IsEnabled = false;
-            this.Controls.Add(exit);
-             */
+				if (actionDatabase[id].ContainsKey(tabs.Key)) { continue; }
+                if (tabs.Key == selectedTab)
+                {
+                    Surface.SetDecorator(Cursor.Position.X, Cursor.Position.Y, tabs.Key.Length, new GlyphDefinition(ICellSurface.ConnectedLineThinExtended[7], Mirror.None).CreateCellDecorator(Color.White));
+                    Cursor.Print(tabs.Key).Right(1);
+
+
+                }
+                else
+                {
+                    var tab = new Button(tabs.Key.Length, 1)
+                    {
+                        Text = tabs.Key,
+                        Position = Cursor.Position,
+                        Theme = new ThingButtonTheme()
+                    };
+                    tab.MouseButtonClicked += (s, a) => selectedTab = tabs.Key;
+                    tab.MouseButtonClicked += (s, a) => DisplayActions(item, newPosition, expilcitlook);
+                    this.Controls.Add(tab);
+                    Cursor.Right(tabs.Key.Length);
+                }
+
+
+            }
+
             if (expilcitlook)
             {
                 var look = new Button(4, 1)
                 {
                     Text = "look",
-                    Position = new Point(9, 0),
+                    Position = Cursor.Position,
                     Theme = new ThingButtonTheme()
                 };
                 look.MouseButtonClicked += (s, a) => IsVisible = false;
@@ -158,6 +171,64 @@ namespace HeartSignal
 
 
             }
+            Cursor.NewLine().Right(1);
+            if (actionDatabase[id].ContainsKey(selectedTab))
+            {
+                foreach (string action in actionDatabase[id][selectedTab])
+                {
+                    string parsedAction = action.Replace(" [name]", "").Replace("_", " ");
+                    if (Cursor.Position.X + parsedAction.Length + 1 > Width)
+                    {
+                        Cursor.NewLine().Right(1);
+                    }
+                    Point pos = this.Cursor.Position;
+                    var button = new Button(parsedAction.Length, 1)
+                    {
+                        Text = parsedAction,
+                        Position = pos,
+                        Theme = new ThingButtonTheme()
+                    };
+                    button.MouseButtonClicked += (s, a) => DoAction(id, action);
+                    this.Controls.Add(button);
+                    this.Cursor.Right(parsedAction.Length + 1);
+
+                }
+            }
+            if (argactionDatabase[id].ContainsKey(selectedTab))
+            {
+                foreach (string action in argactionDatabase[id][selectedTab])
+                {
+
+                    string parsedAction = action.Replace(" [name]", "").Replace("_", " ") + "...";
+                    if (Cursor.Position.X + parsedAction.Length + 1 > Width)
+                    {
+                        Cursor.NewLine().Right(1);
+                    }
+                    Point pos = this.Cursor.Position;
+                    var button = new Button(parsedAction.Length, 1)
+                    {
+                        Text = parsedAction,
+                        Position = pos,
+                        Theme = new ThingButtonTheme()
+                    };
+                    button.MouseButtonClicked += (s, a) => DoArgAction(id, action);
+                    this.Controls.Add(button);
+                    this.Cursor.Right(parsedAction.Length + 1);
+
+                }
+            }
+                /*
+                var exit = new Button(1, 1)
+                {
+                    Text = "x",
+                    Position = new Point(Width-1,0),
+                    Theme = new ThingButtonTheme()
+                };
+                exit.MouseButtonClicked += (s, a) => IsVisible = false;
+                exit.MouseButtonClicked += (s, a) => IsEnabled = false;
+                this.Controls.Add(exit);
+                 */
+
             
             this.IsVisible = true;
             this.IsEnabled = true;
