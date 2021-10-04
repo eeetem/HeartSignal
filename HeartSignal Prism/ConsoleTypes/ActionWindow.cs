@@ -91,7 +91,7 @@ namespace HeartSignal
             var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.Red, Color.Transparent));
             this.DrawBox(new Rectangle(0, 0, Width, Height), boxShape);
             this.Cursor.Position = new Point(0, 0);
-            Cursor.Print("Actions").Right(1);
+            Cursor.Right(1).Print("Actions").Right(1);
             //if the action menu does not contain currently selected tab - switch to the first one
             if (!actionDatabase[id].ContainsKey(selectedTab) && !argactionDatabase[id].ContainsKey(selectedTab))
 			{

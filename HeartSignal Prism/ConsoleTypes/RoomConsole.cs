@@ -142,7 +142,7 @@ namespace HeartSignal
 
                 index++;
 
-                Utility.CreateButtonThingId(thingid, this, actionWindow);
+                Utility.CreateButtonThingId(thingid, this, actionWindow,false,null,true);
                
 
                 if (index >= thingids.Count())

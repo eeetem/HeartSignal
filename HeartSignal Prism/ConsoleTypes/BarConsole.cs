@@ -21,10 +21,15 @@ namespace HeartSignal
 		}
 
 
-        Dictionary<string,List<Affliction>> Bars = new Dictionary<string,List<Affliction>>();
+      Dictionary<string,List<Affliction>> Bars = new Dictionary<string,List<Affliction>>();
 		public void AddBar(string barname, List<string> affs) {
 
             List<Affliction> afflictions = new List<Affliction>();
+            if (affs[0] == "delete") {
+
+                Bars.Remove(barname);
+                return;
+            }
             foreach (string arg in affs) {
                 string[] args = arg.Split(":");
                 if (args.Length != 3) {
