@@ -10,7 +10,7 @@ namespace HeartSignal
     internal class DisplayConsole : BaseConsole
     {
 
-        public DisplayConsole(int width, int height, bool border= true, bool actionW=false) : base(width, height)
+        public DisplayConsole(int width, int height) : base(width, height,true,true)
         {
 
             // Disable the cursor since our keyboard handler will do the work.

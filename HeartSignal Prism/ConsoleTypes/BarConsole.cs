@@ -34,6 +34,7 @@ namespace HeartSignal
                 string[] args = arg.Split(":");
                 if (args.Length != 3) {
                     Program.MainConsole.DrawMessage("incorrect arguments were passed into the bar console - please inform the developers");
+                    Program.MainConsole.DrawMessage(arg);
                     continue;
 
                 }
@@ -43,10 +44,14 @@ namespace HeartSignal
 
             }
             Bars[barname] = afflictions;
-            ReDraw();
+
         }
- 
-        protected override void  DrawConsole() {
+	/*	public override void Update(TimeSpan delta)
+		{
+			base.base.Update(delta);
+            
+		}*/
+		protected override void  DrawConsole() {
             if (Bars.Count == 0) return;
            int glyphsPerBar = Width / Bars.Count;
 
@@ -61,6 +66,7 @@ namespace HeartSignal
 
                     param = ShapeParameters.CreateStyledBoxFilled(ICellSurface.ConnectedLineThick, new ColoredGlyph(a.color, a.color), new ColoredGlyph(a.color, a.color));
                     Surface.DrawBox(new Rectangle(((glyphsPerBar + 1) * index + 1)+ (glyphsPerBar - 3) / 100 * percentage, 1, (glyphsPerBar - 3)/100*a.percentage, 2), param);
+                    
 
                     if (a.name.Length < (glyphsPerBar - 3) / 100 * a.percentage)
                     {
