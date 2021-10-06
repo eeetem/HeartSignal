@@ -74,14 +74,14 @@ namespace HeartSignal
             int index = 0;
 
             foreach (KeyValuePair<string, List<Affliction>> Bar in Bars) {
-                ShapeParameters param = ShapeParameters.CreateStyledBoxFilled(ICellSurface.ConnectedLineThick,new ColoredGlyph(Color.Green, Color.Green), new ColoredGlyph(Color.Green, Color.Green));
-                Surface.DrawBox(new Rectangle((glyphsPerBar + 1) * index+1, 1, glyphsPerBar -3, 2), param);
+                ShapeParameters shape = ShapeParameters.CreateBorder(new ColoredGlyph(Color.Green, Color.Black,176));
+                Surface.DrawBox(new Rectangle((glyphsPerBar + 1) * index+1, 1, glyphsPerBar -3, 2), shape);
                 Surface.Print((glyphsPerBar + 1) * index + 1, 0, Bar.Key);
                 int percentage = 0;
                 foreach (Affliction a in Bar.Value) {
 
-                    param = ShapeParameters.CreateStyledBoxFilled(ICellSurface.ConnectedLineThick, new ColoredGlyph(a.color.Lerp(counter), a.color.Lerp(counter)), new ColoredGlyph(a.color.Lerp(counter), a.color.Lerp(counter)));
-                    Surface.DrawBox(new Rectangle(((glyphsPerBar + 1) * index + 1)+ (glyphsPerBar - 3) / 100 * percentage, 1, (glyphsPerBar - 3)/100*a.percentage, 2), param);
+                    shape = ShapeParameters.CreateStyledBoxFilled(ICellSurface.ConnectedLineThick, new ColoredGlyph(a.color.Lerp(counter), a.color.Lerp(counter)), new ColoredGlyph(a.color.Lerp(counter), a.color.Lerp(counter)));
+                    Surface.DrawBox(new Rectangle(((glyphsPerBar + 1) * index + 1)+ (glyphsPerBar - 3) / 100 * percentage, 1, (glyphsPerBar - 3)/100*a.percentage, 2), shape);
                     
 
                     if (a.name.Length < (glyphsPerBar - 3) / 100 * a.percentage)

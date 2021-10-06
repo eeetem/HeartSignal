@@ -553,7 +553,7 @@ namespace HeartSignal
 
         private static async void ServerLoop() {
 
-
+        SplitInput("bars: Corpus{\"brown.red.brown:hunger:25\",\"blue:thirst:10\",\"64,64,64.123,123,123.64,64,64:testtest:35\"}");
             MainConsole.Cursor.NewLine();
 #if DEBUG
             MainConsole.ReciveExternalInput("This is a debug build of HeartSignal, report to developers if you see this message");
