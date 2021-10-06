@@ -27,6 +27,7 @@ namespace HeartSignal
         protected override void OnMouseExit(MouseScreenObjectState state) {
             IsVisible = false;
             IsEnabled = false;
+            lastitem = "";
         
         
         }
@@ -309,12 +310,12 @@ namespace HeartSignal
             exit.MouseButtonClicked += (s, a) => IsVisible = false;
             exit.MouseButtonClicked += (s, a) => IsEnabled = false;
             this.Controls.Add(exit);
-
+            */
 
             this.IsVisible = true;
             this.IsEnabled = true;
 
-            */
+            
 
         }
 

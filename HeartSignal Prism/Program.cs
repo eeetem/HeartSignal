@@ -66,6 +66,7 @@ namespace HeartSignal
             RoomConsole = new DisplayConsole(1, 1);
             root.Children.Add(RoomConsole);
             ThingConsole = new DisplayConsole(1,1);
+            ThingConsole.ExplicitLook = true;
             root.Children.Add(ThingConsole);
             InventoryConsole = new InventoryConsole(1,1);
             InventoryConsole.tagline = "My Body";

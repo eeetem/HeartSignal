@@ -16,7 +16,7 @@ namespace HeartSignal
             // Disable the cursor since our keyboard handler will do the work.
          
         }
-
+        public bool ExplicitLook = false;
         public List<string> lines = new List<string>();
         protected override void DrawConsole()
         {
@@ -57,7 +57,7 @@ namespace HeartSignal
                         }
                         text2 = text2.Remove(text2.IndexOf('>'), text2.Length - text2.IndexOf('>'));
                         text2 = text2.Replace("<", "").Replace(">", "");
-                        Utility.CreateButtonThingId(Utility.SplitThingID(text2.Replace("_", " ")), this, actionWindow, true, null, true);
+                        Utility.CreateButtonThingId(Utility.SplitThingID(text2.Replace("_", " ")), this, actionWindow, ExplicitLook, null, true);
                         Cursor.Print(leftover).Right(1);
 
                     }
