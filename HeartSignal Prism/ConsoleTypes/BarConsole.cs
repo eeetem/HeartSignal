@@ -16,9 +16,9 @@ namespace HeartSignal
 		{
 
 
+            SadComponents.Add(new AnimatedBorderComponent());
 
-
-		}
+        }
 
 
       Dictionary<string,List<Affliction>> Bars = new Dictionary<string,List<Affliction>>();

@@ -123,12 +123,10 @@ namespace HeartSignal
             int MapConsoleHeight = 7;
             int inventoryWidth = 28;
             int roomConsoleWidth = (WIDTH - (inventoryWidth * 3)) / 2;
-            int barConsoleHeight = 5;
+            int barConsoleHeight = 6;//ONLY EVEN due to map console size increase
             int topconsolerowheight = 20;
 
 
-            ///todo: replace all hardcoded coordinates with variables since a lot of them counterdepend on other console sizes
-            //ScreenSurface.
             int width = WIDTH - (inventoryWidth * 2) - 2;
             int height =HEIGHT - (topconsolerowheight+barConsoleHeight+4);
             MainConsole.Resize(width,height,width,height,false);
@@ -144,7 +142,7 @@ namespace HeartSignal
             width = inventoryWidth / 2;
             height = MapConsoleHeight;
             MapConsole.Resize(width,height,width,height,false);
-            MapConsole.Position = new Point((WIDTH / 2) - (inventoryWidth / 2), barConsoleHeight/2);
+            MapConsole.Position = new Point((WIDTH / 2) - (inventoryWidth / 2), (barConsoleHeight)/2);//dunno why +1 is here, it works, dont care
             MapConsole.ReDraw();
 
             width = roomConsoleWidth - 1;
