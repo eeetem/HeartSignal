@@ -16,13 +16,13 @@ namespace HeartSignal
     static class Program
     {
         public static ClassicConsole MainConsole;
-        public static RoomConsole RoomConsole;
+        public static DisplayConsole RoomConsole;
+        static DisplayConsole ThingConsole;
         static MapConsole MapConsole;
         static PromptWindow PromptWindow;
         public static InventoryConsole InventoryConsole;
         public static InventoryConsole ExamInventoryConsole;
         public static InventoryConsole GrasperConsole;
-        static ThingConsole ThingConsole;
         static BarConsole BarConsole;
         public static Console root;
         public static bool verboseDebug = false;
@@ -63,9 +63,9 @@ namespace HeartSignal
             root.Children.Add(MainConsole);
             MapConsole = new MapConsole(1, 1);
             root.Children.Add(MapConsole);
-            RoomConsole = new RoomConsole(1, 1);
+            RoomConsole = new DisplayConsole(1, 1);
             root.Children.Add(RoomConsole);
-            ThingConsole = new ThingConsole(1,1);
+            ThingConsole = new DisplayConsole(1,1);
             root.Children.Add(ThingConsole);
             InventoryConsole = new InventoryConsole(1,1);
             InventoryConsole.tagline = "My Body";
@@ -301,54 +301,19 @@ namespace HeartSignal
 
                     ///a lot of parse repeating - turn this into a function at some point - me from the future: turned some bits into functions however there is still shitload of repeating, needs quite a big refactor
                     case "desc":
-
                         returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
-
-
-
 
                         ThingConsole.lines = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
                         ThingConsole.ReDraw();
                         break;
                     case "room":
-
                         returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
 
-                        RoomConsole.SetName(returned[1]);
-
-
-                        RoomConsole.roomInfo = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+                        RoomConsole.lines = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
                         RoomConsole.ReDraw();
                         break;
-                    case "fancy":
-
-                        returned = RemoveParseTag(cutstring);
-                        cutstring = returned[0];
-
-                        RoomConsole.fancyInfo = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        RoomConsole.ReDraw();
-                        break;
-                    case "things":
-
-                        returned = RemoveParseTag(cutstring);
-                        cutstring = returned[0];
-
-
-                        RoomConsole.thingInfo = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        RoomConsole.ReDraw();
-                        break;
-                    case "bodies":
-
-                        returned = RemoveParseTag(cutstring);
-                        cutstring = returned[0];
-
-                        RoomConsole.bodyInfo = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        RoomConsole.ReDraw();
-                        break;
-
-
                     case "actions":
                         returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
