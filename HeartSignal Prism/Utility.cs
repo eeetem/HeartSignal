@@ -92,11 +92,26 @@ namespace HeartSignal
             {
                 console.Cursor.NewLine().Right(1);
             }
-            if (!ActionWindow.actionDatabase.ContainsKey(thingid[1]))
+
+            if (multiple)
             {
+                foreach (string id in sameThingsIDs)
+                {
+                    if (!ActionWindow.actionDatabase.ContainsKey(id)){
+
+                        InitThingId(id);
+
+                    }
+
+                }
+
+
+            } else if(!ActionWindow.actionDatabase.ContainsKey(thingid[1]))
+            {
+
                 InitThingId(thingid[1]);
             }
-            Point pos = console.Cursor.Position;
+			Point pos = console.Cursor.Position;
             if (clampactionwindow)
             {
                 pos = new Point(Math.Clamp(pos.X + Offset.X,0,console.Width), pos.Y + Offset.Y);
