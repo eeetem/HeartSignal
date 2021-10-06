@@ -189,7 +189,6 @@ namespace HeartSignal
             width = WIDTH;
             height = barConsoleHeight-1;
             BarConsole.Resize(width, height, width, height, true);
-            BarConsole.ReDraw();
 
 
 

@@ -10,7 +10,7 @@ using System.Collections;
 
 namespace HeartSignal
 {
-	class BarConsole : BaseConsole
+	class BarConsole : Console
 	{
 		public BarConsole(int width, int height) : base(width, height)
 		{
@@ -39,20 +39,36 @@ namespace HeartSignal
 
                 }
                 bool keep = false;
-                Color c = Color.White.FromParser(args[0], out keep, out keep, out keep, out keep, out keep);
-                afflictions.Add(new Affliction(c, args[1], Int32.Parse(args[2])));
+                string[] colors = args[0].Split(".");
+                Color[] Colors = new Color[colors.Length];
+                int index=0;
+                foreach (string color in colors) {
+
+                    Colors[index] = Color.White.FromParser(color, out keep, out keep, out keep, out keep, out keep);
+                    index++;
+                }
+                
+                afflictions.Add(new Affliction(new Gradient(Colors), args[1], Int32.Parse(args[2])));
 
             }
             Bars[barname] = afflictions;
 
         }
-	/*	public override void Update(TimeSpan delta)
+        float counter = 0;
+	    public override void Update(TimeSpan delta)
 		{
-			base.base.Update(delta);
+			base.Update(delta);
+            DrawConsole(delta);
             
-		}*/
-		protected override void  DrawConsole() {
+		}
+		protected void  DrawConsole(TimeSpan delta) {
             if (Bars.Count == 0) return;
+
+            counter += (float)delta.TotalSeconds/2 * AnimatedBorderComponent.speed;
+            if (counter > 1) {
+                counter = 0;
+            
+            }
            int glyphsPerBar = Width / Bars.Count;
 
             int index = 0;
@@ -64,13 +80,13 @@ namespace HeartSignal
                 int percentage = 0;
                 foreach (Affliction a in Bar.Value) {
 
-                    param = ShapeParameters.CreateStyledBoxFilled(ICellSurface.ConnectedLineThick, new ColoredGlyph(a.color, a.color), new ColoredGlyph(a.color, a.color));
+                    param = ShapeParameters.CreateStyledBoxFilled(ICellSurface.ConnectedLineThick, new ColoredGlyph(a.color.Lerp(counter), a.color.Lerp(counter)), new ColoredGlyph(a.color.Lerp(counter), a.color.Lerp(counter)));
                     Surface.DrawBox(new Rectangle(((glyphsPerBar + 1) * index + 1)+ (glyphsPerBar - 3) / 100 * percentage, 1, (glyphsPerBar - 3)/100*a.percentage, 2), param);
                     
 
                     if (a.name.Length < (glyphsPerBar - 3) / 100 * a.percentage)
                     {
-                        Surface.Print(((glyphsPerBar + 1) * index + 1) + (glyphsPerBar - 3) / 100 * percentage, 2, new ColoredString(a.name, a.color, Color.Black));
+                        Surface.Print(((glyphsPerBar + 1) * index + 1) + (glyphsPerBar - 3) / 100 * percentage, 2, new ColoredString(a.name, a.color.Lerp(counter), Color.Black));
 
                     }
 
@@ -87,7 +103,7 @@ namespace HeartSignal
 
     public struct Affliction
     {
-        public Affliction(Color c,string n, int p)
+        public Affliction(Gradient c,string n, int p)
         {
 
             color = c;
@@ -97,7 +113,7 @@ namespace HeartSignal
             
 
         }
-        public Color color;
+        public Gradient color;
         public string name;
         public int percentage;
   
