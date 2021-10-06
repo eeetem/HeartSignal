@@ -64,7 +64,7 @@ namespace HeartSignal
 		protected void  DrawConsole(TimeSpan delta) {
             if (Bars.Count == 0) return;
 
-            counter += (float)delta.TotalSeconds/2 * AnimatedBorderComponent.speed;
+            counter += (float)delta.TotalSeconds/4 * AnimatedBorderComponent.speed;
             if (counter > 1) {
                 counter = 0;
             
