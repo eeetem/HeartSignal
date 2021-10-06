@@ -246,6 +246,10 @@ namespace HeartSignal
 
                 Position = (Point)newPosition;
             }
+            foreach (string id in IDs) {
+
+                GetDesc(id);
+            }
             this.Clear();
             Controls.Clear();
             var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.Red, Color.Transparent));
