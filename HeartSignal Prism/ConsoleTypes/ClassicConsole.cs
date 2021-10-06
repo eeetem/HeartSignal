@@ -16,7 +16,6 @@ namespace HeartSignal
 
 
 
-            // Startup description
             ClearText();
 
            // Disable the cursor since our keyboard handler will do the work.

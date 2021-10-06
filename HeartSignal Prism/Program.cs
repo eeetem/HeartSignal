@@ -424,11 +424,13 @@ namespace HeartSignal
 
                         break;
 
-                    case "recolor":
+                    case "border":
                         cutstring = cutstring.Remove(0, cutstring.IndexOf(":")+1);
+                        string[] settings = cutstring.Split("-");
                        
                         bool keep = false;
-                        AnimatedBorderComponent._borderCellStyle = new ColoredGlyph(Color.White.FromParser(cutstring,out keep, out keep, out keep, out keep, out keep), Color.Black);
+                        AnimatedBorderComponent._borderCellStyle = new ColoredGlyph(Color.White.FromParser(settings[0], out keep, out keep, out keep, out keep, out keep), Color.Black);
+                        AnimatedBorderComponent.speed = float.Parse(settings[1]);
 
 
                         break;

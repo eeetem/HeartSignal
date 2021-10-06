@@ -18,6 +18,7 @@ new int[] {177,177,177,177,177,177,177,177,177,177,177,177,177,},
 new int[] { 178, 178, 178, 178, 178, 178, 178, 178, 178, 178, 178, 178, 178, },
 new int[] {177,177,177,177,177,177,177,177,177,177,177,177,177,},
 };
+        public static float speed = 1f;
 
         public bool IsUpdate => false;
 
@@ -72,7 +73,7 @@ new int[] {177,177,177,177,177,177,177,177,177,177,177,177,177,},
             _borderConsole.Resize(con.Width + 2, con.Height + 2, con.Width + 2, con.Height + 2, true);///this might cause performance issues
             if (_borderConsole != null)
             {
-                counter += delta.TotalSeconds/2;
+                counter += (delta.TotalSeconds/2)*speed;
                 if (counter > 4) { counter = 0; }
                 _borderConsole.DrawBox(new Rectangle(0, 0, _borderConsole.Width, _borderConsole.Height), _borderCellStyle, null, _borderGlyphs[(int)counter]);
             }
