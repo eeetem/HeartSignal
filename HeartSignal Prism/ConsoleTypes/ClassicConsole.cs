@@ -64,6 +64,11 @@ namespace HeartSignal
             return inputToReturn;
         }
         public void ReciveExternalInput(string value) {
+
+            if (value.Contains("[clear]"){
+                ClearText();
+                return;
+            }
             DrawMessage(value);
            // DrawMessage("[c:ga f:black:red:white:5:b:red:orange:yellow:green:blue:purple:blue:green:yellow:orange:red:200]Wow, a strip of human meat![c:u]");
 
@@ -71,7 +76,7 @@ namespace HeartSignal
 
 
         }
-        public void DrawMessage(string value) {
+        private void DrawMessage(string value) {
             Cursor.Print(value).NewLine();
             if (!Program.verboseDebug) //if verbose debug is not set then all other prints would be disbaled so do a debug print here
             {
