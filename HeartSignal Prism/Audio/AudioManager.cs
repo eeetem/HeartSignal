@@ -84,7 +84,6 @@ namespace HeartSignal
 					if (Sounds.ContainsKey(ID))
 					{
 						Sounds[ID].Stop();
-						//Sounds[ID]
 						Sounds[ID].Dispose();
 						Sounds.Remove(ID);
 
@@ -175,7 +174,16 @@ namespace HeartSignal
 		}
 		static Dictionary<string, SoundEffectInstance> Sounds = new Dictionary<string, SoundEffectInstance>();
 
+		public static void StopAllSounds() {
 
+			foreach (KeyValuePair<string, SoundEffectInstance> sound in Sounds) {
+
+				ParseRequest(sound.Key, "stop",null);
+			
+			}
+		
+		
+		}
 		private static void playSound(string id, string path,bool loop =false)
 		{
 			try

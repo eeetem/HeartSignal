@@ -24,6 +24,7 @@ namespace HeartSignal
         }
         bool holding;
 
+        
         public override void ProcessMouse(IScreenObject host, MouseScreenObjectState state, out bool handled)
         {
             handled = false;
@@ -31,6 +32,13 @@ namespace HeartSignal
             {
  
                 return;
+            }
+            //should be specific to map only but since it's the only thing using mouse i'll leave it here for now
+            if (state.Mouse.RightButtonDown)
+            {
+                AudioManager.StopAllSounds();
+
+
             }
             if (state.Mouse.LeftButtonDown && !holding)
             {
