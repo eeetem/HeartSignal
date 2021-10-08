@@ -57,7 +57,7 @@ namespace HeartSignal
         {
             
 
-            Counter += (float)timeElapsed * (float)Speed * 0.8f;
+            Counter += (float)timeElapsed * AnimatedBorderComponent.speed * 0.8f;
             if (Counter > 1)
             {
 
