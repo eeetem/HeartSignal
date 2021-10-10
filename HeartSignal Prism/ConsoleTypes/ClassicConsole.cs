@@ -65,7 +65,7 @@ namespace HeartSignal
         }
         public void ReciveExternalInput(string value) {
 
-            if (value.Contains("[clear]"){
+            if (value.Contains("[clear]")){
                 ClearText();
                 return;
             }

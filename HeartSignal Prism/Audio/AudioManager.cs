@@ -223,10 +223,10 @@ namespace HeartSignal
 			catch (Exception e) {
 
 				System.Console.WriteLine("audio error:" + e);
-				Program.MainConsole.DrawMessage("An error has occured trying to play audio file: " + path);
-				Program.MainConsole.DrawMessage("clearing audio cache may fix this - if the problem persists please inform the developers");
+				Program.MainConsole.ReciveExternalInput("An error has occured trying to play audio file: " + path);
+				Program.MainConsole.ReciveExternalInput("clearing audio cache may fix this - if the problem persists please inform the developers");
 #if DEBUG
-				Program.MainConsole.DrawMessage("the exception has been printed into dev console.");
+				Program.MainConsole.ReciveExternalInput("the exception has been printed into dev console.");
 #endif
 
 			}

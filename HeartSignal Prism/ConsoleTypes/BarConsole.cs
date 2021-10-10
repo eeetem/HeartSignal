@@ -33,8 +33,8 @@ namespace HeartSignal
             foreach (string arg in affs) {
                 string[] args = arg.Split(":");
                 if (args.Length != 3) {
-                    Program.MainConsole.DrawMessage("incorrect arguments were passed into the bar console - please inform the developers");
-                    Program.MainConsole.DrawMessage(arg);
+                    Program.MainConsole.ReciveExternalInput("incorrect arguments were passed into the bar console - please inform the developers");
+                    Program.MainConsole.ReciveExternalInput(arg);
                     continue;
 
                 }
