@@ -295,7 +295,7 @@ namespace HeartSignal
 
                 int foo = i - 1;
                 button.MouseEnter += (s, a) => DisplayActions(name + "(" + IDs[foo] + ")", null);
-                button.Click += (s, a) => ClickItem(IDs[foo]);
+               // button.Click += (s, a) => ClickItem(IDs[foo]);
                 this.Controls.Add(button);
                 this.Cursor.Right(buttontext.Length + 1);
 
@@ -339,7 +339,7 @@ namespace HeartSignal
         }
 
 
-        public void ClickItem(string item)
+        public void ClickItem(string item, ControlBase.ControlMouseState mouse)
         {
 
 
@@ -349,6 +349,16 @@ namespace HeartSignal
                 awaitingItemClick = false;
              
                 return;
+            }
+            
+            if (mouse.OriginalMouseState.Mouse.LeftButtonDown) {
+
+                Program.SendNetworkMessage("lmb " + item);
+            }
+            if (mouse.OriginalMouseState.Mouse.RightButtonDown)
+            {
+                Program.SendNetworkMessage("rmb " + item);
+
             }
         }
 

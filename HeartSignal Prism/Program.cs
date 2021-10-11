@@ -556,7 +556,7 @@ namespace HeartSignal
         private static async void ServerLoop() {
 
             MainConsole.Cursor.NewLine();
-            MainConsole.ReciveExternalInput("[c:glyph red-green-h:green-red-H:blue-pink-#]a[c:glyph red-green-E:green-red-e]a[c:glyph red-green-L:green-red-l:orange-blue-&]a[c:glyph red-green-L:green-red-L]a[c:glyph red-green-O:green-red-o]a");
+           
 #if DEBUG
             MainConsole.ReciveExternalInput("This is a debug build of HeartSignal, report to developers if you see this message");
             string ans = await MainConsole.AskForInput("Do you want verbose logging?(y/n)");

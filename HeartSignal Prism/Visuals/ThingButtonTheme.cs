@@ -21,15 +21,16 @@ namespace HeartSignal
             {
                 this.grad = grad;
             }
+           else
+            {
+                this.grad = new Gradient(Color.Red, Color.Pink, Color.Red);
+            }
         }
         public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
             if (!(control is Button button)) return;
             if (!button.IsDirty) return;
-            if (grad == null) 
-            {
-            grad = new Gradient(Color.Red, Color.Pink,Color.Red);
-            }
+
             RefreshTheme(control.FindThemeColors(), control);
             ColoredGlyph appearance;
 

@@ -136,7 +136,7 @@ namespace HeartSignal
 
 
                 button.MouseEnter += (s, a) => ac.DisplayActions(thingid[0] + "(" + thingid[1] + ")", pos, explicitlook);
-                button.Click += (s, a) => ac.ClickItem(thingid[1]);
+                button.MouseButtonClicked += (s, a) => ac.ClickItem(thingid[1],a);
                 console.Controls.Add(button);
                 console.Cursor.Right(thingid[0].Length);
             }
@@ -151,6 +151,7 @@ namespace HeartSignal
                 };
 
                 button.MouseEnter += (s, a) => ac.DisplayMultiItem(thingid[0], pos, sameThingsIDs);
+
                 // button.Click += (s, a) => actionWindow.SetFocus(thing.Key);
                 console.Controls.Add(button);
                 console.Cursor.Right(thingid[0].Length);

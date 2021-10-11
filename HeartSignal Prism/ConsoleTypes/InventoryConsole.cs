@@ -31,6 +31,9 @@ namespace HeartSignal
 
         protected override void DrawConsole()
         {
+            if (tagline.Length < 1) {
+                tagline = "Me";
+               }
 
 
             if (self) {
