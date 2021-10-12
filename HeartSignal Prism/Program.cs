@@ -247,10 +247,10 @@ namespace HeartSignal
 
 
             int idx = input.IndexOf(Environment.NewLine);
-            if (idx < 1) {
+  //          if (idx < 1) {
 
 
-                idx = input.IndexOf('\n');
+         //       idx = input.IndexOf('\n');
 
                 if (idx < 1)
                 {
@@ -262,7 +262,7 @@ namespace HeartSignal
 
                 }
 
-            }
+           // }
             if (idx > 0)
             {
                 ParseServerInput(input.Substring(0,idx));
