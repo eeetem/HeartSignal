@@ -20,6 +20,10 @@ namespace HeartSignal
 		
 		public static void ParseRequest(string ID, string request, string param)
 		{
+			if (ID == null) {
+
+			 ID = 	new Random().Next(0, 1000).ToString();//this isnt gonna happend often so i dont want to store a random in memory
+			}
 
 			switch (request)
 			{

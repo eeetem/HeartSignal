@@ -35,6 +35,7 @@ namespace HeartSignal
         //a lot fo reapeating code in here, integrate this better at some point
         public void ShowTooltip(string text, Point? newPosition = null) {
             this.Resize(40, 12, 40, 12, false);
+            AudioManager.ParseRequest(null, "play", "misc/tooltip.ogg");
             if (newPosition != null)
             {
 
