@@ -46,13 +46,15 @@ namespace HeartSignal
             this.DrawBox(new Rectangle(0, 0, Width, Height), boxShape);
             this.Cursor.Position = new Point(1, 1);
             string[] words = text.Split(" ");
-            foreach (string word in words)
+            foreach (string w in words)
             {
-                if (Cursor.Position.X + word.Length + 2 > Width || word.Contains("\\n"))
+                string Word = w;
+                if (Cursor.Position.X + Word.Length + 2 > Width || Word.Contains("[newline]"))
                 {
+                    Word = Word.Replace("[newline]", "");//server - client boogaloo character escape inception
                     Cursor.NewLine().Right(1);
                 }
-                Cursor.Print(word).Right(1);
+                Cursor.Print(Word).Right(1);
             }
 
             this.IsVisible = true;
