@@ -48,7 +48,7 @@ namespace HeartSignal
             string[] words = text.Split(" ");
             foreach (string word in words)
             {
-                if (Cursor.Position.X + word.Length + 2 > Width)
+                if (Cursor.Position.X + word.Length + 2 > Width || word.Contains("\\n"))
                 {
                     Cursor.NewLine().Right(1);
                 }
