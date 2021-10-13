@@ -355,10 +355,10 @@ namespace HeartSignal
             }
             
             if (mouse.OriginalMouseState.Mouse.LeftClicked) {
-                if (KeyboardInfo.IsKeyDown(Keys.LeftShift)){
+                if (Game.Instance.Keyboard.IsKeyDown(Keys.LeftShift)){
                     Program.SendNetworkMessage("lmbshift " + item);
 
-                } else if (KeyboardInfo.IsKeyDown(Keys.LeftControl)){
+                } else if (Game.Instance.Keyboard.IsKeyDown(Keys.LeftControl)){
                     Program.SendNetworkMessage("lmbctrl " + item);
                 } 
                 else {
@@ -367,12 +367,12 @@ namespace HeartSignal
             }
             if (mouse.OriginalMouseState.Mouse.RightClicked)
             {
-                if (KeyboardInfo.IsKeyDown(Keys.LeftShift))
+                if (Game.Instance.Keyboard.IsKeyDown(Keys.LeftShift))
                 {
                     Program.SendNetworkMessage("rmbshift " + item);
 
                 }
-                else if (KeyboardInfo.IsKeyDown(Keys.LeftControl))
+                else if (Game.Instance.Keyboard.IsKeyDown(Keys.LeftControl))
                 {
                     Program.SendNetworkMessage("rmbctrl " + item);
                 }
@@ -389,13 +389,7 @@ namespace HeartSignal
             Program.SendNetworkMessage("look " + id);
 
         }
-        Keyboard KeyboardInfo;
-        public override bool ProcessKeyboard(Keyboard info)
-        {
 
-            this.KeyboardInfo = info;
-            return true;
-        }
 
     }
 }
