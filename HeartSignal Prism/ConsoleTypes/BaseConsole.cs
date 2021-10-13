@@ -72,17 +72,6 @@ namespace HeartSignal
         }
        
 
-        ///every console will run this - which isnt great but better than adding a keyboard component to every console
-        ///implement a static keyboard manager at some point
-        Keyboard KeyboardInfo;
-        public override bool ProcessKeyboard(Keyboard info)
-        {
-
-            this.KeyboardInfo = info;
-            return true; 
-        }
-
-
 
         }
 }

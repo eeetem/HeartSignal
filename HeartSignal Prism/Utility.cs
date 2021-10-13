@@ -136,6 +136,8 @@ namespace HeartSignal
 
 
                 button.MouseEnter += (s, a) => ac.DisplayActions(thingid[0] + "(" + thingid[1] + ")", pos, explicitlook);
+                button.MouseMove += (s, a) => (button.Theme as ThingButtonTheme).AdjustColor();
+                button.MouseExit += (s, a) => (button.Theme as ThingButtonTheme).DefaultColor();
                 button.MouseButtonClicked += (s, a) => ac.ClickItem(thingid[1],a);
                 console.Controls.Add(button);
                 console.Cursor.Right(thingid[0].Length);

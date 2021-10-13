@@ -6,6 +6,7 @@ using Console = SadConsole.Console;
 using SadRogue.Primitives;
 using SadConsole.UI.Controls;
 using SadConsole.UI.Themes;
+using SadConsole.Input;
 
 namespace HeartSignal
 {
@@ -14,6 +15,7 @@ namespace HeartSignal
 
         Gradient grad;
         float gradientCounter;
+        Color textcolor;
 
         public ThingButtonTheme(Gradient grad = null) : base() {
 
@@ -25,6 +27,7 @@ namespace HeartSignal
             {
                 this.grad = new Gradient(Color.Red, Color.Pink, Color.Red);
             }
+            textcolor = Color.White;
         }
         public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
@@ -53,6 +56,7 @@ namespace HeartSignal
             button.Surface.Fill(appearance.Foreground, appearance.Background,
                                 appearance.Glyph, Mirror.None);
 
+            appearance.Foreground = textcolor;
             button.Surface.Print(0, middle, button.Text.Align(button.TextAlignment, button.Width), appearance);
 
            
@@ -63,6 +67,31 @@ namespace HeartSignal
 
                button.IsDirty = true;
         }
+        public void AdjustColor() {
+
+            if (Game.Instance.Keyboard.IsKeyDown(Keys.LeftShift))
+            {
+
+                textcolor = Color.Red;
+            }
+            else if (Game.Instance.Keyboard.IsKeyDown(Keys.LeftControl))
+            {
+
+                textcolor = Color.Blue;
+            }
+            else {
+
+                textcolor = Color.White;
+            }
         
+        }
+        public void DefaultColor()
+        {
+            textcolor = Color.White;
+
+
+        }
+
+
     }
 }
