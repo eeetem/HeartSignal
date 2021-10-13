@@ -354,13 +354,32 @@ namespace HeartSignal
                 return;
             }
             
-            if (mouse.OriginalMouseState.Mouse.LeftButtonDown) {
+            if (mouse.OriginalMouseState.Mouse.LeftClicked) {
+                if (KeyboardInfo.IsKeyDown(Keys.LeftShift)){
+                    Program.SendNetworkMessage("lmbshift " + item);
 
-                Program.SendNetworkMessage("lmb " + item);
+                } else if (KeyboardInfo.IsKeyDown(Keys.LeftControl)){
+                    Program.SendNetworkMessage("lmbctrl " + item);
+                } 
+                else {
+                    Program.SendNetworkMessage("lmb " + item);
+                }
             }
-            if (mouse.OriginalMouseState.Mouse.RightButtonDown)
+            if (mouse.OriginalMouseState.Mouse.RightClicked)
             {
-                Program.SendNetworkMessage("rmb " + item);
+                if (KeyboardInfo.IsKeyDown(Keys.LeftShift))
+                {
+                    Program.SendNetworkMessage("rmbshift " + item);
+
+                }
+                else if (KeyboardInfo.IsKeyDown(Keys.LeftControl))
+                {
+                    Program.SendNetworkMessage("rmbctrl " + item);
+                }
+                else
+                {
+                    Program.SendNetworkMessage("rmb " + item);
+                }
 
             }
         }
@@ -369,6 +388,13 @@ namespace HeartSignal
         {
             Program.SendNetworkMessage("look " + id);
 
+        }
+        Keyboard KeyboardInfo;
+        public override bool ProcessKeyboard(Keyboard info)
+        {
+
+            this.KeyboardInfo = info;
+            return true;
         }
 
     }
