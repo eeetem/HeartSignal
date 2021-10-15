@@ -126,12 +126,19 @@ namespace HeartSignal
             }
             if (!multiple)
             {
-
-                var button = new Button(thingid[0].Length, 1)
+                string realtext = thingid[0];//just used for lenght
+                bool forceApearance = true;
+                if (thingid[0].Contains("]"))
+                {
+                   realtext = thingid[0].Substring(thingid[0].IndexOf("]")+1, thingid[0].LastIndexOf("[") - thingid[0].IndexOf("]"));
+                    forceApearance = false;
+                   
+                }
+                var button = new Button(realtext.Length, 1)
                 {
                     Text = thingid[0],
                     Position = console.Cursor.Position,
-                    Theme = new ThingButtonTheme()
+                    Theme = new ThingButtonTheme(null, forceApearance)
                 };
 
 
@@ -140,7 +147,7 @@ namespace HeartSignal
                 button.MouseExit += (s, a) => (button.Theme as ThingButtonTheme).DefaultColor();
                 button.MouseButtonClicked += (s, a) => ac.ClickItem(thingid[1],a);
                 console.Controls.Add(button);
-                console.Cursor.Right(thingid[0].Length);
+                console.Cursor.Right(realtext.Length);
             }
             else
             {

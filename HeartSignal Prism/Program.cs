@@ -556,7 +556,7 @@ namespace HeartSignal
         private static async void ServerLoop() {
 
             MainConsole.Cursor.NewLine();
-           
+//SplitInput("room:{ \"\", \"Wow.\", \" <[c:ga_f:128,0,0:200,128,0:128,128,0:0,128,0:0,0,128:128,0,128:0,0,128:0,128,0:128,128,0:200,128,0:128,0,0:19:b:0,0,128:0,128,0:128,0,0:0,128,0:0,0,128:19]A_fear_poster[c:u](#418)> [c:r_f:red]hangs on the wall[c:u]. Your eyes are offended by <two_despicable_crogi(#161,#286)>.\"}");  
 #if DEBUG
             MainConsole.ReciveExternalInput("This is a debug build of HeartSignal, report to developers if you see this message");
             string ans = await MainConsole.AskForInput("Do you want verbose logging?(y/n)");

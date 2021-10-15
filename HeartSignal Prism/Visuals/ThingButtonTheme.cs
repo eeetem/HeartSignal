@@ -16,9 +16,10 @@ namespace HeartSignal
         Gradient grad;
         float gradientCounter;
         Color textcolor;
+        bool ForceApreanace = true;
+        public ThingButtonTheme(Gradient grad = null, bool forceapreaance = true) : base() {
 
-        public ThingButtonTheme(Gradient grad = null) : base() {
-
+            ForceApreanace = forceapreaance;
             if (grad != null)
             {
                 this.grad = grad;
@@ -38,9 +39,6 @@ namespace HeartSignal
             ColoredGlyph appearance;
 
 
-            appearance = ControlThemeState.GetStateAppearance(control.State);
-
-
 
             appearance = ControlThemeState.GetStateAppearance(control.State);
             int middle = button.Surface.Height != 1 ? button.Surface.Height / 2 : 0;
@@ -50,17 +48,30 @@ namespace HeartSignal
 
                 gradientCounter = 0;
             }
-            Color color = grad.Lerp(gradientCounter);
+
 
             // Redraw the control
             button.Surface.Fill(appearance.Foreground, appearance.Background,
                                 appearance.Glyph, Mirror.None);
 
             appearance.Foreground = textcolor;
-            button.Surface.Print(0, middle, button.Text.Align(button.TextAlignment, button.Width), appearance);
+            
+            button.Surface.UsePrintProcessor = true;
+            //button.Surface.Print(0, 0, button.Text);
+            if (ForceApreanace)
+            {
+                button.Surface.Print(0, middle, button.Text.Align(button.TextAlignment, button.Width), appearance);
 
+            }
+            else {
+                ColoredString parsedText = ColoredString.Parse(button.Text);
+                parsedText.IgnoreEffect = false;
+                 button.Surface.Print(0, middle, parsedText);
+
+            }
            
-                button.Surface.SetDecorator(0, button.Surface.Width, new GlyphDefinition(ICellSurface.ConnectedLineThinExtended[7], Mirror.None).CreateCellDecorator(color));
+            Color color = grad.Lerp(gradientCounter);
+            button.Surface.SetDecorator(0, button.Surface.Width, new GlyphDefinition(ICellSurface.ConnectedLineThinExtended[7], Mirror.None).CreateCellDecorator(color));
               ///  button.Surface.AddDecorator(0, 1, button.Parent.Host.ParentConsole.Font.GetDecorator("box-edge-left", topleftcolor));
                // button.Surface.AddDecorator(button.Surface.Width - 1, 1, button.Parent.Host.ParentConsole.Font.GetDecorator("box-edge-right", bottomrightcolor));
 
