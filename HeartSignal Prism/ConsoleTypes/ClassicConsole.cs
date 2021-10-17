@@ -90,25 +90,17 @@ namespace HeartSignal
             string[] words = value.Split(" ");
             foreach (string word in words)
             {
-                if (word.Contains("+"))
+                if (word.Contains("!+!"))
                 {
                     string text;
-                    text = word.Replace("+", "").Replace("_", " ");
+                    text = word.Replace("!+!", "").Replace("_", " ");
                     string tip = text.Substring(text.IndexOf('(') + 1, text.Length - (text.IndexOf('(') + 2));
                     text = text.Remove(text.IndexOf('('), text.Length - text.IndexOf('('));
 
-                    var button = new Button(text.Length, 1)
-                    {
-                        Text = text,
-                        Position = Cursor.Position,
-                        Theme = new ThingButtonTheme(new Gradient(Color.Green, Color.LimeGreen, Color.Green))
-                    };
 
-
-                    button.MouseEnter += (s, a) => actionWindow.ShowTooltip(tip, Cursor.Position + new Point(0, 0));
-
-                    Controls.Add(button);
-                    Cursor.Right(text.Length + 1);
+                    Utility.CreateToolTip(text, tip,this,actionWindow);
+                    
+                 
                 }
                 else if (word.Contains("<")&& word.Contains(">"))
                 {

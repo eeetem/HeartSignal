@@ -16,7 +16,7 @@ namespace HeartSignal
         public ActionWindow(int width, int height, Point position) : base(width, height)
         {
 
-
+            this.UsePrintProcessor = true;
             this.Position = position;
 
         }

@@ -59,8 +59,58 @@ namespace HeartSignal
                     return null; 
             }
         }
+        public static string RemoveParserTags(string text) {
+
+            while (text.Contains("]"))
+            {
+                text = text.Remove(text.IndexOf("["), text.IndexOf("]") - text.IndexOf("[") + 1);
 
 
+            }
+            return text;
+
+
+        }
+
+        public static void CreateToolTip(string name, string tip, SadConsole.UI.ControlsConsole console, ActionWindow ac) {
+            name.Replace("_", " ");
+            string realtext = RemoveParserTags(name);
+
+            bool forceApearance = true;
+            if (realtext != name)
+            {
+                forceApearance = false;
+
+
+            }
+
+
+
+            if (realtext.Length + console.Cursor.Position.X > console.Width)
+            {
+                console.Cursor.NewLine().Right(1);
+            }
+            Point pos = console.Cursor.Position;
+
+            ///pos = new Point(pos.X + Offset.X, pos.Y + Offset.Y);
+
+
+            
+            var button = new Button(name.Length, 1)
+            {
+                Text = name,
+                Position = console.Cursor.Position,
+                Theme = new ThingButtonTheme(new Gradient(Color.Green, Color.LimeGreen, Color.Green), forceApearance)
+            };
+
+
+            button.MouseEnter += (s, a) => ac.ShowTooltip(tip, pos);
+
+            console.Controls.Add(button);
+            console.Cursor.Right(name.Length + 1);
+
+
+        }
         public static void CreateButtonThingId(string[] thingid, SadConsole.UI.ControlsConsole console, ActionWindow ac,bool explicitlook = false, Point? offset = null,bool clampactionwindow = false) {
 
             ///if there is other things with same name process them at the same time
@@ -110,30 +160,33 @@ namespace HeartSignal
 
                 InitThingId(thingid[1]);
             }
-			Point pos = console.Cursor.Position;
-            if (clampactionwindow)
-            {
-                pos = new Point(Math.Clamp(pos.X + Offset.X,0,console.Width), pos.Y + Offset.Y);
-            }
-			else
-			{
-                pos = new Point(pos.X + Offset.X, pos.Y + Offset.Y);
 
 
-            }
+            string realtext = RemoveParserTags(thingid[0]);
 
-            string realtext = thingid[0];//just used for lenght
             bool forceApearance = true;
-            while (realtext.Contains("]"))
-            {
-                realtext = realtext.Remove(realtext.IndexOf("["), realtext.IndexOf("]") - realtext.IndexOf("[") + 1);
+            if (realtext != thingid[0]) {
                 forceApearance = false;
 
+
             }
 
+          
+        
             if (realtext.Length + console.Cursor.Position.X > console.Width)
             {
                 console.Cursor.NewLine().Right(1);
+            }
+            Point pos = console.Cursor.Position;
+            if (clampactionwindow)
+            {
+                pos = new Point(Math.Clamp(pos.X + Offset.X, 0, console.Width), pos.Y + Offset.Y);
+            }
+            else
+            {
+                pos = new Point(pos.X + Offset.X, pos.Y + Offset.Y);
+
+
             }
             if (!multiple)
             {

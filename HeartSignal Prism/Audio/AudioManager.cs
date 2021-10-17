@@ -153,7 +153,7 @@ namespace HeartSignal
 			if (file.Contains("/"))
 			{
 				dir = Directory.GetCurrentDirectory() + "/sfx/" + file.Remove(file.LastIndexOf("/"), file.Length - file.LastIndexOf("/"));
-				filename = file.Substring(file.IndexOf("/")+1);
+				filename = file.Substring(file.LastIndexOf("/")+1);
 			}
 			else {
 				//base sfx folder is used for temp files
@@ -177,7 +177,7 @@ namespace HeartSignal
 		private static void DownloadCompleted (object sender, AsyncCompletedEventArgs e)
 		{
 			string[] finishedDownload = DownloadQueue[0];
-			File.Move("sfx" + finishedDownload[0].Substring(finishedDownload[0].IndexOf("/")), "sfx/"+ finishedDownload[0]);//move the downloaded file from temp location to proper one
+			File.Move("sfx" + finishedDownload[0].Substring(finishedDownload[0].LastIndexOf("/")), "sfx/"+ finishedDownload[0]);//move the downloaded file from temp location to proper one
 			if (finishedDownload[1].Length >1)//if an after action was supplied now that the sound is downloaded perform that actions
 			{
 				ParseRequest(finishedDownload[2], finishedDownload[1], finishedDownload[0]);
