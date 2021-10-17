@@ -19,7 +19,7 @@ namespace HeartSignal
             Cursor.IsVisible = false;
 
             Cursor.DisableWordBreak = true;
-            ColoredString.CustomProcessor = Utility.CustomParseCommand;
+
             Cursor.UseStringParser = true;
             UsePrintProcessor = true;
             // SadComponents.Add(new CopyPasteMouse());

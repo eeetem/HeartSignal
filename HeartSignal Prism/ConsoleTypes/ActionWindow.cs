@@ -69,7 +69,7 @@ namespace HeartSignal
             this.Resize(40, 5, 40, 5, false);
 
             string[] returned = Utility.SplitThingID(item);
-            string thing = returned[0];
+            //string thing = returned[0];
             string id = returned[1];
 
             if (lastitem != item)

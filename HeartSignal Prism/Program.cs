@@ -57,7 +57,7 @@ namespace HeartSignal
 
         private static void Init()
         {
-
+            ColoredString.CustomProcessor = Utility.CustomParseCommand;
             root = new Console(1, 1);
             MainConsole = new ClassicConsole(1,1);
             root.Children.Add(MainConsole);
@@ -121,7 +121,7 @@ namespace HeartSignal
 
 
             int MapConsoleHeight = 7;
-            int inventoryWidth = 28;
+            int inventoryWidth = 27;
             int roomConsoleWidth = (WIDTH - (inventoryWidth * 3)) / 2;
             int barConsoleHeight = 6;//ONLY EVEN due to map console size increase
             int topconsolerowheight = 20;
@@ -129,8 +129,8 @@ namespace HeartSignal
 
             int width = WIDTH - (inventoryWidth * 2) - 2;
             int height =HEIGHT - (topconsolerowheight+barConsoleHeight+4);
-            MainConsole.Resize(width,height,width,height,false);
-            MainConsole.Position = new Point(inventoryWidth + 1, topconsolerowheight+barConsoleHeight);
+            MainConsole.Resize(width/2,height/2,width/2,height/2,false);
+            MainConsole.Position = new Point((inventoryWidth+2)/2, (topconsolerowheight+barConsoleHeight)/2);
 
             //cringus
             MainConsole.GetInputSource().Resize(width, 30, width, 30, false);//fun fact: input console is gigantic - just hidden under
@@ -139,10 +139,10 @@ namespace HeartSignal
             MainConsole.GetInputSource().Clear();
             MainConsole.GetInputSource().Cursor.Print(">");
 
-            width = inventoryWidth / 2;
+            width = (inventoryWidth / 2)+1;
             height = MapConsoleHeight;
             MapConsole.Resize(width,height,width,height,false);
-            MapConsole.Position = new Point((WIDTH / 2) - (inventoryWidth / 2), (barConsoleHeight)/2);//dunno why +1 is here, it works, dont care
+            MapConsole.Position = new Point((WIDTH / 2) - (inventoryWidth / 2)-1, (barConsoleHeight)/2);//dunno why +1 is here, it works, dont care
             MapConsole.ReDraw();
 
             width = roomConsoleWidth - 1;
@@ -556,7 +556,7 @@ namespace HeartSignal
         private static async void ServerLoop() {
 
             MainConsole.Cursor.NewLine();
-//SplitInput("room:{ \"\", \"Wow.\", \" <[c:ga_f:128,0,0:200,128,0:128,128,0:0,128,0:0,0,128:128,0,128:0,0,128:0,128,0:128,128,0:200,128,0:128,0,0:19:b:0,0,128:0,128,0:128,0,0:0,128,0:0,0,128:19]A_fear_poster[c:u](#418)> [c:r_f:red]hangs on the wall[c:u]. Your eyes are offended by <two_despicable_crogi(#161,#286)>.\"}");  
+ SplitInput("room:{ \"\", \"Wow.\", \" <[c:ga_f:128,0,0:200,128,0:128,128,0:0,128,0:0,0,128:128,0,128:0,0,128:0,128,0:128,128,0:200,128,0:128,0,0:19:b:0,0,128:0,128,0:128,0,0:0,128,0:0,0,128:19]A_fear_poster[c:u](#418)> [c:r_f:red]hangs on the wall[c:u]. Your eyes are offended by <two_despicable_crogi(#161,#286)>.\"}");  
 #if DEBUG
             MainConsole.ReciveExternalInput("This is a debug build of HeartSignal, report to developers if you see this message");
             string ans = await MainConsole.AskForInput("Do you want verbose logging?(y/n)");

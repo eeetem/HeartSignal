@@ -130,7 +130,7 @@ namespace HeartSignal
                 bool forceApearance = true;
                 if (thingid[0].Contains("]"))
                 {
-                   realtext = thingid[0].Substring(thingid[0].IndexOf("]")+1, thingid[0].LastIndexOf("[") - thingid[0].IndexOf("]"));
+                   realtext = thingid[0].Substring(thingid[0].IndexOf("]")+1, thingid[0].LastIndexOf("[") - (thingid[0].IndexOf("]")+1));
                     forceApearance = false;
                    
                 }

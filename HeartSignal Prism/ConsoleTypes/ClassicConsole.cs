@@ -2,28 +2,31 @@
 using SadConsole;
 using Console = SadConsole.Console;
 using SadRogue.Primitives;
-using PrimS.Telnet;
+using SadConsole.UI.Controls;
 using System.Threading.Tasks;
+
 
 namespace HeartSignal
 {
-    internal class ClassicConsole : Console, ITextInputReciver
+    internal class ClassicConsole : SadConsole.UI.ControlsConsole, ITextInputReciver
     {
         public string Prompt { get; set; }
 
+
+        //a lot of repeating of other things here should be parented to another console at some poin
         public ClassicConsole(int width,int height): base(width, height)
         {
 
 
 
             ClearText();
-
-           // Disable the cursor since our keyboard handler will do the work.
+            FontSize = Font.GetFontSize(IFont.Sizes.Two);
+            // Disable the cursor since our keyboard handler will do the work.
             Cursor.IsEnabled = false;
             Cursor.IsVisible = false;
 
             Cursor.DisableWordBreak = true;
-            ColoredString.CustomProcessor = Utility.CustomParseCommand;
+            
             Cursor.UseStringParser = true;
            // UseKeyboard = true;
 
@@ -32,9 +35,14 @@ namespace HeartSignal
             input.Position = new Point(0, 0);
             Children.Add(input);
 
-            //  SadComponents.Add(new AnimatedBorderComponent());
+            actionWindow = new ActionWindow(30, 5, new Point(0, 0));
+            Children.Add(actionWindow);
+
+            actionWindow.IsVisible = false;
+            actionWindow.IsEnabled = false;
 
         }
+        ActionWindow actionWindow;
 
         InputConsole input;
         //this may be elegant or maybe be omega shitcode
@@ -77,7 +85,62 @@ namespace HeartSignal
 
         }
         private void DrawMessage(string value) {
-            Cursor.Print(value).NewLine();
+
+
+            string[] words = value.Split(" ");
+            foreach (string word in words)
+            {
+                if (word.Contains("+"))
+                {
+                    string text;
+                    text = word.Replace("+", "").Replace("_", " ");
+                    string tip = text.Substring(text.IndexOf('(') + 1, text.Length - (text.IndexOf('(') + 2));
+                    text = text.Remove(text.IndexOf('('), text.Length - text.IndexOf('('));
+
+                    var button = new Button(text.Length, 1)
+                    {
+                        Text = text,
+                        Position = Cursor.Position,
+                        Theme = new ThingButtonTheme(new Gradient(Color.Green, Color.LimeGreen, Color.Green))
+                    };
+
+
+                    button.MouseEnter += (s, a) => actionWindow.ShowTooltip(tip, Cursor.Position + new Point(0, 0));
+
+                    Controls.Add(button);
+                    Cursor.Right(text.Length + 1);
+                }
+                else if (word.Contains("<")&& word.Contains(">"))
+                {
+                    string text2 = word;
+                    string leftover = "";
+                    if (text2.Length > text2.IndexOf('>'))
+                    {
+                        leftover = text2.Substring(text2.IndexOf('>') + 1, text2.Length - (text2.IndexOf('>') + 1));
+                    }
+                    text2 = text2.Remove(text2.IndexOf('>'), text2.Length - text2.IndexOf('>'));
+                    text2 = text2.Replace("<", "").Replace(">", "");
+                    Utility.CreateButtonThingId(Utility.SplitThingID(text2.Replace("_", " ")), this, actionWindow, false, null, true);
+                    Cursor.Print(leftover).Right(1);
+
+                }
+                else
+                {
+
+                    if (Cursor.Position.X + word.Length > Width && !word.Contains("["))
+                    {
+                        Cursor.NewLine();
+                    }
+                    Cursor.Print(word.Replace("_", " ") + " ");
+
+                }
+
+
+
+
+
+            }
+            Cursor.NewLine();
             if (!Program.verboseDebug) //if verbose debug is not set then all other prints would be disbaled so do a debug print here
             {
 
@@ -106,7 +169,7 @@ namespace HeartSignal
 
 
 
-            DrawMessage("[c:r f:darkgray]" + value);
+            DrawMessage("[c:r_f:darkgray]" + value);
 
             value = value.Replace(">", "");
             if (awaitingInput) {
