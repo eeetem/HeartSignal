@@ -69,7 +69,7 @@ namespace HeartSignal
             this.Resize(40, 5, 40, 5, false);
 
             string[] returned = Utility.SplitThingID(item);
-            //string thing = returned[0];
+            string thing = returned[0];
             string id = returned[1];
 
             if (lastitem != item)
@@ -215,7 +215,7 @@ namespace HeartSignal
                         Position = pos,
                         Theme = new ThingButtonTheme()
                     };
-                    button.MouseButtonClicked += (s, a) => DoArgAction(id, action);
+                    button.MouseButtonClicked += (s, a) => DoArgAction(id, action,thing);
                     this.Controls.Add(button);
                     this.Cursor.Right(parsedAction.Length + 1);
 
@@ -331,13 +331,16 @@ namespace HeartSignal
 
         static bool awaitingItemClick = false;
         static string PendingArgMessage = "";
-        private static void DoArgAction(string id, string action)
+        private static void DoArgAction(string id, string action,string name)
         {
             // index++;///arrays starting at 1 momment
             PendingArgMessage = action.Replace("[name]", id);
             awaitingItemClick = true;
+            Program.PromptWindow.toptext = "Click a thing to complete";
+            Program.PromptWindow.middletext = action.Replace("[name]", name)+"..?";
+            Program.PromptWindow.Type = PromptWindow.popupType.permanent;
 
-
+            Program.PromptWindow.needsDraw = true;
 
         }
 
@@ -348,6 +351,7 @@ namespace HeartSignal
 
             if (awaitingItemClick)
             {
+                Program.PromptWindow.IsVisible = false;
                 Program.SendNetworkMessage(PendingArgMessage + " " + item);
                 awaitingItemClick = false;
              

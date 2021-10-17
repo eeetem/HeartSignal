@@ -19,7 +19,7 @@ namespace HeartSignal
         public static DisplayConsole RoomConsole;
         static DisplayConsole ThingConsole;
         static MapConsole MapConsole;
-        static PromptWindow PromptWindow;
+        public static PromptWindow PromptWindow;
         public static InventoryConsole InventoryConsole;
         public static InventoryConsole ExamInventoryConsole;
         public static InventoryConsole GrasperConsole;
@@ -34,8 +34,8 @@ namespace HeartSignal
 
 
 
-            var SCREEN_WIDTH = (96*2)+30;
-            var SCREEN_HEIGHT = 54+5;
+            var SCREEN_WIDTH = (96 * 2) + 30;
+            var SCREEN_HEIGHT = 54 + 5;
 
             SadConsole.Settings.WindowTitle = "HeartSignal Prism";
             SadConsole.Settings.UseDefaultExtendedFont = true;
@@ -43,7 +43,7 @@ namespace HeartSignal
             SadConsole.Settings.AllowWindowResize = true;
             SadConsole.UI.Themes.Library.Default.Colors.Lines = new AdjustableColor(Color.Red, "red");
 
-            
+
 
             SadConsole.Game.Create(SCREEN_WIDTH, SCREEN_HEIGHT);
             SadConsole.Game.Instance.OnStart = Init;
@@ -59,16 +59,16 @@ namespace HeartSignal
         {
             ColoredString.CustomProcessor = Utility.CustomParseCommand;
             root = new Console(1, 1);
-            MainConsole = new ClassicConsole(1,1);
+            MainConsole = new ClassicConsole(1, 1);
             root.Children.Add(MainConsole);
             MapConsole = new MapConsole(1, 1);
             root.Children.Add(MapConsole);
             RoomConsole = new DisplayConsole(1, 1);
             root.Children.Add(RoomConsole);
-            ThingConsole = new DisplayConsole(1,1);
+            ThingConsole = new DisplayConsole(1, 1);
             ThingConsole.ExplicitLook = true;
             root.Children.Add(ThingConsole);
-            InventoryConsole = new InventoryConsole(1,1);
+            InventoryConsole = new InventoryConsole(1, 1);
             InventoryConsole.tagline = "My Body";
             InventoryConsole.self = true;
             root.Children.Add(InventoryConsole);
@@ -97,9 +97,9 @@ namespace HeartSignal
             // This is needed because we replaced the initial screen object with our own.
             Game.Instance.DestroyDefaultStartingConsole();
 
-           // SadConsole.WIDTH = 100;
+            // SadConsole.WIDTH = 100;
             Settings.ResizeMode = Settings.WindowResizeOptions.None;
-            SadConsole.Game.Instance.MonoGameInstance.WindowResized += (s,a) => PositionConsoles();
+            SadConsole.Game.Instance.MonoGameInstance.WindowResized += (s, a) => PositionConsoles();
             ServerLoop();
 
 
@@ -113,7 +113,8 @@ namespace HeartSignal
 
 
         ///TODO: TURN needRedraw into something that's part of a one inheritable console instead of each console having that
-        static void PositionConsoles() {
+        static void PositionConsoles()
+        {
 
             WIDTH = Game.Instance.MonoGameInstance.WindowWidth / root.FontSize.X;
             HEIGHT = Game.Instance.MonoGameInstance.WindowHeight / root.FontSize.Y;
@@ -128,26 +129,26 @@ namespace HeartSignal
 
 
             int width = WIDTH - (inventoryWidth * 2) - 2;
-            int height =HEIGHT - (topconsolerowheight+barConsoleHeight+4);
-            MainConsole.Resize(width/2,height/2,width/2,height/2,false);
-            MainConsole.Position = new Point((inventoryWidth+2)/2, (topconsolerowheight+barConsoleHeight)/2);
+            int height = HEIGHT - (topconsolerowheight + barConsoleHeight + 4);
+            MainConsole.Resize(width / 2, height / 2, width / 2, height / 2, false);
+            MainConsole.Position = new Point((inventoryWidth + 2) / 2, (topconsolerowheight + barConsoleHeight) / 2);
 
             //cringus
             MainConsole.GetInputSource().Resize(width, 30, width, 30, false);//fun fact: input console is gigantic - just hidden under
-            MainConsole.GetInputSource().Position = new Point(0, height +2);
+            MainConsole.GetInputSource().Position = new Point(0, height + 2);
             MainConsole.GetInputSource().Cursor.Position = new Point(0, 0);
             MainConsole.GetInputSource().Clear();
             MainConsole.GetInputSource().Cursor.Print(">");
 
-            width = (inventoryWidth / 2)+1;
+            width = (inventoryWidth / 2) + 1;
             height = MapConsoleHeight;
-            MapConsole.Resize(width,height,width,height,false);
-            MapConsole.Position = new Point((WIDTH / 2) - (inventoryWidth / 2)-1, (barConsoleHeight)/2);//dunno why +1 is here, it works, dont care
+            MapConsole.Resize(width, height, width, height, false);
+            MapConsole.Position = new Point((WIDTH / 2) - (inventoryWidth / 2) - 1, (barConsoleHeight) / 2);//dunno why +1 is here, it works, dont care
             MapConsole.ReDraw();
 
             width = roomConsoleWidth - 1;
             height = topconsolerowheight;
-            RoomConsole.Resize(width, height,width,height,true);
+            RoomConsole.Resize(width, height, width, height, true);
             RoomConsole.Position = new Point(inventoryWidth + 1, barConsoleHeight);
             RoomConsole.ReDraw();
 
@@ -186,7 +187,7 @@ namespace HeartSignal
             GrasperConsole.ReDraw();
 
             width = WIDTH;
-            height = barConsoleHeight-1;
+            height = barConsoleHeight - 1;
             BarConsole.Resize(width, height, width, height, true);
 
 
@@ -196,10 +197,11 @@ namespace HeartSignal
 
         }
 
-       
+
 
         static List<string> messageQueue = new List<string>();
-        public static bool SendNetworkMessage(string message) {
+        public static bool SendNetworkMessage(string message)
+        {
 
             messageQueue.Add(message);
             needToSendMessage = true;
@@ -214,7 +216,8 @@ namespace HeartSignal
         static bool needToSendMessage = false;
 
 
-        public static List<string> ExtractQuotationStrings(string s) {
+        public static List<string> ExtractQuotationStrings(string s)
+        {
 
             List<string> stringlist = new List<string>();
 
@@ -228,15 +231,15 @@ namespace HeartSignal
                     {
                         stringlist.Add(s.Substring(posFrom + 1, posTo - posFrom - 1));
 
-                        s = s.Remove(0,posTo+1);//+1 to cut the comma
-           
+                        s = s.Remove(0, posTo + 1);//+1 to cut the comma
+
                         continue;
 
                     }
                 }
                 break;
             }
-            
+
 
             return stringlist;
 
@@ -247,26 +250,26 @@ namespace HeartSignal
 
 
             int idx = input.IndexOf(Environment.NewLine);
-  //          if (idx < 1) {
+            //          if (idx < 1) {
 
 
-         //       idx = input.IndexOf('\n');
+            //       idx = input.IndexOf('\n');
 
-                if (idx < 1)
-                {
-
-
-                    idx = input.IndexOf('\r');
+            if (idx < 1)
+            {
 
 
+                idx = input.IndexOf('\r');
 
-                }
 
-           // }
+
+            }
+
+            // }
             if (idx > 0)
             {
-                ParseServerInput(input.Substring(0,idx));
-                input = input.Remove(0,idx+2);//i'm not exactly sure why the +2 is needed, but it works, dont touch it
+                ParseServerInput(input.Substring(0, idx));
+                input = input.Remove(0, idx + 2);//i'm not exactly sure why the +2 is needed, but it works, dont touch it
                 if (input.Length > 1)
                 {
 
@@ -283,10 +286,11 @@ namespace HeartSignal
 
 
         }
-        private static void ParseServerInput(string input) {
-            
+        private static void ParseServerInput(string input)
+        {
 
-        int idx = input.IndexOf(':');
+
+            int idx = input.IndexOf(':');
             if (idx > 0 && idx < 11)//hardcoded max lenght, kinda cringe but whatever for now
             {
 
@@ -317,10 +321,11 @@ namespace HeartSignal
                         cutstring = returned[0];
 
                         string[] args = returned[1].Split("-");
-                        if (!ActionWindow.actionDatabase.ContainsKey(args[0])) {
+                        if (!ActionWindow.actionDatabase.ContainsKey(args[0]))
+                        {
                             ActionWindow.actionDatabase[args[0]] = new Dictionary<string, List<string>>();
                         }
-                        
+
                         ActionWindow.actionDatabase[args[0]][args[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
                         break;
                     case "argactions":
@@ -339,7 +344,7 @@ namespace HeartSignal
                         cutstring = returned[0];
 
 
-                        BarConsole.AddBar(returned[1],  ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));
+                        BarConsole.AddBar(returned[1], ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));
                         break;
                     case "map":
 
@@ -365,7 +370,7 @@ namespace HeartSignal
                         returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
 
-                        NestedInfo info2 = new NestedInfo(null,null);
+                        NestedInfo info2 = new NestedInfo(null, null);
 
                         while (cutstring.Contains('{'))
                         {
@@ -377,7 +382,7 @@ namespace HeartSignal
                         InventoryConsole.tagline = returned[1];
                         InventoryConsole.inventoryInfo = info2;
                         InventoryConsole.ReDraw();
-						break;
+                        break;
                     case "examine":
 
 
@@ -398,7 +403,7 @@ namespace HeartSignal
                         ExamInventoryConsole.ReDraw();
                         break;
                     case "holding":
-                        
+
                         returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
                         NestedInfo info = new NestedInfo(null, null);
@@ -423,9 +428,9 @@ namespace HeartSignal
                         break;
 
                     case "border":
-                        cutstring = cutstring.Remove(0, cutstring.IndexOf(":")+1);
+                        cutstring = cutstring.Remove(0, cutstring.IndexOf(":") + 1);
                         string[] settings = cutstring.Split("-");
-                       
+
                         bool keep = false;
                         AnimatedBorderComponent._borderCellStyle = new ColoredGlyph(Color.White.FromParser(settings[0], out keep, out keep, out keep, out keep, out keep), Color.Black);
                         AnimatedBorderComponent.speed = float.Parse(settings[1]);
@@ -433,7 +438,7 @@ namespace HeartSignal
 
                         break;
                     case "prompt":
-                       
+
                         returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
 
@@ -441,13 +446,9 @@ namespace HeartSignal
                         List<string> args4 = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
                         PromptWindow.middletext = args4[0];
                         //cringe
-                        if (args4[1] == "binary") {
-
-                            PromptWindow.binary = true;
-						}
-						else { PromptWindow.binary = false; }
+                        PromptWindow.Type = (PromptWindow.popupType)Enum.Parse(typeof(PromptWindow.popupType), args4[1]);
                         PromptWindow.needsDraw = true;
-                        
+
 
                         break;
 
@@ -457,54 +458,58 @@ namespace HeartSignal
 
                         //todo
                         break;
-                
+
                     default:
                         if (verboseDebug)
                         {
                             System.Console.WriteLine("unkown parsing tag: " + sub);
                         }
-							//if we couldn't parse it - it's possibly not meant to be parsed - print it
-							MainConsole.ReciveExternalInput(input);
+                        //if we couldn't parse it - it's possibly not meant to be parsed - print it
+                        MainConsole.ReciveExternalInput(input);
                         break;
 
                 }
 
             }
-            else {
+            else
+            {
                 MainConsole.ReciveExternalInput(input);
             }
- 
-         
 
-                
-            
+
+
+
+
         }
-        private static NestedInfo GetNestedBrackets(string text) {
+        private static NestedInfo GetNestedBrackets(string text)
+        {
 
-            
+
             int[] indexes = GetOutermostBrackets(text);
             string thingid = text.Substring(0, indexes[0]);
-            NestedInfo info = new NestedInfo(thingid,null);
-            string innerbracket = text.Substring(indexes[0]+1, indexes[1] - (indexes[0]+1));
+            NestedInfo info = new NestedInfo(thingid, null);
+            string innerbracket = text.Substring(indexes[0] + 1, indexes[1] - (indexes[0] + 1));
 
-           while (innerbracket.Contains('{'))
+            while (innerbracket.Contains('{'))
             {
-               NestedInfo innerinfo = GetNestedBrackets(innerbracket);
+                NestedInfo innerinfo = GetNestedBrackets(innerbracket);
                 info.Contents.Add(innerinfo);
                 int[] innerindexes = GetOutermostBrackets(innerbracket);
-                innerbracket = innerbracket.Remove(0, innerindexes[1]+1).Replace(",", "").Trim();
+                innerbracket = innerbracket.Remove(0, innerindexes[1] + 1).Replace(",", "").Trim();
             }
 
 
 
-            if (innerbracket.Length > 1) {
+            if (innerbracket.Length > 1)
+            {
 
-                info.Contents.Add(new NestedInfo(innerbracket,null));
+                info.Contents.Add(new NestedInfo(innerbracket, null));
             }
 
             return info;
         }
-        private static int[] GetOutermostBrackets(string text) {
+        private static int[] GetOutermostBrackets(string text)
+        {
 
             int first = text.IndexOf('{');
             int layers = -1;
@@ -540,7 +545,8 @@ namespace HeartSignal
             return new int[] { first, last };
 
         }
-        private static string[] RemoveParseTag(string s) {
+        private static string[] RemoveParseTag(string s)
+        {
 
 
 
@@ -549,18 +555,20 @@ namespace HeartSignal
             string name = s.Substring(0, s.IndexOf('{'));
 
 
-            s = s.Remove(0, s.IndexOf('{')+1);
+            s = s.Remove(0, s.IndexOf('{') + 1);
             return new string[] { s, name };
         }
 
-        private static async void ServerLoop() {
+        private static async void ServerLoop()
+        {
 
             MainConsole.Cursor.NewLine();
-// SplitInput("room:{ \"\", \"Wow.\", \" <A_[c:r_f:red]fear[c:u]_poster(#418)> [c:r_f:red]hangs on the wall[c:u]. Your eyes are offended by <two_despicable_crogi(#161,#286)>.\"}");  
+            // SplitInput("room:{ \"\", \"Wow.\", \" <A_[c:r_f:red]fear[c:u]_poster(#418)> [c:r_f:red]hangs on the wall[c:u]. Your eyes are offended by <two_despicable_crogi(#161,#286)>.\"}");  
 #if DEBUG
             MainConsole.ReciveExternalInput("This is a debug build of HeartSignal, report to developers if you see this message");
             string ans = await MainConsole.AskForInput("Do you want verbose logging?(y/n)");
-            if (ans == "y") {
+            if (ans == "y")
+            {
                 verboseDebug = true;
             }
 
@@ -574,14 +582,17 @@ namespace HeartSignal
             {
                 await client.TryLoginAsync("", "", 1000);
 
-                await client.WriteLine("connect "+login+" "+pass);
+                await client.WriteLine("connect " + login + " " + pass);
                 string response = await client.ReadAsync(TimeSpan.FromMilliseconds(50));
                 MainConsole.ReciveExternalInput(response);
                 TelnetClient = client;
-                while (true) {
+                while (true)
+                {
 
-                    if (needToSendMessage) {
-                        foreach (string message in new List<string>(messageQueue)) {
+                    if (needToSendMessage)
+                    {
+                        foreach (string message in new List<string>(messageQueue))
+                        {
                             await client.WriteLine(message);
                             messageQueue.Remove(message);
                         }
@@ -591,7 +602,8 @@ namespace HeartSignal
                         }
                     }
                     response = await client.ReadAsync(TimeSpan.FromMilliseconds(50));
-                    if (response.Length >1) {
+                    if (response.Length > 1)
+                    {
                         SplitInput(response);
 #if DEBUG
 

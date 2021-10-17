@@ -19,13 +19,20 @@ namespace HeartSignal
             this.Position = position;
             Cursor.DisableWordBreak = false;
             IsVisible = false;
+            UsePrintProcessor = true;
+            Cursor.UseStringParser = true;
         }
 
 
          public string toptext;
         public string middletext;
-        public bool binary;///posibly turn this into an enum later if we get multiple popup types
-
+        public enum popupType { 
+        binary,
+        text,
+        permanent,//has to be manually hid by other code
+        
+        }
+        public popupType Type;
         public bool needsDraw = false;
 
 
@@ -35,9 +42,7 @@ namespace HeartSignal
                needsDraw = false;
             this.Clear();
             Controls.Clear();
-            var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.LightGray, Color.Transparent));
-            this.DrawBox(new Rectangle(0, 0, Width, Height), boxShape);
-            this.Print(Width / 2 - toptext.Length, 0, toptext);
+
             this.Cursor.Position = new Point(1, 1);
             string[] words = middletext.Split(' ');
             foreach (string word in words)
@@ -48,7 +53,7 @@ namespace HeartSignal
                 }
                 Cursor.Print(word).RightWrap(1);
             }
-            if (binary)
+            if (Type == popupType.binary)
             {
                 var button = new Button(5, 1)
                 {
@@ -71,12 +76,13 @@ namespace HeartSignal
                 button.Click += (s, a) => this.IsVisible = false;
                 this.Controls.Add(button);
             }
-            else {
+            else if (Type == popupType.text)
+            {
 
                 var text = new TextBox(15)
                 {
-                   // Mask = '*',
-                    Position = new Point(Width / 2 - 15, Height-2)
+                    // Mask = '*',
+                    Position = new Point(Width / 2 - 15, Height - 2)
                 };
                 Controls.Add(text);
 
@@ -96,6 +102,17 @@ namespace HeartSignal
 
 
             }
+            else if (Type == popupType.permanent)
+            {
+
+
+
+
+            }
+            this.Resize(Width, Cursor.Position.Y + 2, Width, Cursor.Position.Y + 2, false);
+            var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.LightGray, Color.Transparent));
+            this.DrawBox(new Rectangle(0, 0, Width, Height), boxShape);
+            this.Print(0, 0, toptext);
             this.IsVisible = true;
 
 
