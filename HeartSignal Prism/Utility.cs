@@ -90,10 +90,7 @@ namespace HeartSignal
 
             }
             
-            if (thingid[0].Length + console.Cursor.Position.X > console.Width)
-            {
-                console.Cursor.NewLine().Right(1);
-            }
+
 
             if (multiple)
             {
@@ -124,16 +121,23 @@ namespace HeartSignal
 
 
             }
+
+            string realtext = thingid[0];//just used for lenght
+            bool forceApearance = true;
+            while (realtext.Contains("]"))
+            {
+                realtext = realtext.Remove(realtext.IndexOf("["), realtext.IndexOf("]") - realtext.IndexOf("[") + 1);
+                forceApearance = false;
+
+            }
+
+            if (realtext.Length + console.Cursor.Position.X > console.Width)
+            {
+                console.Cursor.NewLine().Right(1);
+            }
             if (!multiple)
             {
-                string realtext = thingid[0];//just used for lenght
-                bool forceApearance = true;
-                if (thingid[0].Contains("]"))
-                {
-                   realtext = thingid[0].Substring(thingid[0].IndexOf("]")+1, thingid[0].LastIndexOf("[") - (thingid[0].IndexOf("]")+1));
-                    forceApearance = false;
-                   
-                }
+  
                 var button = new Button(realtext.Length, 1)
                 {
                     Text = thingid[0],

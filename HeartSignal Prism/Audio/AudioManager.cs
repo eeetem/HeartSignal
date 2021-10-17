@@ -28,7 +28,7 @@ namespace HeartSignal
 			switch (request)
 			{
 				case "preload":
-					download(param);
+					InitiateDownload(param,"",ID);
 					break;
 				case "play":
 					if (Sounds.ContainsKey(ID)) {
@@ -36,7 +36,7 @@ namespace HeartSignal
 					
 					
 					}
-					else if (download(param))
+					else if (InitiateDownload(param,"",ID))
 					{
 						playSound(ID, param);
 					}
@@ -48,14 +48,9 @@ namespace HeartSignal
 
 
 					}
-					else if(download(param, true))
+					else if(InitiateDownload(param, "play", ID))
 					{
 						playSound(ID, param);
-					}
-					else
-					{
-						DownloadAwaiters.Add(new string[] { ID, param });
-
 					}
 					break;
 				case "loop":
@@ -66,14 +61,9 @@ namespace HeartSignal
 
 
 					}
-					else if(download(param, true))
+					else if(InitiateDownload(param, "loop", ID))
 					{
 						playSound(ID, param, true);
-					}
-					else
-					{
-						DownloadAwaiters.Add(new string[] { ID, param ,"loop"});
-
 					}
 					break;
 				case "pause":
@@ -126,53 +116,80 @@ namespace HeartSignal
 
 
 		}
-		static List<string[]> DownloadAwaiters = new List<string[]>();
+		static List<string[]> DownloadQueue= new List<string[]>();
+		static bool DownloadInProgress = false;
+
 		/// <summary>
 		/// returns true if file already exists, false if dowload was started instead
 		/// </summary>
-		/// <param name="file"></param>
-		/// <returns></returns>
-		public static bool download(string file, bool doCallback = false)
-		{
+		public static bool InitiateDownload(string file, string afteraction, string ID) {
 			if (File.Exists("sfx/" + file)) { return true; }
-			string dir;
+			foreach (string[] param in DownloadQueue) {
+				if (param[0] == file) {
+
+					return false;//return since the same file is already in queue, however dont return true as then the yet to be downloaded sound will attempt to be played
+				}
+			
+			
+			
+			}
+			DownloadQueue.Add(new string[] { file, afteraction, ID });
+			//if nothing is downloading - start the download otherwise the other download will check the download queue after it's finished
+			if (!DownloadInProgress) {
+
+				Download();
+			}
+			return false;
+		}
+
+
+		
+		public static void Download()
+		{
+			DownloadInProgress = true;
+			string file = DownloadQueue[0][0];
+			string dir = "";
+			string filename ="";
 			if (file.Contains("/"))
 			{
 				dir = Directory.GetCurrentDirectory() + "/sfx/" + file.Remove(file.LastIndexOf("/"), file.Length - file.LastIndexOf("/"));
+				filename = file.Substring(file.IndexOf("/")+1);
 			}
 			else {
-				dir = Directory.GetCurrentDirectory() + "/sfx/";
-
+				//base sfx folder is used for temp files
+				Program.MainConsole.ReciveExternalInput("warning inaproporiate download path for a sound file was specified: " + file);
+				return;
 
 			}
+
 			Directory.CreateDirectory(dir);
 			using (var client = new WebClient())
 			{
-				if (doCallback)
-				{
-					client.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadFileCallback);
-				}
-				client.DownloadFileAsync(new Uri("http://deathcult.today/soundhell/" + file), "sfx/" + file);
+				client.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadCompleted);
+				
+				client.DownloadFileAsync(new Uri("http://deathcult.today/soundhell/" + file), "sfx/" + filename);
 			}
-			return false;
+			return;
 
 		}
 
 
-		private static void DownloadFileCallback(object sender, AsyncCompletedEventArgs e)
+		private static void DownloadCompleted (object sender, AsyncCompletedEventArgs e)
 		{
-			foreach (string[] downloadAwaiter in new List<string[]>(DownloadAwaiters))
+			string[] finishedDownload = DownloadQueue[0];
+			File.Move("sfx" + finishedDownload[0].Substring(finishedDownload[0].IndexOf("/")), "sfx/"+ finishedDownload[0]);//move the downloaded file from temp location to proper one
+			if (finishedDownload[1].Length >1)//if an after action was supplied now that the sound is downloaded perform that actions
 			{
-				
-				if (File.Exists("sfx/" + downloadAwaiter[1]))
-				{
-					playSound(downloadAwaiter[0], downloadAwaiter[1], downloadAwaiter[2] =="loop");
-					DownloadAwaiters.Remove(downloadAwaiter);
-
-
-				}
-
-
+				ParseRequest(finishedDownload[2], finishedDownload[1], finishedDownload[0]);
+			}
+			DownloadQueue.Remove(DownloadQueue[0]);
+			if (DownloadQueue.Count() > 0)
+			{
+				Download();
+			}
+			else {
+				DownloadInProgress = false;
+			
 			}
 
 		}
