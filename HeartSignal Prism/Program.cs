@@ -563,7 +563,7 @@ namespace HeartSignal
         {
 
             MainConsole.Cursor.NewLine();
-            // SplitInput("room:{ \"\", \"Wow.\", \" <A_[c:r_f:red]fear[c:u]_poster(#418)> [c:r_f:red]hangs on the wall[c:u]. Your eyes are offended by <two_despicable_crogi(#161,#286)>.\"}");  
+       //      SplitInput("room:{ \"\", \"Wow.\", \" !+!fear!+!(hello_123_[c:r;f:red]hangs;on;the;wall[c:u]_fuck_you)!+! . Your eyes are offended by <two_despicable_crogi(#161,#286)>.\"}");  
 #if DEBUG
             MainConsole.ReciveExternalInput("This is a debug build of HeartSignal, report to developers if you see this message");
             string ans = await MainConsole.AskForInput("Do you want verbose logging?(y/n)");

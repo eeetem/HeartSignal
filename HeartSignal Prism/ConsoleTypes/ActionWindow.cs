@@ -43,20 +43,23 @@ namespace HeartSignal
             }
             this.Clear();
             Controls.Clear();
-            var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.Green, Color.Transparent));
-            this.DrawBox(new Rectangle(0, 0, Width, Height), boxShape);
+
             this.Cursor.Position = new Point(1, 1);
             string[] words = text.Split(" ");
             foreach (string w in words)
             {
                 string Word = w;
-                if (Cursor.Position.X + Word.Length + 2 > Width || Word.Contains("[newline]"))
+                if (!Word.Contains("[") && Cursor.Position.X + Word.Length + 2 > Width || Word.Contains("[newline]"))
                 {
-                    Word = Word.Replace("[newline]", "");//server - client boogaloo character escape inception
+
+                    Word = Word.Replace("[newline]", "");
                     Cursor.NewLine().Right(1);
                 }
-                Cursor.Print(Word).Right(1);
+                Cursor.Print(Word.Replace(";"," ")).Right(1);
             }
+            this.Resize(Width, Cursor.Position.Y + 2, Width, Cursor.Position.Y + 2, false);
+            var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.Green, Color.Transparent));
+            this.DrawBox(new Rectangle(0, 0, Width, Height), boxShape);
 
             this.IsVisible = true;
             this.IsEnabled = true;

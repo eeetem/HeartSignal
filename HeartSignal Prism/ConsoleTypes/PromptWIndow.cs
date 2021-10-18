@@ -51,7 +51,7 @@ namespace HeartSignal
                 {
                     Cursor.NewLine().Right(1);
                 }
-                Cursor.Print(word).RightWrap(1);
+                Cursor.Print(word.Replace(";", " ")).RightWrap(1);
             }
             if (Type == popupType.binary)
             {

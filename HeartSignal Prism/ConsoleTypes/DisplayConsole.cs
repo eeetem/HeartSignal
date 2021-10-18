@@ -58,7 +58,7 @@ namespace HeartSignal
                         {
                             Cursor.NewLine();
                         }
-                        Cursor.Print(word.Replace("_", " ") + " ");
+                        Cursor.Print(word.Replace("_", " ").Replace(";", " ") + " ");
 
                     }
 
