@@ -47,7 +47,7 @@ namespace HeartSignal
             string[] words = middletext.Split(' ');
             foreach (string word in words)
             {
-                if (Cursor.Position.X + word.Length + 1 > Width)
+                if (Cursor.Position.X + Utility.RemoveParserTags(word).Length + 1 > Width)
                 {
                     Cursor.NewLine().Right(1);
                 }

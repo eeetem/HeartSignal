@@ -340,7 +340,7 @@ namespace HeartSignal
             PendingArgMessage = action.Replace("[name]", id);
             awaitingItemClick = true;
             Program.PromptWindow.toptext = "Click a thing to complete";
-            Program.PromptWindow.middletext = action.Replace("[name]", name)+"..?";
+            Program.PromptWindow.middletext = action.Replace("[name]", name)+"...?";
             Program.PromptWindow.Type = PromptWindow.popupType.permanent;
 
             Program.PromptWindow.needsDraw = true;

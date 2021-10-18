@@ -64,7 +64,7 @@ namespace HeartSignal
 
             }
             else {
-                ColoredString parsedText = ColoredString.Parse(button.Text);
+                ColoredString parsedText = ColoredString.Parse(button.Text.Replace(";"," "));
                 parsedText.IgnoreEffect = false;
                
                  button.Surface.Print(0, middle, parsedText);

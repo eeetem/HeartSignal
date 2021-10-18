@@ -67,7 +67,7 @@ namespace HeartSignal
 
 
             }
-            return text;
+            return text.Replace(";"," ");
 
 
         }
