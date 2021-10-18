@@ -64,6 +64,10 @@ namespace HeartSignal
             this.IsVisible = true;
             this.IsEnabled = true;
         }
+
+
+
+        //todo remove the actions/argaction seperation and instead check for [name] being present
         public void DisplayActions(string item, Point? newPosition = null, bool expilcitlook = false)
         {
             //if (focusitem != null) { item = focusitem; }
@@ -183,7 +187,7 @@ namespace HeartSignal
             {
                 foreach (string action in actionDatabase[id][selectedTab])
                 {
-                    string parsedAction = action.Replace(" [name]", "").Replace("_", " ");
+                    string parsedAction = action.Replace(" [this]", "").Replace("[whatever]", "...").Replace("_", " ");
                     if (Cursor.Position.X + parsedAction.Length + 1 > Width)
                     {
                         Cursor.NewLine().Right(1);
@@ -206,7 +210,7 @@ namespace HeartSignal
                 foreach (string action in argactionDatabase[id][selectedTab])
                 {
 
-                    string parsedAction = action.Replace(" [name]", "").Replace("_", " ") + "...";
+                    string parsedAction = action.Replace(" [this]", "").Replace("[whatever]", "...").Replace("_", " ");
                     if (Cursor.Position.X + parsedAction.Length + 1 > Width)
                     {
                         Cursor.NewLine().Right(1);
@@ -337,10 +341,10 @@ namespace HeartSignal
         private static void DoArgAction(string id, string action,string name)
         {
             // index++;///arrays starting at 1 momment
-            PendingArgMessage = action.Replace("[name]", id);
+            PendingArgMessage = action.Replace("[this]", id);
             awaitingItemClick = true;
             Program.PromptWindow.toptext = "Click a thing to complete";
-            Program.PromptWindow.middletext = action.Replace("[name]", name)+"...?";
+            Program.PromptWindow.middletext = action.Replace("[this]", name).Replace("[whatever]", "...?");
             Program.PromptWindow.Type = PromptWindow.popupType.permanent;
 
             Program.PromptWindow.needsDraw = true;
@@ -355,7 +359,7 @@ namespace HeartSignal
             if (awaitingItemClick)
             {
                 Program.PromptWindow.IsVisible = false;
-                Program.SendNetworkMessage(PendingArgMessage + " " + item);
+                Program.SendNetworkMessage(PendingArgMessage.Replace("[whatever]",item));
                 awaitingItemClick = false;
              
                 return;
