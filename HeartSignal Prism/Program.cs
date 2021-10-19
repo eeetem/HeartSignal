@@ -328,16 +328,10 @@ namespace HeartSignal
 
                         ActionWindow.actionDatabase[args[0]][args[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
                         break;
+                        //obsolete
                     case "argactions":
-                        returned = RemoveParseTag(cutstring);
-                        cutstring = returned[0];
-
-                        string[] args2 = returned[1].Split("-");
-                        if (!ActionWindow.argactionDatabase.ContainsKey(args2[0]))
-                        {
-                            ActionWindow.argactionDatabase[args2[0]] = new Dictionary<string, List<string>>();
-                        }
-                        ActionWindow.argactionDatabase[args2[0]][args2[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+                        MainConsole.ReciveExternalInput("obsolete parsing tag recived:");
+                        MainConsole.ReciveExternalInput(cutstring);
                         break;
                     case "bars":
                         returned = RemoveParseTag(cutstring);

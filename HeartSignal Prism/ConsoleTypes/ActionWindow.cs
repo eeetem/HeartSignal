@@ -21,7 +21,7 @@ namespace HeartSignal
 
         }
         public static Dictionary<string, Dictionary<string, List<string>>> actionDatabase = new Dictionary<string, Dictionary<string, List<string>>>();
-        public static Dictionary<string, Dictionary<string, List<string>>> argactionDatabase = new Dictionary<string, Dictionary<string, List<string>>>();
+       // public static Dictionary<string, Dictionary<string, List<string>>> argactionDatabase = new Dictionary<string, Dictionary<string, List<string>>>();
         static string lastitem = "";
         public string selectedTab = "";
         protected override void OnMouseExit(MouseScreenObjectState state) {
@@ -104,7 +104,7 @@ namespace HeartSignal
             this.Cursor.Position = new Point(0, 0);
             Cursor.Right(1).Print("Actions").Right(1);
             //if the action menu does not contain currently selected tab - switch to the first one
-            if (!actionDatabase[id].ContainsKey(selectedTab) && !argactionDatabase[id].ContainsKey(selectedTab))
+            if (!actionDatabase[id].ContainsKey(selectedTab))
 			{
                 var first = actionDatabase[id].First();
                 selectedTab = first.Key;
@@ -139,33 +139,7 @@ namespace HeartSignal
 
 
             }
-            //this double loop is a bit cringe
-            foreach (KeyValuePair<string, List<string>> tabs in argactionDatabase[id])
-            {
-				if (actionDatabase[id].ContainsKey(tabs.Key)) { continue; }
-                if (tabs.Key == selectedTab)
-                {
-                    Surface.SetDecorator(Cursor.Position.X, Cursor.Position.Y, tabs.Key.Length, new GlyphDefinition(ICellSurface.ConnectedLineThinExtended[7], Mirror.None).CreateCellDecorator(Color.White));
-                    Cursor.Print(tabs.Key).Right(1);
-
-
-                }
-                else
-                {
-                    var tab = new Button(tabs.Key.Length, 1)
-                    {
-                        Text = tabs.Key,
-                        Position = Cursor.Position,
-                        Theme = new ThingButtonTheme()
-                    };
-                    tab.MouseButtonClicked += (s, a) => selectedTab = tabs.Key;
-                    tab.MouseButtonClicked += (s, a) => DisplayActions(item, newPosition, expilcitlook);
-                    this.Controls.Add(tab);
-                    Cursor.Right(tabs.Key.Length);
-                }
-
-
-            }
+         
 
             if (expilcitlook)
             {
@@ -187,6 +161,11 @@ namespace HeartSignal
             {
                 foreach (string action in actionDatabase[id][selectedTab])
                 {
+                    bool argFlag = false;
+                    if (action.Contains("[whatever]")) {
+
+                        argFlag = true;
+                    }
                     string parsedAction = action.Replace(" [this]", "").Replace("[whatever]", "...").Replace("_", " ");
                     if (Cursor.Position.X + parsedAction.Length + 1 > Width)
                     {
@@ -199,35 +178,20 @@ namespace HeartSignal
                         Position = pos,
                         Theme = new ThingButtonTheme()
                     };
-                    button.MouseButtonClicked += (s, a) => DoAction(id, action);
-                    this.Controls.Add(button);
-                    this.Cursor.Right(parsedAction.Length + 1);
-
-                }
-            }
-            if (argactionDatabase[id].ContainsKey(selectedTab))
-            {
-                foreach (string action in argactionDatabase[id][selectedTab])
-                {
-
-                    string parsedAction = action.Replace(" [this]", "").Replace("[whatever]", "...").Replace("_", " ");
-                    if (Cursor.Position.X + parsedAction.Length + 1 > Width)
+                    if (argFlag)
                     {
-                        Cursor.NewLine().Right(1);
+                        button.MouseButtonClicked += (s, a) => DoArgAction(id, action, thing);
                     }
-                    Point pos = this.Cursor.Position;
-                    var button = new Button(parsedAction.Length, 1)
+                    else
                     {
-                        Text = parsedAction,
-                        Position = pos,
-                        Theme = new ThingButtonTheme()
-                    };
-                    button.MouseButtonClicked += (s, a) => DoArgAction(id, action,thing);
+                        button.MouseButtonClicked += (s, a) => DoAction(id, action);
+                    }
                     this.Controls.Add(button);
                     this.Cursor.Right(parsedAction.Length + 1);
 
                 }
             }
+           
                 /*
                 var exit = new Button(1, 1)
                 {
