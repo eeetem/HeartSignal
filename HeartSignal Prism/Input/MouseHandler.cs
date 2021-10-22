@@ -7,7 +7,7 @@ using SadConsole.Input;
 using SadConsole;
 using SadRogue.Primitives;
 using Console = SadConsole.Console;
-using System.Windows.Forms;
+//using System.Windows.Forms;
 
 namespace HeartSignal
 {

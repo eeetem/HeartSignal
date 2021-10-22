@@ -67,7 +67,6 @@ namespace HeartSignal
 
 
 
-        //todo remove the actions/argaction seperation and instead check for [name] being present
         public void DisplayActions(string item, Point? newPosition = null, bool expilcitlook = false)
         {
             //if (focusitem != null) { item = focusitem; }

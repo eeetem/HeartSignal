@@ -3,17 +3,12 @@ using SadConsole;
 using SadRogue.Primitives;
 using Console = SadConsole.Console;
 using PrimS.Telnet;
-using System.Threading.Tasks;
 using System.Collections.Generic;
-
-using SadConsole.UI.Controls;
-using SadConsole.UI.Themes;
 using SadConsole.UI;
-using System.Text.RegularExpressions;
 
 namespace HeartSignal
 {
-    static class Program
+    internal static class Program
     {
         public static ClassicConsole MainConsole;
         public static DisplayConsole RoomConsole;
@@ -37,19 +32,19 @@ namespace HeartSignal
             var SCREEN_WIDTH = (96 * 2) + 30;
             var SCREEN_HEIGHT = 54 + 5;
 
-            SadConsole.Settings.WindowTitle = "HeartSignal Prism";
-            SadConsole.Settings.UseDefaultExtendedFont = true;
+            Settings.WindowTitle = "HeartSignal Prism";
+            Settings.UseDefaultExtendedFont = true;
 
-            SadConsole.Settings.AllowWindowResize = true;
+            Settings.AllowWindowResize = true;
             SadConsole.UI.Themes.Library.Default.Colors.Lines = new AdjustableColor(Color.Red, "red");
 
 
 
-            SadConsole.Game.Create(SCREEN_WIDTH, SCREEN_HEIGHT);
-            SadConsole.Game.Instance.OnStart = Init;
-            SadConsole.Game.Instance.Run();
+            Game.Create(SCREEN_WIDTH, SCREEN_HEIGHT);
+            Game.Instance.OnStart = Init;
+            Game.Instance.Run();
 
-            SadConsole.Game.Instance.Dispose();
+            Game.Instance.Dispose();
 
         }
 
@@ -86,7 +81,7 @@ namespace HeartSignal
 
 
 
-            PromptWindow = new PromptWindow(30, 10, new Point(WIDTH / 2 - 15, HEIGHT / 2 - 5));
+            PromptWindow = new PromptWindow(30, 10, new Point(width / 2 - 15, height / 2 - 5));
 
             root.Children.Add(PromptWindow);
 
@@ -99,7 +94,7 @@ namespace HeartSignal
 
             // SadConsole.WIDTH = 100;
             Settings.ResizeMode = Settings.WindowResizeOptions.None;
-            SadConsole.Game.Instance.MonoGameInstance.WindowResized += (s, a) => PositionConsoles();
+            Game.Instance.MonoGameInstance.WindowResized += (_, a) => PositionConsoles();
             ServerLoop();
 
 
@@ -108,87 +103,87 @@ namespace HeartSignal
 
         }
 
-        public static int WIDTH = 0;
-        public static int HEIGHT = 0;
+        private static int width;
+        private static int height;
 
 
         ///TODO: TURN needRedraw into something that's part of a one inheritable console instead of each console having that
         static void PositionConsoles()
         {
 
-            WIDTH = Game.Instance.MonoGameInstance.WindowWidth / root.FontSize.X;
-            HEIGHT = Game.Instance.MonoGameInstance.WindowHeight / root.FontSize.Y;
-            root.Resize(WIDTH, HEIGHT, WIDTH, HEIGHT, false);
+            width = Game.Instance.MonoGameInstance.WindowWidth / root.FontSize.X;
+            height = Game.Instance.MonoGameInstance.WindowHeight / root.FontSize.Y;
+            root.Resize(width, height, width, height, false);
 
 
             int MapConsoleHeight = 7;
             int inventoryWidth = 29;
-            int roomConsoleWidth = (WIDTH - (inventoryWidth * 3)) / 2;
+            int roomConsoleWidth = (width - (inventoryWidth * 3)) / 2;
             int barConsoleHeight = 6;//ONLY EVEN due to map console size increase
-            int topconsolerowheight = 20;
+            int topConsoleRowHeight = 20;
 
 
-            int width = WIDTH - (inventoryWidth * 2) - 2;
-            int height = HEIGHT - (topconsolerowheight + barConsoleHeight + 4);
-            MainConsole.Resize(width / 2, height / 2, width / 2, height / 2, false);
-            MainConsole.Position = new Point((inventoryWidth + 2) / 2, (topconsolerowheight + barConsoleHeight) / 2);
+            int resizeWidth = width - (inventoryWidth * 2) - 2;
+            int resizeHeight = height - (topConsoleRowHeight + barConsoleHeight + 4);
+            MainConsole.Resize(resizeWidth / 2, resizeHeight / 2, resizeWidth / 2, resizeHeight / 2, false);
+            MainConsole.Position = new Point((inventoryWidth + 2) / 2, (topConsoleRowHeight + barConsoleHeight) / 2);
 
             //cringus
-            MainConsole.GetInputSource().Resize(width, 30, width, 30, false);//fun fact: input console is gigantic - just hidden under
-            MainConsole.GetInputSource().Position = new Point(0, height + 2);
+            MainConsole.GetInputSource().Resize(resizeWidth, 30, resizeWidth, 30, false);//fun fact: input console is gigantic - just hidden under
+            MainConsole.GetInputSource().Position = new Point(0, resizeHeight + 2);
             MainConsole.GetInputSource().Cursor.Position = new Point(0, 0);
             MainConsole.GetInputSource().Clear();
             MainConsole.GetInputSource().Cursor.Print(">");
 
-            width = (inventoryWidth / 2) + 1;
-            height = MapConsoleHeight;
-            MapConsole.Resize(width, height, width, height, false);
-            MapConsole.Position = new Point((WIDTH / 2) - (inventoryWidth / 2) - 1, (barConsoleHeight) / 2);//dunno why +1 is here, it works, dont care
+            resizeWidth = (inventoryWidth / 2) + 1;
+            resizeHeight = MapConsoleHeight;
+            MapConsole.Resize(resizeWidth, resizeHeight, resizeWidth, resizeHeight, false);
+            MapConsole.Position = new Point((width / 2) - (inventoryWidth / 2) - 1, (barConsoleHeight) / 2);//dunno why +1 is here, it works, dont care
             MapConsole.ReDraw();
 
-            width = roomConsoleWidth - 1;
-            height = topconsolerowheight;
-            RoomConsole.Resize(width, height, width, height, true);
+            resizeWidth = roomConsoleWidth - 1;
+            resizeHeight = topConsoleRowHeight;
+            RoomConsole.Resize(resizeWidth, resizeHeight, resizeWidth, resizeHeight, true);
             RoomConsole.Position = new Point(inventoryWidth + 1, barConsoleHeight);
             RoomConsole.ReDraw();
 
 
-            PromptWindow.Position = new Point(WIDTH / 2 - 15, HEIGHT / 2 - 5);
+            PromptWindow.Position = new Point(width / 2 - 15, height / 2 - 5);
 
-            width = roomConsoleWidth - 3;
-            height = topconsolerowheight;
-            ThingConsole.Resize(width, height, width, height, true);
+            resizeWidth = roomConsoleWidth - 3;
+            resizeHeight = topConsoleRowHeight;
+            ThingConsole.Resize(resizeWidth, resizeHeight, resizeWidth, resizeHeight, true);
             ThingConsole.Position = new Point(inventoryWidth * 2 + roomConsoleWidth + 2, barConsoleHeight);
             ThingConsole.ReDraw();
 
 
-            width = inventoryWidth;
-            height = HEIGHT;
-            InventoryConsole.Resize(width, height, width, height, true);
+            resizeWidth = inventoryWidth;
+            resizeHeight = height;
+            InventoryConsole.Resize(resizeWidth, resizeHeight, resizeWidth, resizeHeight, true);
             InventoryConsole.Position = new Point(0, barConsoleHeight);
             InventoryConsole.ActionOffset = new Point(10, 1);
             InventoryConsole.ReDraw();
 
 
-            width = inventoryWidth;
-            height = HEIGHT - (MapConsoleHeight * 2) - 1;
-            ExamInventoryConsole.Resize(width, height, width, height, true);
-            ExamInventoryConsole.Position = new Point(WIDTH - inventoryWidth, (MapConsoleHeight * 2) + 1 + barConsoleHeight);
+            resizeWidth = inventoryWidth;
+            resizeHeight = height - (MapConsoleHeight * 2) - 1;
+            ExamInventoryConsole.Resize(resizeWidth, resizeHeight, resizeWidth, resizeHeight, true);
+            ExamInventoryConsole.Position = new Point(width - inventoryWidth, (MapConsoleHeight * 2) + 1 + barConsoleHeight);
             ExamInventoryConsole.ActionOffset = new Point(-30, 1);
             ExamInventoryConsole.ReDraw();
 
 
-            width = inventoryWidth;
-            height = topconsolerowheight;
-            GrasperConsole.Resize(width, height, width, height, false);
+            resizeWidth = inventoryWidth;
+            resizeHeight = topConsoleRowHeight;
+            GrasperConsole.Resize(resizeWidth, resizeHeight, resizeWidth, resizeHeight, false);
             GrasperConsole.Position = new Point(inventoryWidth + roomConsoleWidth + 1, barConsoleHeight);
             GrasperConsole.ActionOffset = new Point(0, 1);
             GrasperConsole.clickableFirstLayer = false;
             GrasperConsole.ReDraw();
 
-            width = WIDTH;
-            height = barConsoleHeight - 1;
-            BarConsole.Resize(width, height, width, height, true);
+            resizeWidth = width;
+            resizeHeight = barConsoleHeight - 1;
+            BarConsole.Resize(resizeWidth, resizeHeight, resizeWidth, resizeHeight, true);
 
 
 
@@ -216,7 +211,7 @@ namespace HeartSignal
         static bool needToSendMessage = false;
 
 
-        public static List<string> ExtractQuotationStrings(string s)
+        private static List<string> ExtractQuotationStrings(string s)
         {
 
             List<string> stringlist = new List<string>();
@@ -301,7 +296,7 @@ namespace HeartSignal
                 switch (sub)
                 {
 
-                    ///a lot of parse repeating - turn this into a function at some point - me from the future: turned some bits into functions however there is still shitload of repeating, needs quite a big refactor
+                    //a lot of parse repeating - turn this into a function at some point - me from the future: turned some bits into functions however there is still shitload of repeating, needs quite a big refactor
                     case "desc":
                         returned = RemoveParseTag(cutstring);
                         cutstring = returned[0];
@@ -480,24 +475,24 @@ namespace HeartSignal
 
 
             int[] indexes = GetOutermostBrackets(text);
-            string thingid = text.Substring(0, indexes[0]);
-            NestedInfo info = new NestedInfo(thingid, null);
-            string innerbracket = text.Substring(indexes[0] + 1, indexes[1] - (indexes[0] + 1));
+            string thingID = text.Substring(0, indexes[0]);
+            NestedInfo info = new NestedInfo(thingID, null);
+            string innerBracket = text.Substring(indexes[0] + 1, indexes[1] - (indexes[0] + 1));
 
-            while (innerbracket.Contains('{'))
+            while (innerBracket.Contains('{'))
             {
-                NestedInfo innerinfo = GetNestedBrackets(innerbracket);
+                NestedInfo innerinfo = GetNestedBrackets(innerBracket);
                 info.Contents.Add(innerinfo);
-                int[] innerindexes = GetOutermostBrackets(innerbracket);
-                innerbracket = innerbracket.Remove(0, innerindexes[1] + 1).Replace(",", "").Trim();
+                int[] innerIndexes = GetOutermostBrackets(innerBracket);
+                innerBracket = innerBracket.Remove(0, innerIndexes[1] + 1).Replace(",", "").Trim();
             }
 
 
 
-            if (innerbracket.Length > 1)
+            if (innerBracket.Length > 1)
             {
 
-                info.Contents.Add(new NestedInfo(innerbracket, null));
+                info.Contents.Add(new NestedInfo(innerBracket, null));
             }
 
             return info;
@@ -572,48 +567,47 @@ namespace HeartSignal
             MainConsole.Clear();
             MainConsole.Cursor.NewLine();
             MainConsole.Cursor.Print("Attempting server connection....").NewLine();
-            using (Client client = new Client("deathcult.today", 6666, new System.Threading.CancellationToken()))
+            using Client client = new Client("deathcult.today", 6666, new System.Threading.CancellationToken());
+            await client.TryLoginAsync("", "", 1000);
+
+            await client.WriteLine("connect " + login + " " + pass);
+            string response = await client.ReadAsync(TimeSpan.FromMilliseconds(50));
+            MainConsole.ReciveExternalInput(response);
+            TelnetClient = client;
+            while (true)
             {
-                await client.TryLoginAsync("", "", 1000);
 
-                await client.WriteLine("connect " + login + " " + pass);
-                string response = await client.ReadAsync(TimeSpan.FromMilliseconds(50));
-                MainConsole.ReciveExternalInput(response);
-                TelnetClient = client;
-                while (true)
+                if (needToSendMessage)
                 {
-
-                    if (needToSendMessage)
+                    foreach (string message in new List<string>(messageQueue))
                     {
-                        foreach (string message in new List<string>(messageQueue))
-                        {
-                            await client.WriteLine(message);
-                            messageQueue.Remove(message);
-                        }
-                        if (messageQueue.Count < 1)
-                        {
-                            needToSendMessage = false;
-                        }
+                        await client.WriteLine(message);
+                        messageQueue.Remove(message);
                     }
-                    response = await client.ReadAsync(TimeSpan.FromMilliseconds(50));
-                    if (response.Length > 1)
+                    if (messageQueue.Count < 1)
                     {
-                        SplitInput(response);
+                        needToSendMessage = false;
+                    }
+                }
+                response = await client.ReadAsync(TimeSpan.FromMilliseconds(50));
+                if (response.Length > 1)
+                {
+                    SplitInput(response);
 #if DEBUG
 
-                        if (verboseDebug)
-                        {
-                            System.Console.WriteLine(response);
-                        }
+                    if (verboseDebug)
+                    {
+                        System.Console.WriteLine(response);
+                    }
 
 
 #endif
-                    }
-
-                    if (!client.IsConnected) { break; }
-                    //await Task.Delay(50);
                 }
+
+                if (!client.IsConnected) { break; }
+                //await Task.Delay(50);
             }
+
             MainConsole.Cursor.Print("Server Connection Ended").NewLine();
 
         }
