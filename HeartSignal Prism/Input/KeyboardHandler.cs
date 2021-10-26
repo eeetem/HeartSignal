@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using SadConsole.Components;
+﻿using SadConsole.Components;
 using SadConsole.Input;
 using SadConsole;
-using SadRogue.Primitives;
 using Console = SadConsole.Console;
 using Keys = SadConsole.Input.Keys;
-using System.Text;
-using System.Windows.Forms;
+//using System.Windows.Forms;
 
 namespace HeartSignal
 {
@@ -41,46 +36,6 @@ namespace HeartSignal
                 // If the character associated with the key pressed is a printable character, print it
                 if (key.Character != '\0')
                 {
-
-                    if (key.Character == 'v' && info.IsKeyDown(Keys.LeftControl)) {
-
-
-                        string data = "";
-                        // Declares an IDataObject to hold the data returned from the clipboard.
-                        // Retrieves the data from the clipboard.
-                        IDataObject iData = Clipboard.GetDataObject();
-
-                        // Determines whether the data is in a format you can use.
-                        if (iData.GetDataPresent(DataFormats.Text))
-                        {
-                            // Yes it is, so display it in a text box.
-                            data = (String)iData.GetData(DataFormats.Text);
-
-
-
-                            string[] lines = data.Split("\n");
-                            for (int i = 0; i < lines.Length; i++) {
-                                if ( i != 0) {
-                                    console.Cursor.NewLine();
-                                }
-
-                                  console.Cursor.Print(lines[i]);
-                                
-                            
-                            }
-
-
-
-
-                        }
-                        handled = true;
-                        return;
-
-                    }
-                    
-                        
-                    
-                    
                     console.Cursor.Print(key.Character.ToString());
                 }
 
@@ -117,15 +72,15 @@ namespace HeartSignal
                 // Special character - ENTER
                 else if (key.Key == Keys.Enter)
                 {
-                    EnterPressed();
+                    EnterPressed?.Invoke();
                 }
                 else if (key.Key == Keys.Up)
                 {
-                    UpPressed();
+                    UpPressed?.Invoke();
                 }
                 else if (key.Key == Keys.Down)
                 {
-                    DownPressed();
+                    DownPressed?.Invoke();
                 }
             }
 

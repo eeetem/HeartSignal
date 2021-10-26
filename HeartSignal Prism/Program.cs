@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using PrimS.Telnet;
@@ -672,10 +672,10 @@ namespace HeartSignal
 						SplitInput(response);
 #if DEBUG
 
-                        if (verboseDebug)
-                        {
-                            System.Console.WriteLine(response);
-                        }
+                    if (verboseDebug)
+                    {
+                        System.Console.WriteLine(response);
+                    }
 
 
 #endif

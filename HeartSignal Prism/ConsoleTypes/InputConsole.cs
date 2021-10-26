@@ -1,11 +1,7 @@
-﻿using System;
-using SadConsole;
+﻿using SadConsole;
 using Console = SadConsole.Console;
 using SadRogue.Primitives;
-using PrimS.Telnet;
-using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Text;
 using SadConsole.Input;
 
 namespace HeartSignal
@@ -14,7 +10,7 @@ namespace HeartSignal
     {//ONLY EVER SHOULD EXIST AS A CHILD OF ANOTHER CONSOLE
         readonly KeyboardHandler keyboard;
 
-        ITextInputReciver ReciverParent;
+        ITextInputReciver reciverParent;
         List<string> commands = new List<string>();
         public InputConsole(int width, int height, ITextInputReciver parent) : base(width, height)
         {
@@ -27,7 +23,7 @@ namespace HeartSignal
             keyboard.EnterPressed += SendCommand;
             keyboard.UpPressed += UpCommand;
             keyboard.DownPressed += DownCommand;
-            ReciverParent = parent;
+            reciverParent = parent;
           //  TimesShiftedDown
      
             SadComponents.Add(keyboard);
@@ -47,7 +43,7 @@ namespace HeartSignal
 
             string data = this.GetString(0,( Width*Cursor.Position.Y)+Cursor.Position.X);
 
-            ReciverParent.ReciveInput(data);
+            reciverParent.ReciveInput(data);
 
             commands.Add(data);
             commandindex = 0;
