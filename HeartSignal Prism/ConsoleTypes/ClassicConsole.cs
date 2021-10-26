@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HeartSignal
 {
-    internal class ClassicConsole : SadConsole.UI.ControlsConsole, ITextInputReciver
+    public class ClassicConsole : SadConsole.UI.ControlsConsole, ITextInputReciver
     {
         public string Prompt { get; set; }
 

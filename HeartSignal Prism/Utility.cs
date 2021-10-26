@@ -76,14 +76,7 @@ namespace HeartSignal
             name.Replace("_", " ");
             string realtext = RemoveParserTags(name);
 
-            bool forceApearance = true;
-            if (realtext != name)
-            {
-                forceApearance = false;
-
-
-            }
-
+            bool forceApearance = !(realtext != name);
 
 
             if (realtext.Length + console.Cursor.Position.X > console.Width)
@@ -92,7 +85,7 @@ namespace HeartSignal
             }
             Point pos = console.Cursor.Position;
 
-            ///pos = new Point(pos.X + Offset.X, pos.Y + Offset.Y);
+            //pos = new Point(pos.X + Offset.X, pos.Y + Offset.Y);
 
 
             
@@ -113,7 +106,7 @@ namespace HeartSignal
         }
         public static void CreateButtonThingId(string[] thingid, SadConsole.UI.ControlsConsole console, ActionWindow ac,bool explicitlook = false, Point? offset = null,bool clampactionwindow = false) {
 
-            ///if there is other things with same name process them at the same time
+            //if there is other things with same name process them at the same time
             List<string> sameThingsIDs = new List<string>();
            
             bool multiple = false;
@@ -133,9 +126,9 @@ namespace HeartSignal
 
                 }
             }
-            Point Offset = new Point(-5, 1);//default offset
+            Point _offset = new Point(-5, 1);//default offset
             if (offset != null) {
-                Offset = (Point)offset;
+                _offset = (Point)offset;
 
 
             }
@@ -180,11 +173,11 @@ namespace HeartSignal
             Point pos = console.Cursor.Position;
             if (clampactionwindow)
             {
-                pos = new Point(Math.Clamp(pos.X + Offset.X, 0, console.Width), pos.Y + Offset.Y);
+                pos = new Point(Math.Clamp(pos.X + _offset.X, 0, console.Width), pos.Y + _offset.Y);
             }
             else
             {
-                pos = new Point(pos.X + Offset.X, pos.Y + Offset.Y);
+                pos = new Point(pos.X + _offset.X, pos.Y + _offset.Y);
 
 
             }

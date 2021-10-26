@@ -1,563 +1,633 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using PrimS.Telnet;
 using SadConsole;
+using SadConsole.UI;
+using SadConsole.UI.Themes;
 using SadRogue.Primitives;
 using Console = SadConsole.Console;
-using PrimS.Telnet;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-
-using SadConsole.UI.Controls;
-using SadConsole.UI.Themes;
-using SadConsole.UI;
-using System.Text.RegularExpressions;
 
 namespace HeartSignal
 {
-    static class Program
-    {
-        public static ClassicConsole MainConsole;
-        public static DisplayConsole RoomConsole;
-        static DisplayConsole ThingConsole;
-        static MapConsole MapConsole;
-        public static PromptWindow PromptWindow;
-        public static InventoryConsole InventoryConsole;
-        public static InventoryConsole ExamInventoryConsole;
-        public static InventoryConsole GrasperConsole;
-        static BarConsole BarConsole;
-        public static Console root;
-        public static bool verboseDebug = false;
+	static class Program
+	{
+		public static ClassicConsole MainConsole;
+		public static DisplayConsole RoomConsole;
+		static DisplayConsole ThingConsole;
+		static MapConsole MapConsole;
+		public static PromptWindow PromptWindow;
+		public static InventoryConsole InventoryConsole;
+		public static InventoryConsole ExamInventoryConsole;
+		public static InventoryConsole GrasperConsole;
+		static BarConsole BarConsole;
+		private static Console root;
+		public static LoginConsole loginConsole;
 
-        public static Client TelnetClient;
-        [STAThread]
-        private static void Main(string[] args)
-        {
+		public static bool verboseDebug;
 
-
-
-            var SCREEN_WIDTH = (96 * 2) + 30;
-            var SCREEN_HEIGHT = 54 + 5;
-
-            SadConsole.Settings.WindowTitle = "HeartSignal Prism";
-            SadConsole.Settings.UseDefaultExtendedFont = true;
-
-            SadConsole.Settings.AllowWindowResize = true;
-            SadConsole.UI.Themes.Library.Default.Colors.Lines = new AdjustableColor(Color.Red, "red");
+		public static Client TelnetClient;
+		[STAThread]
+		private static void Main()
+		{
 
 
 
-            SadConsole.Game.Create(SCREEN_WIDTH, SCREEN_HEIGHT);
-            SadConsole.Game.Instance.OnStart = Init;
-            SadConsole.Game.Instance.Run();
+			var SCREEN_WIDTH = (96 * 2) + 30;
+			var SCREEN_HEIGHT = 54 + 5;
 
-            SadConsole.Game.Instance.Dispose();
+			Settings.WindowTitle = "HeartSignal Prism";
+			Settings.UseDefaultExtendedFont = true;
 
-        }
-
-
-
-        private static void Init()
-        {
-            ColoredString.CustomProcessor = Utility.CustomParseCommand;
-            root = new Console(1, 1);
-            MainConsole = new ClassicConsole(1, 1);
-            root.Children.Add(MainConsole);
-            MapConsole = new MapConsole(1, 1);
-            root.Children.Add(MapConsole);
-            RoomConsole = new DisplayConsole(1, 1);
-            root.Children.Add(RoomConsole);
-            ThingConsole = new DisplayConsole(1, 1);
-            ThingConsole.ExplicitLook = true;
-            root.Children.Add(ThingConsole);
-            InventoryConsole = new InventoryConsole(1, 1);
-            InventoryConsole.tagline = "My Body";
-            InventoryConsole.self = true;
-            root.Children.Add(InventoryConsole);
-            ExamInventoryConsole = new InventoryConsole(1, 1);
-            ExamInventoryConsole.tagline = "Their Body";
-            root.Children.Add(ExamInventoryConsole);
-            GrasperConsole = new InventoryConsole(1, 1);
-            GrasperConsole.tagline = "I can hold with";
-            root.Children.Add(GrasperConsole);
-            BarConsole = new BarConsole(1, 1);
-            root.Children.Add(BarConsole);
+			Settings.AllowWindowResize = true;
+			Library.Default.Colors.Lines = new AdjustableColor(Color.Red, "red");
 
 
 
+			Game.Create(SCREEN_WIDTH, SCREEN_HEIGHT);
+			Game.Instance.OnStart = Init;
+			Game.Instance.Run();
+
+			Game.Instance.Dispose();
+
+		}
 
 
 
-            PromptWindow = new PromptWindow(30, 10, new Point(WIDTH / 2 - 15, HEIGHT / 2 - 5));
+		private static void Init()
+		{
+			ColoredString.CustomProcessor = Utility.CustomParseCommand;
+			root = new Console(1, 1);
+			MainConsole = new ClassicConsole(1, 1);
+			root.Children.Add(MainConsole);
+			MapConsole = new MapConsole(1, 1);
+			root.Children.Add(MapConsole);
+			RoomConsole = new DisplayConsole(1, 1);
+			root.Children.Add(RoomConsole);
+			ThingConsole = new DisplayConsole(1, 1);
+			ThingConsole.ExplicitLook = true;
+			root.Children.Add(ThingConsole);
+			InventoryConsole = new InventoryConsole(1, 1);
+			InventoryConsole.tagline = "My Body";
+			InventoryConsole.self = true;
+			root.Children.Add(InventoryConsole);
+			ExamInventoryConsole = new InventoryConsole(1, 1);
+			ExamInventoryConsole.tagline = "Their Body";
+			root.Children.Add(ExamInventoryConsole);
+			GrasperConsole = new InventoryConsole(1, 1);
+			GrasperConsole.tagline = "I can hold with";
+			root.Children.Add(GrasperConsole);
+			BarConsole = new BarConsole(1, 1);
+			root.Children.Add(BarConsole);
+            
+#if RELEASE
 
-            root.Children.Add(PromptWindow);
+			loginConsole = new LoginConsole(1, 1);
+#endif
+            
+            
+
+			PromptWindow = new PromptWindow(30, 10, new Point(Width / 2 - 15, Height / 2 - 5));
+
+			root.Children.Add(PromptWindow);
 
 
 
-            PositionConsoles();
+			PositionConsoles();
+#if RELEASE
+			Game.Instance.Screen = loginConsole;
+#else
+
             Game.Instance.Screen = root;
-            // This is needed because we replaced the initial screen object with our own.
-            Game.Instance.DestroyDefaultStartingConsole();
+#endif
+            
+			// This is needed because we replaced the initial screen object with our own.
+			Game.Instance.DestroyDefaultStartingConsole();
 
-            // SadConsole.WIDTH = 100;
-            Settings.ResizeMode = Settings.WindowResizeOptions.None;
-            SadConsole.Game.Instance.MonoGameInstance.WindowResized += (s, a) => PositionConsoles();
-            ServerLoop();
+  
+			Settings.ResizeMode = Settings.WindowResizeOptions.None;
+			Game.Instance.MonoGameInstance.WindowResized += (s, a) => PositionConsoles();
+			ServerLoop();
+
 
 
 
+
+		}
+
+		public static int Width = 0;
+		public static int Height;
+
+
+		///TODO: TURN needRedraw into something that's part of a one inheritable console instead of each console having that
+		static void PositionConsoles()
+		{
+            
 
+			Program.Width = Game.Instance.MonoGameInstance.WindowWidth / root.FontSize.X;
+			Program.Height = Game.Instance.MonoGameInstance.WindowHeight / root.FontSize.Y;
+#if  RELEASE
+			if (loginConsole != null)
+			{
+				loginConsole.Resize(Program.Width, Program.Height, Program.Width, Program.Height, false);
+				
+				var defaultFontSize = SadConsole.Game.Instance.DefaultFont.GetFontSize(SadConsole.Game.Instance.DefaultFontSize);
+				var defaultFontSizeRatio = SadConsole.Game.Instance.DefaultFont.GetGlyphRatio(defaultFontSize);
+				
+				using ITexture sadImage = GameHost.Instance.GetTexture("lobby2.png");
+				ICellSurface logo;
 
-        }
+				logo = sadImage.ToSurface(TextureConvertMode.Background, Width, Height, foregroundStyle: TextureConvertForegroundStyle.Block, backgroundStyle: TextureConvertBackgroundStyle.Pixel);
+				
+				loginConsole.Surface = logo;
+				loginConsole.Position = new Point((Width/2) - loginConsole.Width/2 , 0);
+				loginConsole.miniDisplay.Position = new Point(-50, 0);
+				loginConsole.ReDraw();
+				return;
+			}
+#endif
 
-        public static int WIDTH = 0;
-        public static int HEIGHT = 0;
+            
+            
+			root.Resize(Program.Width, Program.Height, Program.Width, Program.Height, false);
 
 
-        ///TODO: TURN needRedraw into something that's part of a one inheritable console instead of each console having that
-        static void PositionConsoles()
-        {
+			int MapConsoleHeight = 7;
+			int inventoryWidth = 29;
+			int roomConsoleWidth = (Program.Width - (inventoryWidth * 3)) / 2;
+			int barConsoleHeight = 6;//ONLY EVEN due to map console size increase
+			int topconsolerowheight = 20;
 
-            WIDTH = Game.Instance.MonoGameInstance.WindowWidth / root.FontSize.X;
-            HEIGHT = Game.Instance.MonoGameInstance.WindowHeight / root.FontSize.Y;
-            root.Resize(WIDTH, HEIGHT, WIDTH, HEIGHT, false);
 
+			int width = Program.Width - (inventoryWidth * 2) - 2;
+			int height = Program.Height - (topconsolerowheight + barConsoleHeight + 4);
+			MainConsole.Resize(width / 2, height / 2, width / 2, height / 2, false);
+			MainConsole.Position = new Point((inventoryWidth + 2) / 2, (topconsolerowheight + barConsoleHeight) / 2);
 
-            int MapConsoleHeight = 7;
-            int inventoryWidth = 29;
-            int roomConsoleWidth = (WIDTH - (inventoryWidth * 3)) / 2;
-            int barConsoleHeight = 6;//ONLY EVEN due to map console size increase
-            int topconsolerowheight = 20;
+			//cringus
+			MainConsole.GetInputSource().Resize(width, 30, width, 30, false);//fun fact: input console is gigantic - just hidden under
+			MainConsole.GetInputSource().Position = new Point(0, height + 2);
+			MainConsole.GetInputSource().Cursor.Position = new Point(0, 0);
+			MainConsole.GetInputSource().Clear();
+			MainConsole.GetInputSource().Cursor.Print(">");
 
+			width = (inventoryWidth / 2) + 1;
+			height = MapConsoleHeight;
+			MapConsole.Resize(width, height, width, height, false);
+			MapConsole.Position = new Point((Program.Width / 2) - (inventoryWidth / 2) - 1, (barConsoleHeight) / 2);//dunno why +1 is here, it works, dont care
+			MapConsole.ReDraw();
 
-            int width = WIDTH - (inventoryWidth * 2) - 2;
-            int height = HEIGHT - (topconsolerowheight + barConsoleHeight + 4);
-            MainConsole.Resize(width / 2, height / 2, width / 2, height / 2, false);
-            MainConsole.Position = new Point((inventoryWidth + 2) / 2, (topconsolerowheight + barConsoleHeight) / 2);
+			width = roomConsoleWidth - 1;
+			height = topconsolerowheight;
+			RoomConsole.Resize(width, height, width, height, true);
+			RoomConsole.Position = new Point(inventoryWidth + 1, barConsoleHeight);
+			RoomConsole.ReDraw();
 
-            //cringus
-            MainConsole.GetInputSource().Resize(width, 30, width, 30, false);//fun fact: input console is gigantic - just hidden under
-            MainConsole.GetInputSource().Position = new Point(0, height + 2);
-            MainConsole.GetInputSource().Cursor.Position = new Point(0, 0);
-            MainConsole.GetInputSource().Clear();
-            MainConsole.GetInputSource().Cursor.Print(">");
 
-            width = (inventoryWidth / 2) + 1;
-            height = MapConsoleHeight;
-            MapConsole.Resize(width, height, width, height, false);
-            MapConsole.Position = new Point((WIDTH / 2) - (inventoryWidth / 2) - 1, (barConsoleHeight) / 2);//dunno why +1 is here, it works, dont care
-            MapConsole.ReDraw();
+			PromptWindow.Position = new Point(Program.Width / 2 - 15, Program.Height / 2 - 5);
 
-            width = roomConsoleWidth - 1;
-            height = topconsolerowheight;
-            RoomConsole.Resize(width, height, width, height, true);
-            RoomConsole.Position = new Point(inventoryWidth + 1, barConsoleHeight);
-            RoomConsole.ReDraw();
+			width = roomConsoleWidth - 3;
+			height = topconsolerowheight;
+			ThingConsole.Resize(width, height, width, height, true);
+			ThingConsole.Position = new Point(inventoryWidth * 2 + roomConsoleWidth + 2, barConsoleHeight);
+			ThingConsole.ReDraw();
 
 
-            PromptWindow.Position = new Point(WIDTH / 2 - 15, HEIGHT / 2 - 5);
+			width = inventoryWidth;
+			height = Program.Height;
+			InventoryConsole.Resize(width, height, width, height, true);
+			InventoryConsole.Position = new Point(0, barConsoleHeight);
+			InventoryConsole.ActionOffset = new Point(10, 1);
+			InventoryConsole.ReDraw();
 
-            width = roomConsoleWidth - 3;
-            height = topconsolerowheight;
-            ThingConsole.Resize(width, height, width, height, true);
-            ThingConsole.Position = new Point(inventoryWidth * 2 + roomConsoleWidth + 2, barConsoleHeight);
-            ThingConsole.ReDraw();
 
+			width = inventoryWidth;
+			height = Program.Height - (MapConsoleHeight * 2) - 1;
+			ExamInventoryConsole.Resize(width, height, width, height, true);
+			ExamInventoryConsole.Position = new Point(Program.Width - inventoryWidth, (MapConsoleHeight * 2) + 1 + barConsoleHeight);
+			ExamInventoryConsole.ActionOffset = new Point(-30, 1);
+			ExamInventoryConsole.ReDraw();
 
-            width = inventoryWidth;
-            height = HEIGHT;
-            InventoryConsole.Resize(width, height, width, height, true);
-            InventoryConsole.Position = new Point(0, barConsoleHeight);
-            InventoryConsole.ActionOffset = new Point(10, 1);
-            InventoryConsole.ReDraw();
 
+			width = inventoryWidth;
+			height = topconsolerowheight;
+			GrasperConsole.Resize(width, height, width, height, false);
+			GrasperConsole.Position = new Point(inventoryWidth + roomConsoleWidth + 1, barConsoleHeight);
+			GrasperConsole.ActionOffset = new Point(0, 1);
+			GrasperConsole.clickableFirstLayer = false;
+			GrasperConsole.ReDraw();
 
-            width = inventoryWidth;
-            height = HEIGHT - (MapConsoleHeight * 2) - 1;
-            ExamInventoryConsole.Resize(width, height, width, height, true);
-            ExamInventoryConsole.Position = new Point(WIDTH - inventoryWidth, (MapConsoleHeight * 2) + 1 + barConsoleHeight);
-            ExamInventoryConsole.ActionOffset = new Point(-30, 1);
-            ExamInventoryConsole.ReDraw();
+			width = Program.Width;
+			height = barConsoleHeight - 1;
+			BarConsole.Resize(width, height, width, height, true);
 
 
-            width = inventoryWidth;
-            height = topconsolerowheight;
-            GrasperConsole.Resize(width, height, width, height, false);
-            GrasperConsole.Position = new Point(inventoryWidth + roomConsoleWidth + 1, barConsoleHeight);
-            GrasperConsole.ActionOffset = new Point(0, 1);
-            GrasperConsole.clickableFirstLayer = false;
-            GrasperConsole.ReDraw();
 
-            width = WIDTH;
-            height = barConsoleHeight - 1;
-            BarConsole.Resize(width, height, width, height, true);
 
 
 
+		}
 
 
 
-        }
+		static List<string> messageQueue = new List<string>();
+		public static bool SendNetworkMessage(string message)
+		{
 
+			messageQueue.Add(message);
+			needToSendMessage = true;
+			if (verboseDebug)
+			{
+				System.Console.WriteLine("Sending Message: " + message);
+			}
+			return true;
 
+		}
 
-        static List<string> messageQueue = new List<string>();
-        public static bool SendNetworkMessage(string message)
-        {
+		static bool needToSendMessage = false;
 
-            messageQueue.Add(message);
-            needToSendMessage = true;
-            if (verboseDebug)
-            {
-                System.Console.WriteLine("Sending Message: " + message);
-            }
-            return true;
 
-        }
+		public static List<string> ExtractQuotationStrings(string s)
+		{
 
-        static bool needToSendMessage = false;
+			List<string> stringlist = new List<string>();
 
+			while (true)
+			{
+				int posFrom = s.IndexOf('"');
+				if (posFrom != -1) //if found char
+				{
+					int posTo = s.IndexOf('"', posFrom + 1);
+					if (posTo != -1) //if found char
+					{
+						stringlist.Add(s.Substring(posFrom + 1, posTo - posFrom - 1));
 
-        public static List<string> ExtractQuotationStrings(string s)
-        {
+						s = s.Remove(0, posTo + 1);//+1 to cut the comma
 
-            List<string> stringlist = new List<string>();
+						continue;
 
-            while (true)
-            {
-                int posFrom = s.IndexOf('"');
-                if (posFrom != -1) //if found char
-                {
-                    int posTo = s.IndexOf('"', posFrom + 1);
-                    if (posTo != -1) //if found char
-                    {
-                        stringlist.Add(s.Substring(posFrom + 1, posTo - posFrom - 1));
+					}
+				}
+				break;
+			}
 
-                        s = s.Remove(0, posTo + 1);//+1 to cut the comma
 
-                        continue;
+			return stringlist;
 
-                    }
-                }
-                break;
-            }
+		}
+		private static void SplitInput(string input)
+		{
 
 
-            return stringlist;
 
-        }
-        private static void SplitInput(string input)
-        {
+			int idx = input.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+			//          if (idx < 1) {
 
 
+			//       idx = input.IndexOf('\n');
 
-            int idx = input.IndexOf(Environment.NewLine);
-            //          if (idx < 1) {
+			if (idx < 1)
+			{
 
 
-            //       idx = input.IndexOf('\n');
+				idx = input.IndexOf('\r');
 
-            if (idx < 1)
-            {
 
 
-                idx = input.IndexOf('\r');
+			}
 
+			// }
+			if (idx > 0)
+			{
+				ParseServerInput(input.Substring(0, idx));
+				input = input.Remove(0, idx + 2);//i'm not exactly sure why the +2 is needed, but it works, dont touch it
+				if (input.Length > 1)
+				{
 
+					SplitInput(input);
 
-            }
 
-            // }
-            if (idx > 0)
-            {
-                ParseServerInput(input.Substring(0, idx));
-                input = input.Remove(0, idx + 2);//i'm not exactly sure why the +2 is needed, but it works, dont touch it
-                if (input.Length > 1)
-                {
+				}
+				return;
+			}
 
-                    SplitInput(input);
+			ParseServerInput(input);
 
 
-                }
-                return;
-            }
 
-            ParseServerInput(input);
 
+		}
+		private static void ParseServerInput(string input)
+		{
 
 
+			int idx = input.IndexOf(':');
+			if (idx > 0 && idx < 11)//hardcoded max lenght, kinda cringe but whatever for now
+			{
 
-        }
-        private static void ParseServerInput(string input)
-        {
+				string sub = input.Substring(0, idx);
+				string cutstring = input;
+				string[] returned;
+				//  System.Console.WriteLine(input);
+				switch (sub)
+				{
 
+					//a lot of parse repeating - turn this into a function at some point - me from the future: turned some bits into functions however there is still shitload of repeating, needs quite a big refactor
+					case "desc":
+						returned = RemoveParseTag(cutstring);
+						cutstring = returned[0];
 
-            int idx = input.IndexOf(':');
-            if (idx > 0 && idx < 11)//hardcoded max lenght, kinda cringe but whatever for now
-            {
+						ThingConsole.lines = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+						ThingConsole.ReDraw();
+						break;
+					case "room":
+						returned = RemoveParseTag(cutstring);
+						cutstring = returned[0];
 
-                string sub = input.Substring(0, idx);
-                string cutstring = input;
-                string[] returned;
-                //  System.Console.WriteLine(input);
-                switch (sub)
-                {
+						RoomConsole.lines = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+						RoomConsole.ReDraw();
+						break;
+					case "actions":
+						returned = RemoveParseTag(cutstring);
+						cutstring = returned[0];
 
-                    ///a lot of parse repeating - turn this into a function at some point - me from the future: turned some bits into functions however there is still shitload of repeating, needs quite a big refactor
-                    case "desc":
-                        returned = RemoveParseTag(cutstring);
-                        cutstring = returned[0];
+						string[] args = returned[1].Split("-");
+						if (!ActionWindow.actionDatabase.ContainsKey(args[0]))
+						{
+							ActionWindow.actionDatabase[args[0]] = new Dictionary<string, List<string>>();
+						}
 
-                        ThingConsole.lines = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        ThingConsole.ReDraw();
-                        break;
-                    case "room":
-                        returned = RemoveParseTag(cutstring);
-                        cutstring = returned[0];
+						ActionWindow.actionDatabase[args[0]][args[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+						break;
+					//obsolete
+					case "argactions":
+						MainConsole.ReciveExternalInput("obsolete parsing tag recived:");
+						MainConsole.ReciveExternalInput(cutstring);
+						break;
+					case "bars":
+						returned = RemoveParseTag(cutstring);
+						cutstring = returned[0];
 
-                        RoomConsole.lines = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        RoomConsole.ReDraw();
-                        break;
-                    case "actions":
-                        returned = RemoveParseTag(cutstring);
-                        cutstring = returned[0];
 
-                        string[] args = returned[1].Split("-");
-                        if (!ActionWindow.actionDatabase.ContainsKey(args[0]))
-                        {
-                            ActionWindow.actionDatabase[args[0]] = new Dictionary<string, List<string>>();
-                        }
+						BarConsole.AddBar(returned[1], ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));
+						break;
+					case "map":
 
-                        ActionWindow.actionDatabase[args[0]][args[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        break;
-                        //obsolete
-                    case "argactions":
-                        MainConsole.ReciveExternalInput("obsolete parsing tag recived:");
-                        MainConsole.ReciveExternalInput(cutstring);
-                        break;
-                    case "bars":
-                        returned = RemoveParseTag(cutstring);
-                        cutstring = returned[0];
 
+						returned = RemoveParseTag(cutstring);
+						cutstring = returned[0];
 
-                        BarConsole.AddBar(returned[1], ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));
-                        break;
-                    case "map":
+						MapConsole.mapdata = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+						MapConsole.ReDraw();
+						break;
+					case "cexits":
 
+						returned = RemoveParseTag(cutstring);
+						cutstring = returned[0];
 
-                        returned = RemoveParseTag(cutstring);
-                        cutstring = returned[0];
 
-                        MapConsole.mapdata = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        MapConsole.ReDraw();
-                        break;
-                    case "cexits":
+						MapConsole.cexists = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+						MapConsole.ReDraw();
+						break;
+					case "inventory":
 
-                        returned = RemoveParseTag(cutstring);
-                        cutstring = returned[0];
 
+						returned = RemoveParseTag(cutstring);
+						cutstring = returned[0];
 
-                        MapConsole.cexists = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        MapConsole.ReDraw();
-                        break;
-                    case "inventory":
+						NestedInfo info2 = new NestedInfo(null, null);
 
+						while (cutstring.Contains('{'))
+						{
+							NestedInfo innerinfo = GetNestedBrackets(cutstring);
+							info2.Contents.Add(innerinfo);
+							int[] innerindexes = GetOutermostBrackets(cutstring);
+							cutstring = cutstring.Remove(0, innerindexes[1] + 2).Replace(",", "").Trim();
+						}
+						InventoryConsole.tagline = returned[1];
+						InventoryConsole.inventoryInfo = info2;
+						InventoryConsole.ReDraw();
+						break;
+					case "examine":
 
-                        returned = RemoveParseTag(cutstring);
-                        cutstring = returned[0];
 
-                        NestedInfo info2 = new NestedInfo(null, null);
+						returned = RemoveParseTag(cutstring);
+						cutstring = returned[0];
 
-                        while (cutstring.Contains('{'))
-                        {
-                            NestedInfo innerinfo = GetNestedBrackets(cutstring);
-                            info2.Contents.Add(innerinfo);
-                            int[] innerindexes = GetOutermostBrackets(cutstring);
-                            cutstring = cutstring.Remove(0, innerindexes[1] + 2).Replace(",", "").Trim();
-                        }
-                        InventoryConsole.tagline = returned[1];
-                        InventoryConsole.inventoryInfo = info2;
-                        InventoryConsole.ReDraw();
-                        break;
-                    case "examine":
+						NestedInfo info3 = new NestedInfo(null, null);
 
+						while (cutstring.Contains('{'))
+						{
+							NestedInfo innerinfo = GetNestedBrackets(cutstring);
+							info3.Contents.Add(innerinfo);
+							int[] innerindexes = GetOutermostBrackets(cutstring);
+							cutstring = cutstring.Remove(0, innerindexes[1] + 2).Replace(",", "").Trim();
+						}
+						ExamInventoryConsole.tagline = returned[1];
+						ExamInventoryConsole.inventoryInfo = info3;
+						ExamInventoryConsole.ReDraw();
+						break;
+					case "holding":
 
-                        returned = RemoveParseTag(cutstring);
-                        cutstring = returned[0];
+						returned = RemoveParseTag(cutstring);
+						cutstring = returned[0];
+						NestedInfo info = new NestedInfo(null, null);
 
-                        NestedInfo info3 = new NestedInfo(null, null);
+						while (cutstring.Contains('{'))
+						{
+							NestedInfo innerinfo = GetNestedBrackets(cutstring);
+							info.Contents.Add(innerinfo);
+							int[] innerindexes = GetOutermostBrackets(cutstring);
+							cutstring = cutstring.Remove(0, innerindexes[1] + 2).Replace(",", "").Trim();
+						}
+						GrasperConsole.tagline = returned[1];
+						GrasperConsole.inventoryInfo = info;
+						GrasperConsole.ReDraw();
+						break;
+					case "sound":
+						returned = RemoveParseTag(cutstring);
+						cutstring = returned[0];
+						List<string> args3 = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+						AudioManager.ParseRequest(returned[1], args3[0], args3[1]);
 
-                        while (cutstring.Contains('{'))
-                        {
-                            NestedInfo innerinfo = GetNestedBrackets(cutstring);
-                            info3.Contents.Add(innerinfo);
-                            int[] innerindexes = GetOutermostBrackets(cutstring);
-                            cutstring = cutstring.Remove(0, innerindexes[1] + 2).Replace(",", "").Trim();
-                        }
-                        ExamInventoryConsole.tagline = returned[1];
-                        ExamInventoryConsole.inventoryInfo = info3;
-                        ExamInventoryConsole.ReDraw();
-                        break;
-                    case "holding":
+						break;
 
-                        returned = RemoveParseTag(cutstring);
-                        cutstring = returned[0];
-                        NestedInfo info = new NestedInfo(null, null);
+					case "border":
+						cutstring = cutstring.Remove(0, cutstring.IndexOf(":") + 1);
+						string[] settings = cutstring.Split("-");
 
-                        while (cutstring.Contains('{'))
-                        {
-                            NestedInfo innerinfo = GetNestedBrackets(cutstring);
-                            info.Contents.Add(innerinfo);
-                            int[] innerindexes = GetOutermostBrackets(cutstring);
-                            cutstring = cutstring.Remove(0, innerindexes[1] + 2).Replace(",", "").Trim();
-                        }
-                        GrasperConsole.tagline = returned[1];
-                        GrasperConsole.inventoryInfo = info;
-                        GrasperConsole.ReDraw();
-                        break;
-                    case "sound":
-                        returned = RemoveParseTag(cutstring);
-                        cutstring = returned[0];
-                        List<string> args3 = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        AudioManager.ParseRequest(returned[1], args3[0], args3[1]);
+						bool keep = false;
+						AnimatedBorderComponent._borderCellStyle = new ColoredGlyph(Color.White.FromParser(settings[0], out keep, out keep, out keep, out keep, out keep), Color.Black);
+						AnimatedBorderComponent.speed = float.Parse(settings[1]);
 
-                        break;
 
-                    case "border":
-                        cutstring = cutstring.Remove(0, cutstring.IndexOf(":") + 1);
-                        string[] settings = cutstring.Split("-");
+						break;
+					case "prompt":
 
-                        bool keep = false;
-                        AnimatedBorderComponent._borderCellStyle = new ColoredGlyph(Color.White.FromParser(settings[0], out keep, out keep, out keep, out keep, out keep), Color.Black);
-                        AnimatedBorderComponent.speed = float.Parse(settings[1]);
+						returned = RemoveParseTag(cutstring);
+						cutstring = returned[0];
 
+						PromptWindow.toptext = returned[1];
+						List<string> args4 = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+						PromptWindow.middletext = args4[0];
+						//cringe
+						PromptWindow.Type = (PromptWindow.popupType)Enum.Parse(typeof(PromptWindow.popupType), args4[1]);
+						PromptWindow.needsDraw = true;
 
-                        break;
-                    case "prompt":
 
-                        returned = RemoveParseTag(cutstring);
-                        cutstring = returned[0];
+						break;
 
-                        PromptWindow.toptext = returned[1];
-                        List<string> args4 = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-                        PromptWindow.middletext = args4[0];
-                        //cringe
-                        PromptWindow.Type = (PromptWindow.popupType)Enum.Parse(typeof(PromptWindow.popupType), args4[1]);
-                        PromptWindow.needsDraw = true;
 
 
-                        break;
+					case "exits":
 
+						//todo
+						break;
+					case "accept":
+#if RELEASE
+						Game.Instance.Screen = root;
+						if (loginConsole != null)
+						{
+							loginConsole.Dispose();
+							loginConsole.IsEnabled = false;
+							loginConsole = null;
+						}
 
+						PositionConsoles();
+#endif
+						break;
+					case "tagline":
 
-                    case "exits":
+						if (loginConsole != null)
+						{
+							loginConsole.tagline = cutstring.Remove(0, cutstring.IndexOf(":", StringComparison.Ordinal)+1);
+							loginConsole.ReDraw();
+						}
+                        
+						break;
 
-                        //todo
-                        break;
+					default:
+						if (verboseDebug)
+						{
+							System.Console.WriteLine("unkown parsing tag: " + sub);
+						}
+						//if we couldn't parse it - it's possibly not meant to be parsed - print it
+						if (loginConsole != null)
+						{
+							loginConsole.miniDisplay.Cursor.Print(input).NewLine();
+						}
+						else
+						{
 
-                    default:
-                        if (verboseDebug)
-                        {
-                            System.Console.WriteLine("unkown parsing tag: " + sub);
-                        }
-                        //if we couldn't parse it - it's possibly not meant to be parsed - print it
-                        MainConsole.ReciveExternalInput(input);
-                        break;
+							MainConsole.ReciveExternalInput(input);
+						}
 
-                }
+						break;
 
-            }
-            else
-            {
-                MainConsole.ReciveExternalInput(input);
-            }
+				}
 
+			}
+			else
+			{
+				if (loginConsole != null)
+				{
+					loginConsole.miniDisplay.Cursor.Print(input).NewLine();
+				}
+				else
+				{
 
+					MainConsole.ReciveExternalInput(input);
+				}
+			}
 
 
 
-        }
-        private static NestedInfo GetNestedBrackets(string text)
-        {
 
 
-            int[] indexes = GetOutermostBrackets(text);
-            string thingid = text.Substring(0, indexes[0]);
-            NestedInfo info = new NestedInfo(thingid, null);
-            string innerbracket = text.Substring(indexes[0] + 1, indexes[1] - (indexes[0] + 1));
+		}
+		private static NestedInfo GetNestedBrackets(string text)
+		{
 
-            while (innerbracket.Contains('{'))
-            {
-                NestedInfo innerinfo = GetNestedBrackets(innerbracket);
-                info.Contents.Add(innerinfo);
-                int[] innerindexes = GetOutermostBrackets(innerbracket);
-                innerbracket = innerbracket.Remove(0, innerindexes[1] + 1).Replace(",", "").Trim();
-            }
 
+			int[] indexes = GetOutermostBrackets(text);
+			string thingid = text.Substring(0, indexes[0]);
+			NestedInfo info = new NestedInfo(thingid, null);
+			string innerbracket = text.Substring(indexes[0] + 1, indexes[1] - (indexes[0] + 1));
 
+			while (innerbracket.Contains('{'))
+			{
+				NestedInfo innerinfo = GetNestedBrackets(innerbracket);
+				info.Contents.Add(innerinfo);
+				int[] innerindexes = GetOutermostBrackets(innerbracket);
+				innerbracket = innerbracket.Remove(0, innerindexes[1] + 1).Replace(",", "").Trim();
+			}
 
-            if (innerbracket.Length > 1)
-            {
 
-                info.Contents.Add(new NestedInfo(innerbracket, null));
-            }
 
-            return info;
-        }
-        private static int[] GetOutermostBrackets(string text)
-        {
+			if (innerbracket.Length > 1)
+			{
 
-            int first = text.IndexOf('{');
-            int layers = -1;
-            int counter = first;
-            int last = -1;
-            while (counter < text.Length)
-            {
-                if (text[counter] == '}')
-                {
-                    if (layers == 0)
-                    {
-                        last = counter;
-                        break;
+				info.Contents.Add(new NestedInfo(innerbracket, null));
+			}
 
-                    }
-                    else
-                    {
+			return info;
+		}
+		private static int[] GetOutermostBrackets(string text)
+		{
 
-                        layers--;
-                    }
+			int first = text.IndexOf('{');
+			int layers = -1;
+			int counter = first;
+			int last = -1;
+			while (counter < text.Length)
+			{
+				if (text[counter] == '}')
+				{
+					if (layers == 0)
+					{
+						last = counter;
+						break;
 
+					}
+					else
+					{
 
-                }
-                else if (text[counter] == '{')
-                {
+						layers--;
+					}
 
-                    layers++;
 
-                }
-                counter++;
+				}
+				else if (text[counter] == '{')
+				{
 
-            }
-            return new int[] { first, last };
+					layers++;
 
-        }
-        private static string[] RemoveParseTag(string s)
-        {
+				}
+				counter++;
 
+			}
+			return new int[] { first, last };
 
+		}
+		private static string[] RemoveParseTag(string s)
+		{
 
-            s = s.Remove(0, s.IndexOf(':') + 1);
 
-            string name = s.Substring(0, s.IndexOf('{'));
 
+			s = s.Remove(0, s.IndexOf(':') + 1);
 
-            s = s.Remove(0, s.IndexOf('{') + 1);
-            return new string[] { s, name };
-        }
+			string name = s.Substring(0, s.IndexOf('{'));
 
-        private static async void ServerLoop()
-        {
 
-            MainConsole.Cursor.NewLine();
-       //      SplitInput("room:{ \"\", \"Wow.\", \" !+!fear!+!(hello_123_[c:r;f:red]hangs;on;the;wall[c:u]_fuck_you)!+! . Your eyes are offended by <two_despicable_crogi(#161,#286)>.\"}");  
+			s = s.Remove(0, s.IndexOf('{') + 1);
+			return new string[] { s, name };
+		}
+
+		private static async void ServerLoop()
+		{
+
+			MainConsole.Cursor.NewLine();
+			//      SplitInput("room:{ \"\", \"Wow.\", \" !+!fear!+!(hello_123_[c:r;f:red]hangs;on;the;wall[c:u]_fuck_you)!+! . Your eyes are offended by <two_despicable_crogi(#161,#286)>.\"}");  
 #if DEBUG
             MainConsole.ReciveExternalInput("This is a debug build of HeartSignal, report to developers if you see this message");
             string ans = await MainConsole.AskForInput("Do you want verbose logging?(y/n)");
@@ -566,39 +636,40 @@ namespace HeartSignal
                 verboseDebug = true;
             }
 
-#endif
+
             string login = await MainConsole.AskForInput("Enter Login");
             string pass = await MainConsole.AskForInput("Enter Password");
             MainConsole.Clear();
             MainConsole.Cursor.NewLine();
             MainConsole.Cursor.Print("Attempting server connection....").NewLine();
-            using (Client client = new Client("deathcult.today", 6666, new System.Threading.CancellationToken()))
-            {
-                await client.TryLoginAsync("", "", 1000);
-
+#endif
+			using (Client client = new Client("deathcult.today", 6666, new CancellationToken()))
+			{
+				await client.TryLoginAsync("", "", 1000);
+#if DEBUG
                 await client.WriteLine("connect " + login + " " + pass);
-                string response = await client.ReadAsync(TimeSpan.FromMilliseconds(50));
-                MainConsole.ReciveExternalInput(response);
-                TelnetClient = client;
-                while (true)
-                {
+#endif
 
-                    if (needToSendMessage)
-                    {
-                        foreach (string message in new List<string>(messageQueue))
-                        {
-                            await client.WriteLine(message);
-                            messageQueue.Remove(message);
-                        }
-                        if (messageQueue.Count < 1)
-                        {
-                            needToSendMessage = false;
-                        }
-                    }
-                    response = await client.ReadAsync(TimeSpan.FromMilliseconds(50));
-                    if (response.Length > 1)
-                    {
-                        SplitInput(response);
+				TelnetClient = client;
+				while (true)
+				{
+
+					if (needToSendMessage)
+					{
+						foreach (string message in new List<string>(messageQueue))
+						{
+							await client.WriteLine(message);
+							messageQueue.Remove(message);
+						}
+						if (messageQueue.Count < 1)
+						{
+							needToSendMessage = false;
+						}
+					}
+					string response = await client.ReadAsync(TimeSpan.FromMilliseconds(50));
+					if (response.Length > 1)
+					{
+						SplitInput(response);
 #if DEBUG
 
                         if (verboseDebug)
@@ -608,17 +679,15 @@ namespace HeartSignal
 
 
 #endif
-                    }
+					}
 
-                    if (!client.IsConnected) { break; }
-                    //await Task.Delay(50);
-                }
-            }
-            MainConsole.Cursor.Print("Server Connection Ended").NewLine();
+					if (!client.IsConnected) { break; }
+					//await Task.Delay(50);
+				}
+			}
+			MainConsole.Cursor.Print("Server Connection Ended").NewLine();
 
-        }
+		}
 
-    }
+	}
 }
-
-

@@ -10,7 +10,7 @@ using SadConsole.Input;
 
 namespace HeartSignal
 {
-    internal class InputConsole : Console
+    public class InputConsole : Console
     {//ONLY EVER SHOULD EXIST AS A CHILD OF ANOTHER CONSOLE
         readonly KeyboardHandler keyboard;
 
