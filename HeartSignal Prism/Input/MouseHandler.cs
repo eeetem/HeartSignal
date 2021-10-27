@@ -33,17 +33,16 @@ namespace HeartSignal
  
                 return;
             }
-            //should be specific to map only but since it's the only thing using mouse i'll leave it here for now
             if (state.Mouse.RightButtonDown)
             {
-                AudioManager.StopAllSounds();
+                owner.RightClicked(state.CellPosition,state);
 
 
             }
             if (state.Mouse.LeftButtonDown && !holding)
             {
                 holding = true;
-                owner.Clicked(state.CellPosition);
+                owner.Clicked(state.CellPosition,state);
 
 
             }

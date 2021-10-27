@@ -160,11 +160,7 @@ namespace HeartSignal
             {
                 foreach (string action in actionDatabase[id][selectedTab])
                 {
-                    bool argFlag = false;
-                    if (action.Contains("[whatever]")) {
-
-                        argFlag = true;
-                    }
+                    bool argFlag = action.Contains("[whatever]");
                     string parsedAction = action.Replace(" [this]", "").Replace("[whatever]", "...").Replace("_", " ");
                     if (Cursor.Position.X + parsedAction.Length + 1 > Width)
                     {
@@ -268,7 +264,7 @@ namespace HeartSignal
 
                 int foo = i - 1;
                 button.MouseEnter += (s, a) => DisplayActions(name + "(" + IDs[foo] + ")", null);
-               // button.Click += (s, a) => ClickItem(IDs[foo]);
+                button.MouseButtonClicked += (s, a) => ClickItem(IDs[foo],a);
                 this.Controls.Add(button);
                 this.Cursor.Right(buttontext.Length + 1);
 
@@ -299,7 +295,7 @@ namespace HeartSignal
 
         }
 
-        static bool awaitingItemClick = false;
+        public static bool awaitingItemClick = false;
         static string PendingArgMessage = "";
         private static void DoArgAction(string id, string action,string name)
         {

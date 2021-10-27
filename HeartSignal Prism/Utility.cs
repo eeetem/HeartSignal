@@ -76,7 +76,7 @@ namespace HeartSignal
             name.Replace("_", " ");
             string realtext = RemoveParserTags(name);
 
-            bool forceApearance = !(realtext != name);
+            bool forceApearance = realtext == name;
 
 
             if (realtext.Length + console.Cursor.Position.X > console.Width)
@@ -157,15 +157,9 @@ namespace HeartSignal
 
             string realtext = RemoveParserTags(thingid[0]);
 
-            bool forceApearance = true;
-            if (realtext != thingid[0]) {
-                forceApearance = false;
+            bool forceApearance = realtext == thingid[0];
 
 
-            }
-
-          
-        
             if (realtext.Length + console.Cursor.Position.X > console.Width)
             {
                 console.Cursor.NewLine().Right(1);

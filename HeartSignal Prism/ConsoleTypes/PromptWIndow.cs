@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SadConsole;
+using SadConsole.Input;
 using Console = SadConsole.Console;
 using SadRogue.Primitives;
 using SadConsole.UI.Controls;
@@ -10,7 +11,7 @@ using SadConsole.UI;
 
 namespace HeartSignal
 {
-    class PromptWindow : SadConsole.UI.ControlsConsole
+    class PromptWindow : SadConsole.UI.ControlsConsole, IMouseInputReciver
     {
         public PromptWindow(int width, int height, Point position) : base(width, height)
         {
@@ -21,6 +22,7 @@ namespace HeartSignal
             IsVisible = false;
             UsePrintProcessor = true;
             Cursor.UseStringParser = true;
+            SadComponents.Add( new MouseHandler());
         }
 
 
@@ -141,5 +143,20 @@ namespace HeartSignal
 
         }
 
+
+        public void Clicked(Point clickloc, MouseScreenObjectState state)
+        {
+           
+        }
+
+        public void RightClicked(Point clickloc, MouseScreenObjectState state)
+        {
+            if (Type == popupType.permanent)
+            {
+                Program.PromptWindow.IsVisible = false;
+                ActionWindow.awaitingItemClick = false;
+                
+            }
+        }
     }
 }

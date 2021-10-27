@@ -6,7 +6,7 @@ using Console = SadConsole.Console;
 using SadRogue.Primitives;
 using SadConsole.UI.Controls;
 using SadConsole.UI.Themes;
-using SadConsole.UI;
+using SadConsole.Input;
 
 namespace HeartSignal
 {
@@ -25,7 +25,7 @@ namespace HeartSignal
         }
         readonly Point middle = new Point(3,3);
 
-       public void Clicked(Point loc) {
+       public void Clicked(Point loc, MouseScreenObjectState state) {
 
             loc = new Point((int)Math.Floor((double)loc.X / 2), loc.Y); //cells are 2 coordinates wide
 
@@ -80,7 +80,12 @@ namespace HeartSignal
 
         }
 
-        public List<string> cexists = new List<string>();
+       public void RightClicked(Point clickloc, MouseScreenObjectState state)
+       {
+           AudioManager.StopAllSounds();
+       }
+
+       public List<string> cexists = new List<string>();
         public List<string> mapdata = new List<string>();
 
         protected override void DrawConsole()
