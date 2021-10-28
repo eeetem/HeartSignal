@@ -14,8 +14,8 @@ namespace HeartSignal
     {
         public InventoryConsole(int width, int height) : base(width, height,true,true)
         {
-
-
+            Cursor.DisableWordBreak = false;
+            SadComponents.Add(new MouseHandler());
         }
         public string name { get; private set; }
 
@@ -31,11 +31,12 @@ namespace HeartSignal
 
         protected override void DrawConsole()
         {
+            Resize(ViewWidth,ViewHeight,Width,100,false);
             if (tagline.Length < 1) {
                 tagline = "Me";
                }
 
-
+           
             if (self) {
 
 
@@ -58,7 +59,7 @@ namespace HeartSignal
 
             }
 
-            
+            Resize(ViewWidth,ViewHeight,Width,Math.Max(Cursor.Position.Y,ViewHeight),false);
         }
 
 

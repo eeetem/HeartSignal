@@ -42,7 +42,7 @@ new int[] {177,177,177,177,177,177,177,177,177,177,177,177,177,},
             {
                 _borderConsole = new Console(console.Width + 2, console.Height + 2);
                 _borderConsole.Font = console.Font;
-                _borderConsole.DrawBox(new Rectangle(0, 0, _borderConsole.Width, _borderConsole.Height), _borderCellStyle, null, _borderGlyphs[0]);
+                _borderConsole.DrawBox(new Rectangle(0, 0, _borderConsole.ViewWidth, _borderConsole.ViewHeight), _borderCellStyle, null, _borderGlyphs[0]);
                 _borderConsole.Position = new Point(-1, -1);
                 _borderConsole.UseMouse = false;
                 console.Children.Add(_borderConsole);
@@ -70,12 +70,12 @@ new int[] {177,177,177,177,177,177,177,177,177,177,177,177,177,},
         double counter = 0;
         public override void Update(IScreenObject console, TimeSpan delta) {
             Console con = (Console)console;
-            _borderConsole.Resize(con.Width + 2, con.Height + 2, con.Width + 2, con.Height + 2, true);///this might cause performance issues
+            _borderConsole.Resize(con.ViewWidth + 2, con.ViewHeight + 2, con.ViewWidth + 2, con.ViewHeight + 2, true);///this might cause performance issues
             if (_borderConsole != null)
             {
                 counter += (delta.TotalSeconds/2)*speed;
                 if (counter > 4) { counter = 0; }
-                _borderConsole.DrawBox(new Rectangle(0, 0, _borderConsole.Width, _borderConsole.Height), _borderCellStyle, null, _borderGlyphs[(int)counter]);
+                _borderConsole.DrawBox(new Rectangle(0, 0, _borderConsole.ViewWidth, _borderConsole.ViewHeight), _borderCellStyle, null, _borderGlyphs[(int)counter]);
             }
 
         }

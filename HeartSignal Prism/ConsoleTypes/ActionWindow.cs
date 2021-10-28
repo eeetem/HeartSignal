@@ -33,13 +33,13 @@ namespace HeartSignal
         }
 
         //a lot fo reapeating code in here, integrate this better at some point
-        public void ShowTooltip(string text, Point? newPosition = null) {
+        public void ShowTooltip(string text,ICellSurface surface, Point? newPosition = null) {
             this.Resize(40, 12, 40, 12, false);
             AudioManager.ParseRequest(null, "play", "misc/tooltip.ogg");
             if (newPosition != null)
             {
 
-                Position = (Point)newPosition;
+                Position = (Point) newPosition - new Point(0, surface.ViewPosition.Y);
             }
             this.Clear();
             Controls.Clear();
@@ -67,7 +67,7 @@ namespace HeartSignal
 
 
 
-        public void DisplayActions(string item, Point? newPosition = null, bool expilcitlook = false)
+        public void DisplayActions(string item,  ICellSurface surface,Point? newPosition = null, bool expilcitlook = false)
         {
             //if (focusitem != null) { item = focusitem; }
             if (awaitingItemClick) { return; }
@@ -94,7 +94,7 @@ namespace HeartSignal
             if (newPosition != null)
             {
 
-                Position = (Point)newPosition;
+                Position = (Point) newPosition - new Point(0, surface.ViewPosition.Y);
             }
             this.Clear();
             Controls.Clear();
@@ -131,7 +131,7 @@ namespace HeartSignal
                         Theme = new ThingButtonTheme()
                     };
                     tab.MouseButtonClicked += (s, a) => selectedTab = tabs.Key;
-                    tab.MouseButtonClicked += (s, a) => DisplayActions(item, newPosition, expilcitlook);
+                    tab.MouseButtonClicked += (s, a) => DisplayActions(item, surface,newPosition, expilcitlook);
                     this.Controls.Add(tab);
                     Cursor.Right(tabs.Key.Length+1);
                 }
@@ -207,16 +207,15 @@ namespace HeartSignal
 
         }
 
-        public void DisplayMultiItem(string name, Point? newPosition = null, List<string> IDs = null)
+        public void DisplayMultiItem(string name, ICellSurface surface,Point? newPosition = null,List<string> IDs = null)
         {
             //if (awaitingItemClick) { return; }
-
+            
             if (newPosition != null)
             {
-
-                Position = (Point)newPosition;
+                Position = (Point) newPosition - new Point(0, surface.ViewPosition.Y);
             }
-
+            
             this.Clear();
             Controls.Clear();
             var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.Red, Color.Transparent));
@@ -299,7 +298,7 @@ namespace HeartSignal
         static string PendingArgMessage = "";
         private static void DoArgAction(string id, string action,string name)
         {
-            // index++;///arrays starting at 1 momment
+            // index++;//arrays starting at 1 momment
             PendingArgMessage = action.Replace("[this]", id);
             awaitingItemClick = true;
             Program.PromptWindow.toptext = "Click a thing to complete";

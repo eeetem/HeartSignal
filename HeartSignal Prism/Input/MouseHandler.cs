@@ -19,8 +19,11 @@ namespace HeartSignal
         IMouseInputReciver owner;
         public override void OnAdded(IScreenObject host)
         {
-            owner = (IMouseInputReciver)host;
+            if (host is IMouseInputReciver)
+            {
 
+                owner = (IMouseInputReciver) host;
+            }
         }
         bool holding;
 
@@ -35,14 +38,14 @@ namespace HeartSignal
             }
             if (state.Mouse.RightButtonDown)
             {
-                owner.RightClicked(state.CellPosition,state);
+                owner?.RightClicked(state.CellPosition,state);
 
 
             }
             if (state.Mouse.LeftButtonDown && !holding)
             {
                 holding = true;
-                owner.Clicked(state.CellPosition,state);
+                owner?.Clicked(state.CellPosition,state);
 
 
             }
@@ -50,12 +53,21 @@ namespace HeartSignal
             {
 
                 holding = false;
-
+                
 
             }
 
+            Console consolehost = (Console) host;
+            ICellSurface surface = consolehost.Surface;
+            if (state.CellPosition.Y-surface.ViewPosition.Y < 5)
+            {
+                surface.ViewPosition = surface.ViewPosition.Translate(new Point(0, -1));
+            }else  if (state.CellPosition.Y-surface.ViewPosition.Y  > surface.ViewHeight-10)
+            {
+                surface.ViewPosition = surface.ViewPosition.Translate(new Point(0, 1));
+            }
 
-           
+
 
 
         }

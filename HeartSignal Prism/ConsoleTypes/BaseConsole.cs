@@ -22,6 +22,7 @@ namespace HeartSignal
 
             Cursor.UseStringParser = true;
             UsePrintProcessor = true;
+            
             // SadComponents.Add(new CopyPasteMouse());
             if (border)
             {
@@ -34,6 +35,8 @@ namespace HeartSignal
                 actionWindow.IsVisible = false;
                 actionWindow.IsEnabled = false;
                 }
+
+            
         }
         protected ActionWindow actionWindow;
 

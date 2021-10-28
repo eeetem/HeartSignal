@@ -146,7 +146,7 @@ namespace HeartSignal
 
         public void ReciveInput(string value)
         {
-            ///sanitize stuff if not in dev mode
+            //sanitize stuff if not in dev mode
 #if RELEASE
 
 

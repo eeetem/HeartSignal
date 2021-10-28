@@ -179,23 +179,23 @@ namespace HeartSignal
 
 			width = roomConsoleWidth - 1;
 			height = topconsolerowheight;
-			RoomConsole.Resize(width, height, width, height, true);
-			RoomConsole.Position = new Point(inventoryWidth + 1, barConsoleHeight);
-			RoomConsole.ReDraw();
+			ThingConsole.Resize(width, height, width, 100, true);
+			ThingConsole.Position = new Point(inventoryWidth + 1, barConsoleHeight);
+			ThingConsole.ReDraw();
 
 
 			PromptWindow.Position = new Point(Program.Width / 2 - 15, Program.Height / 2 - 5);
 
 			width = roomConsoleWidth - 3;
 			height = topconsolerowheight;
-			ThingConsole.Resize(width, height, width, height, true);
-			ThingConsole.Position = new Point(inventoryWidth * 2 + roomConsoleWidth + 2, barConsoleHeight);
-			ThingConsole.ReDraw();
+			RoomConsole.Resize(width, height, width, 100, true);
+			RoomConsole.Position = new Point(inventoryWidth * 2 + roomConsoleWidth + 2, barConsoleHeight);
+			RoomConsole.ReDraw();
 
 
 			width = inventoryWidth;
 			height = Program.Height;
-			InventoryConsole.Resize(width, height, width, height, true);
+			InventoryConsole.Resize(width, height, width, 100, true);
 			InventoryConsole.Position = new Point(0, barConsoleHeight);
 			InventoryConsole.ActionOffset = new Point(10, 1);
 			InventoryConsole.ReDraw();
@@ -203,7 +203,7 @@ namespace HeartSignal
 
 			width = inventoryWidth;
 			height = Program.Height - (MapConsoleHeight * 2) - 1;
-			ExamInventoryConsole.Resize(width, height, width, height, true);
+			ExamInventoryConsole.Resize(width, height, width, 100, true);
 			ExamInventoryConsole.Position = new Point(Program.Width - inventoryWidth, (MapConsoleHeight * 2) + 1 + barConsoleHeight);
 			ExamInventoryConsole.ActionOffset = new Point(-30, 1);
 			ExamInventoryConsole.ReDraw();
@@ -211,7 +211,7 @@ namespace HeartSignal
 
 			width = inventoryWidth;
 			height = topconsolerowheight;
-			GrasperConsole.Resize(width, height, width, height, false);
+			GrasperConsole.Resize(width, height, width, 100, false);
 			GrasperConsole.Position = new Point(inventoryWidth + roomConsoleWidth + 1, barConsoleHeight);
 			GrasperConsole.ActionOffset = new Point(0, 1);
 			GrasperConsole.clickableFirstLayer = false;

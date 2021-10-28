@@ -97,7 +97,7 @@ namespace HeartSignal
             };
 
 
-            button.MouseEnter += (s, a) => ac.ShowTooltip(tip, pos);
+            button.MouseEnter += (s, a) => ac.ShowTooltip(tip, console.Surface,pos);
 
             console.Controls.Add(button);
             console.Cursor.Right(name.Length + 1);
@@ -164,6 +164,7 @@ namespace HeartSignal
             {
                 console.Cursor.NewLine().Right(1);
             }
+
             Point pos = console.Cursor.Position;
             if (clampactionwindow)
             {
@@ -186,7 +187,7 @@ namespace HeartSignal
                 };
 
 
-                button.MouseEnter += (s, a) => ac.DisplayActions(thingid[0] + "(" + thingid[1] + ")", pos, explicitlook);
+                button.MouseEnter += (s, a) => ac.DisplayActions(thingid[0] + "(" + thingid[1] + ")", console.Surface,pos, explicitlook);
                 button.MouseMove += (s, a) => (button.Theme as ThingButtonTheme).AdjustColor();
                 button.MouseExit += (s, a) => (button.Theme as ThingButtonTheme).DefaultColor();
                 button.MouseButtonClicked += (s, a) => ac.ClickItem(thingid[1],a);
@@ -203,7 +204,7 @@ namespace HeartSignal
                     Theme = new ThingButtonTheme()
                 };
 
-                button.MouseEnter += (s, a) => ac.DisplayMultiItem(thingid[0], pos, sameThingsIDs);
+                button.MouseEnter += (s, a) => ac.DisplayMultiItem(thingid[0],  console.Surface, pos, sameThingsIDs);
 
                 // button.Click += (s, a) => actionWindow.SetFocus(thing.Key);
                 console.Controls.Add(button);

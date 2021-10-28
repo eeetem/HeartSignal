@@ -14,13 +14,14 @@ namespace HeartSignal
         {
 
             // Disable the cursor since our keyboard handler will do the work.
+            SadComponents.Add(new MouseHandler());
          
         }
         public bool ExplicitLook = false;
         public List<string> lines = new List<string>();
         protected override void DrawConsole()
         {
-
+            Resize(ViewWidth,ViewHeight,Width,50,false);
 
             foreach (string fancy in new List<string>(lines))
             {
@@ -69,8 +70,9 @@ namespace HeartSignal
                 }
                 Cursor.NewLine();
             }
-
-
+            //TODO ADD THIS BACK WHEN SADCONSOLE FIXED EFFECT CLEARING
+            //Resize(ViewWidth,ViewHeight,Width,Math.Max(Cursor.Position.Y,ViewHeight),false);
+        
         }
 
     }
