@@ -59,7 +59,7 @@ namespace HeartSignal
 
             Console consolehost = (Console) host;
             ICellSurface surface = consolehost.Surface;
-            if (state.CellPosition.Y-surface.ViewPosition.Y < 4)
+            if (state.CellPosition.Y-surface.ViewPosition.Y < 4 )
             {
                 surface.ViewPosition = surface.ViewPosition.Translate(new Point(0, -1));
             }else  if (state.CellPosition.Y-surface.ViewPosition.Y  > surface.ViewHeight-4)
@@ -68,7 +68,7 @@ namespace HeartSignal
             }
 
 
-
+            surface.ViewPosition = surface.ViewPosition.Translate(new Point(0, (int)(state.Mouse.ScrollWheelValueChange*0.01)));
 
         }
 
