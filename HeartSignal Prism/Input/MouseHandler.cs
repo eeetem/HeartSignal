@@ -59,10 +59,10 @@ namespace HeartSignal
 
             Console consolehost = (Console) host;
             ICellSurface surface = consolehost.Surface;
-            if (state.CellPosition.Y-surface.ViewPosition.Y < 5)
+            if (state.CellPosition.Y-surface.ViewPosition.Y < 4)
             {
                 surface.ViewPosition = surface.ViewPosition.Translate(new Point(0, -1));
-            }else  if (state.CellPosition.Y-surface.ViewPosition.Y  > surface.ViewHeight-10)
+            }else  if (state.CellPosition.Y-surface.ViewPosition.Y  > surface.ViewHeight-4)
             {
                 surface.ViewPosition = surface.ViewPosition.Translate(new Point(0, 1));
             }

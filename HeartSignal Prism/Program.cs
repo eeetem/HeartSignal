@@ -194,7 +194,7 @@ namespace HeartSignal
 
 
 			width = inventoryWidth;
-			height = Program.Height;
+			height = Program.Height -barConsoleHeight;
 			InventoryConsole.Resize(width, height, width, 100, true);
 			InventoryConsole.Position = new Point(0, barConsoleHeight);
 			InventoryConsole.ActionOffset = new Point(10, 1);
@@ -202,7 +202,7 @@ namespace HeartSignal
 
 
 			width = inventoryWidth;
-			height = Program.Height - (MapConsoleHeight * 2) - 1;
+			height = Program.Height - (MapConsoleHeight * 2) - barConsoleHeight-1;
 			ExamInventoryConsole.Resize(width, height, width, 100, true);
 			ExamInventoryConsole.Position = new Point(Program.Width - inventoryWidth, (MapConsoleHeight * 2) + 1 + barConsoleHeight);
 			ExamInventoryConsole.ActionOffset = new Point(-30, 1);
