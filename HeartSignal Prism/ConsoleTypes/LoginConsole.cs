@@ -47,8 +47,10 @@ namespace HeartSignal
         ITexture texture;
         public void MakeSurfaceImage()
         {   if (Tagline=="") return;
+            var watch = System.Diagnostics.Stopwatch.StartNew();
            this.Clear();
-           
+         
+
           
             //using ITexture sadImage = GameHost.Instance.OpenStream("lobby.png");
             Random rnd = new Random();
@@ -83,8 +85,11 @@ namespace HeartSignal
                    
                 }
             }
-            
+             watch.Stop();
+            SurfaceGenerationTime = watch.ElapsedMilliseconds;
+
         }
+        float SurfaceGenerationTime = 100;
 
         public Console miniDisplay;
 
@@ -190,12 +195,7 @@ namespace HeartSignal
      
                 Thread thread = new Thread(MakeSurfaceImage);
                 thread.Start();
-                counter = 1000;
-               // var watch = System.Diagnostics.Stopwatch.StartNew();
-              //  MakeSurfaceImage();
-               // watch.Stop();
-                //var elapsedMs = watch.ElapsedMilliseconds;
-                //counter = elapsedMs*10;//dynamic animation speed in order to not melt bad CPUs
+                counter = SurfaceGenerationTime*2;//dynamic animation speed to not melt bad CPUs
                 IsDirty = true;
             }
             DrawImage();
