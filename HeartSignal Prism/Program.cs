@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Threading;
 using PrimS.Telnet;
 using SadConsole;
@@ -7,6 +8,10 @@ using SadConsole.UI;
 using SadConsole.UI.Themes;
 using SadRogue.Primitives;
 using Console = SadConsole.Console;
+using System.IO;
+using System.Reflection;
+using Color = SadRogue.Primitives.Color;
+using Point = SadRogue.Primitives.Point;
 
 namespace HeartSignal
 {
@@ -131,13 +136,12 @@ namespace HeartSignal
 			{
 				loginConsole.Resize(Program.Width, Program.Height, Program.Width, Program.Height, false);
 				
-				var defaultFontSize = SadConsole.Game.Instance.DefaultFont.GetFontSize(SadConsole.Game.Instance.DefaultFontSize);
-				var defaultFontSizeRatio = SadConsole.Game.Instance.DefaultFont.GetGlyphRatio(defaultFontSize);
+
 				
-				using ITexture sadImage = GameHost.Instance.GetTexture("lobby2.png");
+				using ITexture sadImage = GameHost.Instance.GetTexture("lobby.png");
 				ICellSurface logo;
 
-				logo = sadImage.ToSurface(TextureConvertMode.Background, Width, Height, foregroundStyle: TextureConvertForegroundStyle.Block, backgroundStyle: TextureConvertBackgroundStyle.Pixel);
+				logo = sadImage.ToSurface(TextureConvertMode.Foreground, Height*2, Height, foregroundStyle: TextureConvertForegroundStyle.AsciiSymbol);
 				
 				loginConsole.Surface = logo;
 				loginConsole.Position = new Point((Width/2) - loginConsole.Width/2 , 0);
@@ -156,13 +160,13 @@ namespace HeartSignal
 			int inventoryWidth = 29;
 			int roomConsoleWidth = (Program.Width - (inventoryWidth * 3)) / 2;
 			int barConsoleHeight = 6;//ONLY EVEN due to map console size increase
-			int topconsolerowheight = 20;
+			int topConsoleRowHeight = 20;
 
 
 			int width = Program.Width - (inventoryWidth * 2) - 2;
-			int height = Program.Height - (topconsolerowheight + barConsoleHeight + 4);
+			int height = Program.Height - (topConsoleRowHeight + barConsoleHeight + 4);
 			MainConsole.Resize(width / 2, height / 2, width / 2, height / 2, false);
-			MainConsole.Position = new Point((inventoryWidth + 2) / 2, (topconsolerowheight + barConsoleHeight) / 2);
+			MainConsole.Position = new Point((inventoryWidth + 2) / 2, (topConsoleRowHeight + barConsoleHeight) / 2);
 
 			//cringus
 			MainConsole.GetInputSource().Resize(width, 30, width, 30, false);//fun fact: input console is gigantic - just hidden under
@@ -178,7 +182,7 @@ namespace HeartSignal
 			MapConsole.ReDraw();
 
 			width = roomConsoleWidth - 1;
-			height = topconsolerowheight;
+			height = topConsoleRowHeight;
 			ThingConsole.Resize(width, height, width, 100, true);
 			ThingConsole.Position = new Point(inventoryWidth + 1, barConsoleHeight);
 			ThingConsole.ReDraw();
@@ -187,7 +191,7 @@ namespace HeartSignal
 			PromptWindow.Position = new Point(Program.Width / 2 - 15, Program.Height / 2 - 5);
 
 			width = roomConsoleWidth - 3;
-			height = topconsolerowheight;
+			height = topConsoleRowHeight;
 			RoomConsole.Resize(width, height, width, 100, true);
 			RoomConsole.Position = new Point(inventoryWidth * 2 + roomConsoleWidth + 2, barConsoleHeight);
 			RoomConsole.ReDraw();
@@ -210,7 +214,7 @@ namespace HeartSignal
 
 
 			width = inventoryWidth;
-			height = topconsolerowheight;
+			height = topConsoleRowHeight;
 			GrasperConsole.Resize(width, height, width, 100, false);
 			GrasperConsole.Position = new Point(inventoryWidth + roomConsoleWidth + 1, barConsoleHeight);
 			GrasperConsole.ActionOffset = new Point(0, 1);

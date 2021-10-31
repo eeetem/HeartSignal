@@ -30,4 +30,11 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="asd.png" />
+    <None Update="lobby.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

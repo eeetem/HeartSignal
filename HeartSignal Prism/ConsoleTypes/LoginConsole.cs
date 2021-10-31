@@ -78,7 +78,7 @@ namespace HeartSignal
             var button = new Button(11)
             {
                 Text = "Be Born",
-                Position = new Point(Width/2 -5 ,(Program.Height/2)-2),
+                Position = new Point(Width/2 -5 ,(Program.Height/2)+2),
             };
             button.MouseButtonClicked += (s, a) => input.FocusLost();
             button.MouseButtonClicked += (s, a) => password.FocusLost();
