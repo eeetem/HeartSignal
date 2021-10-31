@@ -180,11 +180,11 @@ namespace HeartSignal
                 surfaceCreated = true;
                 MakeControlls();
             }
-             watch.Stop();
-            SurfaceGenerationTime = watch.ElapsedMilliseconds;
+            watch.Stop();
+            surfaceGenerationTime = watch.ElapsedMilliseconds;
 
         }
-        float SurfaceGenerationTime = 100;
+        float surfaceGenerationTime = 100;
 
         public Console miniDisplay;
 
@@ -265,7 +265,7 @@ namespace HeartSignal
         delegate void VoidDelegate();
         private float counter = 0;
         public static Thread ImageDrawThread;
-        public override void Render(TimeSpan delta)
+        public override void Update(TimeSpan delta)
         {
             
             counter -= delta.Milliseconds;
@@ -275,11 +275,11 @@ namespace HeartSignal
                 PixelCache = texture.GetPixels();
                 ImageDrawThread = new Thread(MakeSurfaceImage);
                 ImageDrawThread.Start();
-                counter = SurfaceGenerationTime*2;//dynamic animation speed to not melt bad CPUs
+                counter = surfaceGenerationTime*2;//dynamic animation speed to not melt bad CPUs
                 IsDirty = true;
             }
             //DrawImage();
-            base.Render(delta);
+            base.Update(delta);
 
         }
     }
