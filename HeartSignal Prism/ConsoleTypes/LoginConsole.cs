@@ -34,6 +34,10 @@ namespace HeartSignal
            blurCounter = rnd.Next(0,50);
            saturCounter = rnd.Next(0,40);
             gammaCounter = rnd.Next(0,200);
+            using (MemoryStream stream = new MemoryStream(baseImage))
+            {
+                texture = GameHost.Instance.GetTexture(stream);
+            }
         }
 
         private byte[] baseImage;
@@ -43,14 +47,14 @@ namespace HeartSignal
         private int gammaCounter;
 
         private bool surfaceCreated = false;
-        
+        private Color[] PixelCache;//since you cant load pixels on a non UI thread - surface generation works the following way: 1.Main thread calls for surface generation 2.Main thread loads Pixels of OLD texture 3. new texture is generated 4. OLD cached pixels are turned into a surface. so image gets generated and printed into surface in 1 go however the surface print is from previous cycle
         ITexture texture;
         public void MakeSurfaceImage()
         {   if (Tagline=="") return;
             var watch = System.Diagnostics.Stopwatch.StartNew();
-           this.Clear();
+           //this.Clear();
          
-
+           
           
             //using ITexture sadImage = GameHost.Instance.OpenStream("lobby.png");
             Random rnd = new Random();
@@ -85,6 +89,97 @@ namespace HeartSignal
                    
                 }
             }
+            
+
+            var surfaceHeight = Program.Height;
+            var surfaceWidth = Program.Height * 2;
+          // this chunk of code is taken straight out of ToSurface() in sadconsole - however since the GetPixel() can't be dont outside of main thread i had to reuse their fucntion but with getpixel done on main thread beforehand
+            if (surfaceWidth <= 0 || surfaceHeight <= 0 || surfaceWidth != texture.Width )
+                return;
+
+            this.Clear();
+            ICellSurface surface = this.Surface;
+
+            
+
+            int fontSizeX = texture.Width / surfaceWidth;
+            int fontSizeY = texture.Height / surfaceHeight;
+
+            global::System.Threading.Tasks.Parallel.For(0, texture.Height / fontSizeY, (h) =>
+            //for (int h = 0; h < imageHeight / fontSizeY; h++)
+            {
+                int startY = h * fontSizeY;
+                //System.Threading.Tasks.Parallel.For(0, imageWidth / fontSizeX, (w) =>
+                for (int w = 0; w < texture.Width / fontSizeX; w++)
+                {
+                    int startX = w * fontSizeX;
+
+                    float allR = 0;
+                    float allG = 0;
+                    float allB = 0;
+
+                    for (int y = 0; y < fontSizeY; y++)
+                    {
+                        for (int x = 0; x < fontSizeX; x++)
+                        {
+                            int cY = y + startY;
+                            int cX = x + startX;
+
+                            int index = cY * texture.Width + cX;
+                            if (PixelCache.Length <= index) return;//window got resized - texutre and size mismatch
+                            Color color = PixelCache[index];
+                           
+                          
+                           
+                            allR += color.R;
+                            allG += color.G;
+                            allB += color.B;
+                        }
+                    }
+
+                    byte sr = (byte)(allR / (fontSizeX * fontSizeY));
+                    byte sg = (byte)(allG / (fontSizeX * fontSizeY));
+                    byte sb = (byte)(allB / (fontSizeX * fontSizeY));
+
+                    var newColor = new SadRogue.Primitives.Color(sr, sg, sb);
+
+                        float sbri = newColor.GetBrightness() * 255;
+
+                        if (sbri > 230)
+                            surface.SetGlyph(w, h, '#', newColor);
+                        else if (sbri > 207)
+                            surface.SetGlyph(w, h, '&', newColor);
+                        else if (sbri > 184)
+                            surface.SetGlyph(w, h, '$', newColor);
+                        else if (sbri > 161)
+                            surface.SetGlyph(w, h, 'X', newColor);
+                        else if (sbri > 138)
+                            surface.SetGlyph(w, h, 'x', newColor);
+                        else if (sbri > 115)
+                            surface.SetGlyph(w, h, '=', newColor);
+                        else if (sbri > 92)
+                            surface.SetGlyph(w, h, '+', newColor);
+                        else if (sbri > 69)
+                            surface.SetGlyph(w, h, ';', newColor);
+                        else if (sbri > 46)
+                            surface.SetGlyph(w, h, ':', newColor);
+                        else if (sbri > 23)
+                            surface.SetGlyph(w, h, '.', newColor);
+                    
+                }
+            }
+            );
+
+            Surface = surface;
+
+            Position = new Point((Program.Width/2) - Program.Height , 0);
+            miniDisplay.Position = new Point((Width / 2) - miniDisplay.Width/2, (Program.Height / 2) + 6);
+            this.Print(Width/2 - Tagline.Length/2, (Program.Height/2)-7,Tagline);
+            if (!surfaceCreated)
+            {
+                surfaceCreated = true;
+                MakeControlls();
+            }
              watch.Stop();
             SurfaceGenerationTime = watch.ElapsedMilliseconds;
 
@@ -109,22 +204,6 @@ namespace HeartSignal
 
         
         //idealy this should be part of the multithreaded MakeSurface image - however you cannot run ToSurface on a non Main thread due to monogame quirk that will hopefully be fixed at some point;
-        public void DrawImage()
-        {
-            if (Tagline==""||texture==null) return;
-            this.Clear();
-            ICellSurface logo = texture.ToSurface(TextureConvertMode.Foreground, Program.Height * 2, Program.Height, foregroundStyle: TextureConvertForegroundStyle.AsciiSymbol,cachedSurface: this.Surface);
-            Surface = logo;
-
-            Position = new Point((Program.Width/2) - Program.Height , 0);
-            miniDisplay.Position = new Point((Width / 2) - miniDisplay.Width/2, (Program.Height / 2) + 6);
-            this.Print(Width/2 - Tagline.Length/2, (Program.Height/2)-7,Tagline);
-            if (!surfaceCreated)
-            {
-                surfaceCreated = true;
-                MakeControlls();
-            }
-        }
 
         public void MakeControlls()
         {
@@ -185,20 +264,21 @@ namespace HeartSignal
 
         delegate void VoidDelegate();
         private float counter = 0;
+        public static Thread ImageDrawThread;
         public override void Render(TimeSpan delta)
         {
             
             counter -= delta.Milliseconds;
             if (counter < 0)
             {
-                
-     
-                Thread thread = new Thread(MakeSurfaceImage);
-                thread.Start();
+
+                PixelCache = texture.GetPixels();
+                ImageDrawThread = new Thread(MakeSurfaceImage);
+                ImageDrawThread.Start();
                 counter = SurfaceGenerationTime*2;//dynamic animation speed to not melt bad CPUs
                 IsDirty = true;
             }
-            DrawImage();
+            //DrawImage();
             base.Render(delta);
 
         }

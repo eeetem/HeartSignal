@@ -136,6 +136,7 @@ namespace HeartSignal
 #if  RELEASE
 			if (loginConsole != null)
 			{
+				//LoginConsole.ImageDrawThread?.Interrupt();//bad things happen if we dont due to texture size and surface size mismatch
 				
 				loginConsole.Resize(Program.Height*2, Program.Height, Height*2, Program.Height, false);
 				loginConsole.MakeControlls();
@@ -498,7 +499,7 @@ namespace HeartSignal
 						{
 							loginConsole.Tagline = cutstring.Remove(0, cutstring.IndexOf(":", StringComparison.Ordinal)+1);
 							Settings.WindowTitle = loginConsole.Tagline;
-							loginConsole.DrawImage();
+							loginConsole.MakeSurfaceImage();
 						}
                         
 						break;
