@@ -171,10 +171,10 @@ namespace HeartSignal
         public override void Render(TimeSpan delta)
         {
             
-            counter += delta.Milliseconds;
-            if (counter > 100)
+            counter -= delta.Milliseconds;
+            if (counter < 0)
             {
-                counter = 0;
+                counter = delta.Milliseconds*2;
      
                // Thread thread = new Thread(MakeSurfaceImage);
                 //thread.Start();
