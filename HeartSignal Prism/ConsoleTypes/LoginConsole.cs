@@ -7,6 +7,7 @@ using System.IO;
 using ImageProcessor;
 using Color = SadRogue.Primitives.Color;
 using Point = SadRogue.Primitives.Point;
+using System.Threading;
 
 namespace HeartSignal
 {
@@ -42,10 +43,10 @@ namespace HeartSignal
         private int gammaCounter;
 
         private bool surfaceCreated = false;
-        public void MakeSurfaceImage(bool force = false)
+        public void MakeSurfaceImage()
         {   if (Tagline=="") return;
-           
-            ICellSurface logo;
+           this.Clear();
+           ICellSurface logo;
             //using ITexture sadImage = GameHost.Instance.OpenStream("lobby.png");
             Random rnd = new Random();
             using (MemoryStream inStream = new MemoryStream(baseImage))
@@ -68,7 +69,7 @@ namespace HeartSignal
                             .GaussianSharpen(rnd.Next(0,10))
                             .GaussianBlur(blurCounter < 25 ? blurCounter : 50-blurCounter)
                              .Gamma(gammaCounter < 20 ? gammaCounter : 40-gammaCounter)
-                            .Resize(new Size(1200,1200))//it's faster to do all effects on a lowres image and then upscale it
+                            .Resize(new Size(Program.Height*2,Program.Height*2))//it's faster to do all effects on a lowres image and then upscale it
                             .Save(outStream);
                     }
                     
@@ -165,15 +166,18 @@ namespace HeartSignal
             Controls.Add(button);
         }
 
-
+        delegate void VoidDelegate();
         private int counter = 0;
         public override void Render(TimeSpan delta)
         {
             
             counter += delta.Milliseconds;
-            if (counter > 200)
+            if (counter > 100)
             {
                 counter = 0;
+     
+               // Thread thread = new Thread(MakeSurfaceImage);
+                //thread.Start();
                 MakeSurfaceImage();
                 IsDirty = true;
             }
