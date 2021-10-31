@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Threading;
 using PrimS.Telnet;
 using SadConsole;
@@ -39,7 +40,10 @@ namespace HeartSignal
 			var SCREEN_WIDTH = (96 * 2) + 30;
 			var SCREEN_HEIGHT = 54 + 5;
 
-			Settings.WindowTitle = "HeartSignal Prism";
+	
+			Settings.WindowTitle = File.ReadAllText("tagline.txt");
+		
+
 			Settings.UseDefaultExtendedFont = true;
 
 			Settings.AllowWindowResize = true;
@@ -493,8 +497,8 @@ namespace HeartSignal
 
 						if (loginConsole != null)
 						{
-							//loginConsole.tagline = cutstring.Remove(0, cutstring.IndexOf(":", StringComparison.Ordinal)+1);
-							loginConsole.tagline = "something bad is going to happen";
+							loginConsole.Tagline = cutstring.Remove(0, cutstring.IndexOf(":", StringComparison.Ordinal)+1);
+							Settings.WindowTitle = loginConsole.Tagline;
 							loginConsole.ReDraw();
 						}
                         

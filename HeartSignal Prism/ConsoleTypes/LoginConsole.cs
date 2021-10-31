@@ -43,7 +43,7 @@ namespace HeartSignal
 
         private bool surfaceCreated = false;
         public void MakeSurfaceImage(bool force = false)
-        {   if (tagline=="") return;
+        {   if (Tagline=="") return;
            
             ICellSurface logo;
             //using ITexture sadImage = GameHost.Instance.OpenStream("lobby.png");
@@ -63,11 +63,11 @@ namespace HeartSignal
                         if (saturCounter > 200) saturCounter = 0;
                         // Load, resize, set the format and quality and save an image.
                         imageFactory.Load(inStream)
-                            .Gamma(gammaCounter < 20 ? gammaCounter : 40-gammaCounter)
-                          //  .Rotate(rnd.Next(-1,1))
+                            //  .Rotate(rnd.Next(-1,1))
                             .Saturation(gammaCounter < 100 ? gammaCounter : 200-gammaCounter)
                             .GaussianSharpen(rnd.Next(0,10))
                             .GaussianBlur(blurCounter < 25 ? blurCounter : 50-blurCounter)
+                             .Gamma(gammaCounter < 20 ? gammaCounter : 40-gammaCounter)
                             .Resize(new Size(1200,1200))//it's faster to do all effects on a lowres image and then upscale it
                             .Save(outStream);
                     }
@@ -84,7 +84,7 @@ namespace HeartSignal
             				
             Position = new Point((Program.Width/2) - Program.Height , 0);
             miniDisplay.Position = new Point(Program.Width / 2 - 15, (Program.Height / 2) + 10);
-            this.Print(Width/2 - tagline.Length/2, (Program.Height/2)-7,tagline);
+            this.Print(Width/2 - Tagline.Length/2, (Program.Height/2)-7,Tagline);
             if (!surfaceCreated)
             {
                 surfaceCreated = true;
@@ -93,8 +93,21 @@ namespace HeartSignal
         }
 
         public Console miniDisplay;
-  
-        public string tagline ="";
+
+
+        private string tagline = "";
+        public string Tagline
+        {
+            get => tagline;
+
+
+            set
+            {
+                File.WriteAllText("tagline.txt",value);
+                tagline = value;
+            }
+        }
+
         public void ReDraw()
         {
           //  this.Clear();
