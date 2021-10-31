@@ -1,8 +1,12 @@
 ﻿using SadConsole;
 using System;
+using System.Drawing;
 using SadConsole.UI.Controls;
-using SadRogue.Primitives;
 using Console = SadConsole.Console;
+using System.IO;
+using ImageProcessor;
+using Color = SadRogue.Primitives.Color;
+using Point = SadRogue.Primitives.Point;
 
 namespace HeartSignal
 {
@@ -14,17 +18,78 @@ namespace HeartSignal
             // Disable the cursor since our keyboard handler will do the work.
             Cursor.IsEnabled = false;
             Cursor.IsVisible = false;
-
+            Surface.DefaultForeground = new Color(20, 20, 20);
             Cursor.DisableWordBreak = true;
 
             Cursor.UseStringParser = true;
-            UsePrintProcessor = true;
+           
             miniDisplay = new Console(30,15);
             
            // miniDisplay.SadComponents.Add(new AnimatedBorderComponent());
             Children.Add(miniDisplay);
-            
+            baseImage = File.ReadAllBytes("lobby.png");
+            //MakeSurfaceImage();
+            Random rnd = new Random();
+           blurCounter = rnd.Next(0,50);
+           saturCounter = rnd.Next(0,40);
+            gammaCounter = rnd.Next(0,200);
+        }
 
+        private byte[] baseImage;
+
+        private int blurCounter;
+        private int saturCounter;
+        private int gammaCounter;
+
+        private bool surfaceCreated = false;
+        public void MakeSurfaceImage(bool force = false)
+        {   if (tagline=="") return;
+           
+            ICellSurface logo;
+            //using ITexture sadImage = GameHost.Instance.OpenStream("lobby.png");
+            Random rnd = new Random();
+            using (MemoryStream inStream = new MemoryStream(baseImage))
+            {
+                using (MemoryStream outStream = new MemoryStream())
+                {
+                    // Initialize the ImageFactory using the overload to preserve EXIF metadata.
+                    using (ImageFactory imageFactory = new ImageFactory(preserveExifData:true))
+                    {
+                        blurCounter++;
+                        saturCounter++;
+                        gammaCounter++;
+                        if (blurCounter > 50) blurCounter = 0;
+                        if (gammaCounter > 40) gammaCounter = 0;
+                        if (saturCounter > 200) saturCounter = 0;
+                        // Load, resize, set the format and quality and save an image.
+                        imageFactory.Load(inStream)
+                            .Gamma(gammaCounter < 20 ? gammaCounter : 40-gammaCounter)
+                          //  .Rotate(rnd.Next(-1,1))
+                            .Saturation(gammaCounter < 100 ? gammaCounter : 200-gammaCounter)
+                            .GaussianSharpen(rnd.Next(0,10))
+                            .GaussianBlur(blurCounter < 25 ? blurCounter : 50-blurCounter)
+                            .Resize(new Size(1200,1200))//it's faster to do all effects on a lowres image and then upscale it
+                            .Save(outStream);
+                    }
+                    
+                    ITexture texture = GameHost.Instance.GetTexture(outStream);
+                  //  this.Resize(Program.Height * 2,Height,Program.Height * 2,Height,false);
+                    logo = texture.ToSurface(TextureConvertMode.Foreground, Program.Height * 2, Program.Height, foregroundStyle: TextureConvertForegroundStyle.AsciiSymbol,cachedSurface: this.Surface);
+                    Surface = logo;
+   
+    
+                   
+                }
+            }
+            				
+            Position = new Point((Program.Width/2) - Program.Height , 0);
+            miniDisplay.Position = new Point(Program.Width / 2 - 15, (Program.Height / 2) + 10);
+            this.Print(Width/2 - tagline.Length/2, (Program.Height/2)-7,tagline);
+            if (!surfaceCreated)
+            {
+                surfaceCreated = true;
+                ReDraw();
+            }
         }
 
         public Console miniDisplay;
@@ -33,11 +98,12 @@ namespace HeartSignal
         public void ReDraw()
         {
           //  this.Clear();
-            this.Controls.Clear();
-   
+          if(!surfaceCreated) return;
+          
+          this.Controls.Clear();
 
-            miniDisplay.Position = new Point(Width / 2 - 15, (Program.Height / 2) + 10);
-            this.Print(0, (Program.Height/2)-8,tagline.Align(HorizontalAlignment.Center,Width));
+
+
             
             var input = new TextBox(26)
             {
@@ -86,5 +152,20 @@ namespace HeartSignal
             Controls.Add(button);
         }
 
+
+        private int counter = 0;
+        public override void Render(TimeSpan delta)
+        {
+            
+            counter += delta.Milliseconds;
+            if (counter > 200)
+            {
+                counter = 0;
+                MakeSurfaceImage();
+                IsDirty = true;
+            }
+            base.Render(delta);
+
+        }
     }
 }

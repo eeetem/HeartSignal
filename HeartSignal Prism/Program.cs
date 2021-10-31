@@ -8,8 +8,6 @@ using SadConsole.UI;
 using SadConsole.UI.Themes;
 using SadRogue.Primitives;
 using Console = SadConsole.Console;
-using System.IO;
-using System.Reflection;
 using Color = SadRogue.Primitives.Color;
 using Point = SadRogue.Primitives.Point;
 
@@ -88,6 +86,7 @@ namespace HeartSignal
 #if RELEASE
 
 			loginConsole = new LoginConsole(1, 1);
+			
 #endif
             
             
@@ -124,7 +123,6 @@ namespace HeartSignal
 		public static int Height;
 
 
-		///TODO: TURN needRedraw into something that's part of a one inheritable console instead of each console having that
 		static void PositionConsoles()
 		{
             
@@ -134,18 +132,9 @@ namespace HeartSignal
 #if  RELEASE
 			if (loginConsole != null)
 			{
-				loginConsole.Resize(Program.Width, Program.Height, Program.Width, Program.Height, false);
 				
-
-				
-				using ITexture sadImage = GameHost.Instance.GetTexture("lobby.png");
-				ICellSurface logo;
-
-				logo = sadImage.ToSurface(TextureConvertMode.Foreground, Height*2, Height, foregroundStyle: TextureConvertForegroundStyle.AsciiSymbol);
-				
-				loginConsole.Surface = logo;
-				loginConsole.Position = new Point((Width/2) - loginConsole.Width/2 , 0);
-				loginConsole.miniDisplay.Position = new Point(-50, 0);
+				loginConsole.Resize(Program.Height*2, Program.Height, Height*2, Program.Height, false);
+				loginConsole.MakeSurfaceImage();
 				loginConsole.ReDraw();
 				return;
 			}
@@ -504,7 +493,8 @@ namespace HeartSignal
 
 						if (loginConsole != null)
 						{
-							loginConsole.tagline = cutstring.Remove(0, cutstring.IndexOf(":", StringComparison.Ordinal)+1);
+							//loginConsole.tagline = cutstring.Remove(0, cutstring.IndexOf(":", StringComparison.Ordinal)+1);
+							loginConsole.tagline = "something bad is going to happen";
 							loginConsole.ReDraw();
 						}
                         
