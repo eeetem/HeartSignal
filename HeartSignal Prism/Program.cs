@@ -138,8 +138,7 @@ namespace HeartSignal
 			{
 				
 				loginConsole.Resize(Program.Height*2, Program.Height, Height*2, Program.Height, false);
-				loginConsole.MakeSurfaceImage();
-				loginConsole.ReDraw();
+				loginConsole.MakeControlls();
 				return;
 			}
 #endif
@@ -499,7 +498,7 @@ namespace HeartSignal
 						{
 							loginConsole.Tagline = cutstring.Remove(0, cutstring.IndexOf(":", StringComparison.Ordinal)+1);
 							Settings.WindowTitle = loginConsole.Tagline;
-							loginConsole.ReDraw();
+							loginConsole.DrawImage();
 						}
                         
 						break;

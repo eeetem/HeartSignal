@@ -43,10 +43,13 @@ namespace HeartSignal
         private int gammaCounter;
 
         private bool surfaceCreated = false;
+        
+        ITexture texture;
         public void MakeSurfaceImage()
         {   if (Tagline=="") return;
            this.Clear();
-           ICellSurface logo;
+           
+          
             //using ITexture sadImage = GameHost.Instance.OpenStream("lobby.png");
             Random rnd = new Random();
             using (MemoryStream inStream = new MemoryStream(baseImage))
@@ -73,24 +76,14 @@ namespace HeartSignal
                             .Save(outStream);
                     }
                     
-                    ITexture texture = GameHost.Instance.GetTexture(outStream);
+                    texture = GameHost.Instance.GetTexture(outStream);
                   //  this.Resize(Program.Height * 2,Height,Program.Height * 2,Height,false);
-                    logo = texture.ToSurface(TextureConvertMode.Foreground, Program.Height * 2, Program.Height, foregroundStyle: TextureConvertForegroundStyle.AsciiSymbol,cachedSurface: this.Surface);
-                    Surface = logo;
-   
+                  
     
                    
                 }
             }
-            				
-            Position = new Point((Program.Width/2) - Program.Height , 0);
-            miniDisplay.Position = new Point(Program.Width / 2 - 15, (Program.Height / 2) + 10);
-            this.Print(Width/2 - Tagline.Length/2, (Program.Height/2)-7,Tagline);
-            if (!surfaceCreated)
-            {
-                surfaceCreated = true;
-                ReDraw();
-            }
+            
         }
 
         public Console miniDisplay;
@@ -109,7 +102,26 @@ namespace HeartSignal
             }
         }
 
-        public void ReDraw()
+        
+        //idealy this should be part of the multithreaded MakeSurface image - however you cannot run ToSurface on a non Main thread due to monogame quirk that will hopefully be fixed at some point;
+        public void DrawImage()
+        {
+            if (Tagline==""||texture==null) return;
+            this.Clear();
+            ICellSurface logo = texture.ToSurface(TextureConvertMode.Foreground, Program.Height * 2, Program.Height, foregroundStyle: TextureConvertForegroundStyle.AsciiSymbol,cachedSurface: this.Surface);
+            Surface = logo;
+
+            Position = new Point((Program.Width/2) - Program.Height , 0);
+            miniDisplay.Position = new Point((Width / 2) - miniDisplay.Width/2, (Program.Height / 2) + 6);
+            this.Print(Width/2 - Tagline.Length/2, (Program.Height/2)-7,Tagline);
+            if (!surfaceCreated)
+            {
+                surfaceCreated = true;
+                MakeControlls();
+            }
+        }
+
+        public void MakeControlls()
         {
           //  this.Clear();
           if(!surfaceCreated) return;
@@ -167,20 +179,26 @@ namespace HeartSignal
         }
 
         delegate void VoidDelegate();
-        private int counter = 0;
+        private float counter = 0;
         public override void Render(TimeSpan delta)
         {
             
             counter -= delta.Milliseconds;
             if (counter < 0)
             {
-                counter = delta.Milliseconds*2;
+                
      
-               // Thread thread = new Thread(MakeSurfaceImage);
-                //thread.Start();
-                MakeSurfaceImage();
+                Thread thread = new Thread(MakeSurfaceImage);
+                thread.Start();
+                counter = 1000;
+               // var watch = System.Diagnostics.Stopwatch.StartNew();
+              //  MakeSurfaceImage();
+               // watch.Stop();
+                //var elapsedMs = watch.ElapsedMilliseconds;
+                //counter = elapsedMs*10;//dynamic animation speed in order to not melt bad CPUs
                 IsDirty = true;
             }
+            DrawImage();
             base.Render(delta);
 
         }
