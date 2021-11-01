@@ -31,9 +31,10 @@ namespace HeartSignal
             baseImage = File.ReadAllBytes("lobby.png");
             //MakeSurfaceImage();
             Random rnd = new Random();
-           blurCounter = rnd.Next(0,50);
-           saturCounter = rnd.Next(0,40);
-            gammaCounter = rnd.Next(0,200);
+           blurCounter = rnd.Next(0,36);
+           contrastCounter = rnd.Next(0, 40);
+            gammaCounter = rnd.Next(0,20);
+            colorCounter = rnd.Next(0, 4);
             using (MemoryStream stream = new MemoryStream(baseImage))
             {
                 texture = GameHost.Instance.GetTexture(stream);
@@ -43,11 +44,12 @@ namespace HeartSignal
         private byte[] baseImage;
 
         private int blurCounter;
-        private int saturCounter;
+        private int contrastCounter;
         private int gammaCounter;
-
+        private int colorCounter;
+        
         private bool surfaceCreated = false;
-        private Color[] PixelCache;//since you cant load pixels on a non UI thread - surface generation works the following way: 1.Main thread calls for surface generation 2.Main thread loads Pixels of OLD texture 3. new texture is generated 4. OLD cached pixels are turned into a surface. so image gets generated and printed into surface in 1 go however the surface print is from previous cycle
+        private Color[] pixelCache;//since you cant load pixels on a non UI thread - surface generation works the following way: 1.Main thread calls for surface generation 2.Main thread loads Pixels of OLD texture 3. new texture is generated 4. OLD cached pixels are turned into a surface. so image gets generated and printed into surface in 1 go however the surface print is from previous cycle
         ITexture texture;
         public void MakeSurfaceImage()
         {   if (Tagline=="") return;
@@ -66,18 +68,20 @@ namespace HeartSignal
                     using (ImageFactory imageFactory = new ImageFactory(preserveExifData:true))
                     {
                         blurCounter++;
-                        saturCounter++;
+                        contrastCounter++;
                         gammaCounter++;
-                        if (blurCounter > 50) blurCounter = 0;
-                        if (gammaCounter > 40) gammaCounter = 0;
-                        if (saturCounter > 200) saturCounter = 0;
+                        colorCounter++;
+                        if (blurCounter > 36) blurCounter = 0;
+                        if (gammaCounter > 50) gammaCounter = 0;
+                        if (contrastCounter > 20) contrastCounter = 0;
+                        if (colorCounter > 60) colorCounter = 0;
                         // Load, resize, set the format and quality and save an image.
                         imageFactory.Load(inStream)
                             //  .Rotate(rnd.Next(-1,1))
-                            .Saturation(gammaCounter < 100 ? gammaCounter : 200-gammaCounter)
-                            .GaussianSharpen(rnd.Next(0,10))
-                            .GaussianBlur(blurCounter < 25 ? blurCounter : 50-blurCounter)
-                             .Gamma(gammaCounter < 20 ? gammaCounter : 40-gammaCounter)
+                            .Gamma(gammaCounter < 25 ? gammaCounter : 50-gammaCounter)
+                            .Contrast(contrastCounter < 10 ? contrastCounter-10 : (20-contrastCounter)-10)
+                            .GaussianBlur(blurCounter < 18 ? blurCounter : 36-blurCounter)
+                            .GaussianSharpen(rnd.Next(0,5))
                             .Resize(new Size(Program.Height*2,Program.Height*2))//it's faster to do all effects on a lowres image and then upscale it
                             .Save(outStream);
                     }
@@ -126,8 +130,8 @@ namespace HeartSignal
                             int cX = x + startX;
 
                             int index = cY * texture.Width + cX;
-                            if (PixelCache.Length <= index) return;//window got resized - texutre and size mismatch
-                            Color color = PixelCache[index];
+                            if (pixelCache==null || pixelCache.Length <= index) return;//window got resized - texutre and size mismatch
+                            Color color = pixelCache[index];
                            
                           
                            
@@ -272,10 +276,10 @@ namespace HeartSignal
             if (counter < 0)
             {
 
-                PixelCache = texture.GetPixels();
+                pixelCache = texture.GetPixels();
                 ImageDrawThread = new Thread(MakeSurfaceImage);
                 ImageDrawThread.Start();
-                counter = surfaceGenerationTime*2;//dynamic animation speed to not melt bad CPUs
+                counter = Math.Max(surfaceGenerationTime*2,400);//dynamic animation speed to not melt bad CPUs
                 IsDirty = true;
             }
             //DrawImage();

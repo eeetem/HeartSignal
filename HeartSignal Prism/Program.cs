@@ -626,6 +626,7 @@ namespace HeartSignal
 
 			MainConsole.Cursor.NewLine();
 			//      SplitInput("room:{ \"\", \"Wow.\", \" !+!fear!+!(hello_123_[c:r;f:red]hangs;on;the;wall[c:u]_fuck_you)!+! . Your eyes are offended by <two_despicable_crogi(#161,#286)>.\"}");  
+			SplitInput("tagline:somthing funny");
 #if DEBUG
             MainConsole.ReciveExternalInput("This is a debug build of HeartSignal, report to developers if you see this message");
             string ans = await MainConsole.AskForInput("Do you want verbose logging?(y/n)");
@@ -641,33 +642,37 @@ namespace HeartSignal
             MainConsole.Cursor.NewLine();
             MainConsole.Cursor.Print("Attempting server connection....").NewLine();
 #endif
-			using (Client client = new Client("deathcult.today", 6666, new CancellationToken()))
+			try
 			{
-				await client.TryLoginAsync("", "", 1000);
+				using (Client client = new Client("deathcult.today", 6666, new CancellationToken()))
+				{
+					await client.TryLoginAsync("", "", 1000);
 #if DEBUG
                 await client.WriteLine("connect " + login + " " + pass);
 #endif
 
-				TelnetClient = client;
-				while (true)
-				{
+					TelnetClient = client;
+					while (true)
+					{
 
-					if (needToSendMessage)
-					{
-						foreach (string message in new List<string>(messageQueue))
+						if (needToSendMessage)
 						{
-							await client.WriteLine(message);
-							messageQueue.Remove(message);
+							foreach (string message in new List<string>(messageQueue))
+							{
+								await client.WriteLine(message);
+								messageQueue.Remove(message);
+							}
+
+							if (messageQueue.Count < 1)
+							{
+								needToSendMessage = false;
+							}
 						}
-						if (messageQueue.Count < 1)
+
+						string response = await client.ReadAsync(TimeSpan.FromMilliseconds(50));
+						if (response.Length > 1)
 						{
-							needToSendMessage = false;
-						}
-					}
-					string response = await client.ReadAsync(TimeSpan.FromMilliseconds(50));
-					if (response.Length > 1)
-					{
-						SplitInput(response);
+							SplitInput(response);
 #if DEBUG
 
                     if (verboseDebug)
@@ -677,10 +682,27 @@ namespace HeartSignal
 
 
 #endif
-					}
+						}
 
-					if (!client.IsConnected) { break; }
-					//await Task.Delay(50);
+						if (!client.IsConnected)
+						{
+							break;
+						}
+						//await Task.Delay(50);
+					}
+				}
+			}
+			catch (InvalidOperationException e)
+			{
+				
+				if (loginConsole != null)
+				{
+					loginConsole.miniDisplay.Cursor.Print("Could not connect to server").NewLine();
+				}
+				else
+				{
+
+					MainConsole.ReciveExternalInput("Could not connect to server");
 				}
 			}
 			MainConsole.Cursor.Print("Server Connection Ended").NewLine();
