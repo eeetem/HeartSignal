@@ -31,10 +31,10 @@ namespace HeartSignal
             baseImage = File.ReadAllBytes("lobby.png");
             //MakeSurfaceImage();
             Random rnd = new Random();
-           blurCounter = rnd.Next(0,36);
+           blurCounter = rnd.Next(0,18);
            contrastCounter = rnd.Next(0, 40);
             gammaCounter = rnd.Next(0,20);
-            colorCounter = rnd.Next(0, 4);
+
             using (MemoryStream stream = new MemoryStream(baseImage))
             {
                 texture = GameHost.Instance.GetTexture(stream);
@@ -70,18 +70,18 @@ namespace HeartSignal
                         blurCounter++;
                         contrastCounter++;
                         gammaCounter++;
-                        colorCounter++;
-                        if (blurCounter > 36) blurCounter = 0;
+                    
+                        if (blurCounter > 26) blurCounter = 0;
                         if (gammaCounter > 50) gammaCounter = 0;
                         if (contrastCounter > 20) contrastCounter = 0;
-                        if (colorCounter > 60) colorCounter = 0;
+                
                         // Load, resize, set the format and quality and save an image.
                         imageFactory.Load(inStream)
                             //  .Rotate(rnd.Next(-1,1))
-                            .Gamma(gammaCounter < 25 ? gammaCounter : 50-gammaCounter)
                             .Contrast(contrastCounter < 10 ? contrastCounter-10 : (20-contrastCounter)-10)
-                            .GaussianBlur(blurCounter < 18 ? blurCounter : 36-blurCounter)
                             .GaussianSharpen(rnd.Next(0,5))
+                            .GaussianBlur(blurCounter < 13 ? blurCounter : 26-blurCounter)
+                            .Gamma(gammaCounter < 25 ? gammaCounter : 50-gammaCounter)
                             .Resize(new Size(Program.Height*2,Program.Height*2))//it's faster to do all effects on a lowres image and then upscale it
                             .Save(outStream);
                     }
