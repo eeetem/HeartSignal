@@ -319,7 +319,7 @@ namespace HeartSignal
 
 
 			int idx = input.IndexOf(':');
-			if (idx > 0 && idx < 11)//hardcoded max lenght, kinda cringe but whatever for now
+			if (idx > 0 && input.Contains("[tag]"))
 			{
 
 				string sub = input.Substring(0, idx);
