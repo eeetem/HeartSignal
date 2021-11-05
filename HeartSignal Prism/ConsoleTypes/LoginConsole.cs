@@ -71,7 +71,7 @@ namespace HeartSignal
                         contrastCounter++;
                         gammaCounter++;
                     
-                        if (blurCounter > 26) blurCounter = 0;
+                        if (blurCounter > 30) blurCounter = 0;
                         if (gammaCounter > 50) gammaCounter = 0;
                         if (contrastCounter > 20) contrastCounter = 0;
                 
@@ -80,7 +80,7 @@ namespace HeartSignal
                             //  .Rotate(rnd.Next(-1,1))
                             .Contrast(contrastCounter < 10 ? contrastCounter-10 : (20-contrastCounter)-10)
                             .GaussianSharpen(rnd.Next(0,5))
-                            .GaussianBlur(blurCounter < 13 ? blurCounter : 26-blurCounter)
+                            .GaussianBlur(blurCounter < 15 ? blurCounter : 30-blurCounter)
                             .Gamma(gammaCounter < 25 ? gammaCounter : 50-gammaCounter)
                             .Resize(new Size(Program.Height*2,Program.Height*2))//it's faster to do all effects on a lowres image and then upscale it
                             .Save(outStream);

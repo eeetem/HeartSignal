@@ -365,7 +365,7 @@ namespace HeartSignal
 						returned = RemoveParseTag(cutstring);
 						cutstring = returned[0];
 
-
+ 
 						BarConsole.AddBar(returned[1], ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));
 						break;
 					case "map":
@@ -373,7 +373,7 @@ namespace HeartSignal
 
 						returned = RemoveParseTag(cutstring);
 						cutstring = returned[0];
-
+						File.WriteAllText("debug.txt", cutstring+"\n");
 						MapConsole.mapdata = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
 						MapConsole.ReDraw();
 						break;
