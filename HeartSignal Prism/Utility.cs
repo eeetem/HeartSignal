@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SadRogue.Primitives;
 using SadConsole.StringParser;
 using SadConsole;
 using SadConsole.UI.Controls;
+using Console = SadConsole.Console;
 
 namespace HeartSignal
 {
@@ -222,6 +220,49 @@ namespace HeartSignal
             Program.SendNetworkMessage("ex " + id);
 
 
+        }
+        public static void PrintParseMessage(string message,ActionWindow ac,SadConsole.UI.ControlsConsole  con, bool explicitLook)
+        {
+            string[] words = message.Split(" ");
+            foreach (string word in words)
+            {
+                if (word.Contains("!+!"))
+                {
+                    string text;
+                    text = word.Replace("!+!", "").Replace("_", " ");
+                    string tip = text.Substring(text.IndexOf('(') + 1, text.Length - (text.IndexOf('(') + 2));
+                    text = text.Remove(text.IndexOf('('), text.Length - text.IndexOf('('));
+
+
+                    Utility.CreateToolTip(text, tip, con, ac);
+                }
+                else if (word.Contains("<"))
+                {
+                    string text2 = word;
+                    string leftover = "";
+                    if (text2.Length > text2.IndexOf('>'))
+                    {
+                        leftover = text2.Substring(text2.IndexOf('>') + 1, text2.Length - (text2.IndexOf('>') + 1));
+                    }
+
+                    text2 = text2.Remove(text2.IndexOf('>'), text2.Length - text2.IndexOf('>'));
+                    text2 = text2.Replace("<", "").Replace(">", "");
+                    Utility.CreateButtonThingId(Utility.SplitThingID(text2.Replace("_", " ")), con, ac, explicitLook,
+                        null, true);
+                    con.Cursor.Print(leftover).Right(1);
+                }
+                else
+                {
+                    if (con.Cursor.Position.X + word.Length > con.Width && !word.Contains("["))
+                    {
+                        con.Cursor.NewLine();
+                    }
+
+                    con.Cursor.Print(word.Replace("_", " ").Replace(";", " ") + " ");
+                }
+            }
+
+            con.Cursor.NewLine();
         }
     }
 }

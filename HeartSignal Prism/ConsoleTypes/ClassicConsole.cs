@@ -71,77 +71,27 @@ namespace HeartSignal
             }
             return inputToReturn;
         }
+        
+        //probably should be renamed to something better
         public void ReciveExternalInput(string value) {
 
             if (value.Contains("[clear]")){
                 ClearText();
                 return;
             }
-            DrawMessage(value);
-           // DrawMessage("[c:ga f:black:red:white:5:b:red:orange:yellow:green:blue:purple:blue:green:yellow:orange:red:200]Wow, a strip of human meat![c:u]");
 
-
-
-
-        }
-        private void DrawMessage(string value) {
-
-
-            string[] words = value.Split(" ");
-            foreach (string word in words)
-            {
-                if (word.Contains("!+!"))
-                {
-                    string text;
-                    text = word.Replace("!+!", "").Replace("_", " ");
-                    string tip = text.Substring(text.IndexOf('(') + 1, text.Length - (text.IndexOf('(') + 2));
-                    text = text.Remove(text.IndexOf('('), text.Length - text.IndexOf('('));
-
-
-                    Utility.CreateToolTip(text, tip,this,actionWindow);
-                    
-                 
-                }
-                else if (word.Contains("<")&& word.Contains(">"))
-                {
-                    string text2 = word;
-                    string leftover = "";
-                    if (text2.Length > text2.IndexOf('>'))
-                    {
-                        leftover = text2.Substring(text2.IndexOf('>') + 1, text2.Length - (text2.IndexOf('>') + 1));
-                    }
-                    text2 = text2.Remove(text2.IndexOf('>'), text2.Length - text2.IndexOf('>'));
-                    text2 = text2.Replace("<", "").Replace(">", "");
-                    Utility.CreateButtonThingId(Utility.SplitThingID(text2.Replace("_", " ")), this, actionWindow, false, null, true);
-                    Cursor.Print(leftover).Right(1);
-
-                }
-                else
-                {
-
-                    if (Cursor.Position.X + word.Length > Width && !word.Contains("["))
-                    {
-                        Cursor.NewLine();
-                    }
-                    Cursor.Print(word.Replace("_", " ") + " ");
-
-                }
-
-
-
-
-
-            }
-            Cursor.NewLine();
+            Utility.PrintParseMessage(value, actionWindow, this, false);
             if (!Program.verboseDebug) //if verbose debug is not set then all other prints would be disbaled so do a debug print here
             {
 
                 System.Console.WriteLine(value);
             }
 
-        
-        
+
+
+
         }
+
     
 
         public void ReciveInput(string value)
@@ -161,7 +111,7 @@ namespace HeartSignal
 
 
 
-            DrawMessage("[c:r_f:darkgray]" + value);
+            ReciveExternalInput("[c:r_f:darkgray]" + value);
 
             value = value.Replace(">", "");
             if (awaitingInput) {
