@@ -34,7 +34,7 @@ namespace HeartSignal
             Resize(ViewWidth,ViewHeight,Width,100,false);
             if (tagline.Length < 1) {
                 tagline = "Me";
-               }
+            }
 
            
             if (self) {

@@ -171,7 +171,7 @@ namespace HeartSignal
 			width = (inventoryWidth / 2) + 1;
 			height = MapConsoleHeight;
 			MapConsole.Resize(width, height, width, height, false);
-			MapConsole.Position = new Point((Program.Width / 2) - (inventoryWidth / 2) - 1, (barConsoleHeight) / 2);//dunno why +1 is here, it works, dont care
+			MapConsole.Position = new Point((Program.Width / 2) - (inventoryWidth / 2) , (barConsoleHeight) / 2);//dunno why +1 is here, it works, dont care
 			MapConsole.ReDraw();
 
 			width = roomConsoleWidth - 1;
@@ -218,6 +218,7 @@ namespace HeartSignal
 			height = barConsoleHeight - 1;
 			BarConsole.Resize(width, height, width, height, true);
 
+			//BarConsole.
 
 
 
@@ -468,7 +469,7 @@ namespace HeartSignal
 						List<string> args4 = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
 						PromptWindow.middletext = args4[0];
 						//cringe
-						PromptWindow.Type = (PromptWindow.popupType)Enum.Parse(typeof(PromptWindow.popupType), args4[1]);
+						PromptWindow.Type = (PromptWindow.PopupType)Enum.Parse(typeof(PromptWindow.PopupType), args4[1]);
 						PromptWindow.needsDraw = true;
 
 
@@ -627,6 +628,8 @@ namespace HeartSignal
 			MainConsole.Cursor.NewLine();
 			//      SplitInput("room:{ \"\", \"Wow.\", \" !+!fear!+!(hello_123_[c:r;f:red]hangs;on;the;wall[c:u]_fuck_you)!+! . Your eyes are offended by <two_despicable_crogi(#161,#286)>.\"}");  
 			//SplitInput("tagline:somthing funny");
+			SplitInput("[tag]bars:Corpus{\"brown:hunger:25\",\"blue:chungus syndrome:5\",\"64,64,64:testtest:35\"}");
+			SplitInput("[tag]bars:Psyche{\"brown:hunger:25\",\"blue:thirst:25\",\"64,64,64:testtest:25\",\"green:chungus:25\"}");
 #if DEBUG
             MainConsole.ReciveExternalInput("This is a debug build of HeartSignal, report to developers if you see this message");
             string ans = await MainConsole.AskForInput("Do you want verbose logging?(y/n)");
@@ -692,7 +695,7 @@ namespace HeartSignal
 					}
 				}
 			}
-			catch (InvalidOperationException e)
+			catch (InvalidOperationException)
 			{
 				
 				if (loginConsole != null)

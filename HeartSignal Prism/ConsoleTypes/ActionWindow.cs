@@ -303,7 +303,7 @@ namespace HeartSignal
             awaitingItemClick = true;
             Program.PromptWindow.toptext = "Click a thing to complete";
             Program.PromptWindow.middletext = action.Replace("[this]", name).Replace("[whatever]", "...?");
-            Program.PromptWindow.Type = PromptWindow.popupType.permanent;
+            Program.PromptWindow.Type = PromptWindow.PopupType.Permanent;
 
             Program.PromptWindow.needsDraw = true;
 

@@ -28,13 +28,13 @@ namespace HeartSignal
 
          public string toptext;
         public string middletext;
-        public enum popupType { 
-        binary,
-        text,
-        permanent,//has to be manually hid by other code
+        public enum PopupType { 
+        Binary,
+        Text,
+        Permanent,//has to be manually hid by other code
         
         }
-        public popupType Type;
+        public PopupType Type;
         public bool needsDraw = false;
 
 
@@ -55,7 +55,7 @@ namespace HeartSignal
                 }
                 Cursor.Print(word.Replace(";", " ")).RightWrap(1);
             }
-            if (Type == popupType.binary)
+            if (Type == PopupType.Binary)
             {
                 var button = new Button(5, 1)
                 {
@@ -78,7 +78,7 @@ namespace HeartSignal
                 button.Click += (s, a) => this.IsVisible = false;
                 this.Controls.Add(button);
             }
-            else if (Type == popupType.text)
+            else if (Type == PopupType.Text)
             {
 
                 var text = new TextBox(15)
@@ -104,7 +104,7 @@ namespace HeartSignal
 
 
             }
-            else if (Type == popupType.permanent)
+            else if (Type == PopupType.Permanent)
             {
 
 
@@ -151,7 +151,7 @@ namespace HeartSignal
 
         public void RightClicked(Point clickloc, MouseScreenObjectState state)
         {
-            if (Type == popupType.permanent)
+            if (Type == PopupType.Permanent)
             {
                 Program.PromptWindow.IsVisible = false;
                 ActionWindow.awaitingItemClick = false;

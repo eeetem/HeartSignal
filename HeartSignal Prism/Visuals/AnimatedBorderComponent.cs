@@ -70,14 +70,21 @@ new int[] {177,177,177,177,177,177,177,177,177,177,177,177,177,},
         double counter = 0;
         public override void Update(IScreenObject console, TimeSpan delta) {
             Console con = (Console)console;
-            _borderConsole.Resize(con.ViewWidth + 2, con.ViewHeight + 2, con.ViewWidth + 2, con.ViewHeight + 2, true);///this might cause performance issues
-            if (_borderConsole != null)
+            if (_borderConsole.Width != con.ViewWidth+2 || _borderConsole.Height != con.ViewHeight+2)
             {
-                counter += (delta.TotalSeconds/2)*speed;
-                if (counter > 4) { counter = 0; }
-                _borderConsole.DrawBox(new Rectangle(0, 0, _borderConsole.ViewWidth, _borderConsole.ViewHeight), _borderCellStyle, null, _borderGlyphs[(int)counter]);
-            }
+                _borderConsole.Resize(con.ViewWidth + 2, con.ViewHeight + 2, con.ViewWidth + 2, con.ViewHeight + 2,
+                    true); //this might cause performance issues
+             
+                    counter += (delta.TotalSeconds / 2) * speed;
+                    if (counter > 4)
+                    {
+                        counter = 0;
+                    }
 
+                    _borderConsole.DrawBox(new Rectangle(0, 0, _borderConsole.ViewWidth, _borderConsole.ViewHeight),
+                        _borderCellStyle, null, _borderGlyphs[(int) counter]);
+                
+            }
         }
     }
     /*

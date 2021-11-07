@@ -20,14 +20,13 @@ namespace HeartSignal
 
         }
 
-
-      Dictionary<string,List<Affliction>> Bars = new Dictionary<string,List<Affliction>>();
-		public void AddBar(string barname, List<string> affs) {
+        Dictionary<string,List<Affliction>> bars = new Dictionary<string,List<Affliction>>();
+		public void AddBar(string barName, List<string> affs) {
 
             List<Affliction> afflictions = new List<Affliction>();
             if (affs[0] == "delete") {
 
-                Bars.Remove(barname);
+                bars.Remove(barName);
                 return;
             }
             foreach (string arg in affs) {
@@ -51,7 +50,7 @@ namespace HeartSignal
                 afflictions.Add(new Affliction(new Gradient(Colors), args[1], Int32.Parse(args[2])));
 
             }
-            Bars[barname] = afflictions;
+            bars[barName] = afflictions;
 
         }
         float counter = 0;
@@ -62,44 +61,66 @@ namespace HeartSignal
             
 		}
 		protected void  DrawConsole(TimeSpan delta) {
-            if (Bars.Count == 0) return;
+            if (bars.Count == 0) return;
 
             counter += (float)delta.TotalSeconds/4 * AnimatedBorderComponent.speed;
             if (counter > 1) {
                 counter = 0;
             
             }
-           int glyphsPerBar = Width / Bars.Count;
+            // ReSharper disable once PossibleLossOfFraction -accuracy not highly important
+            float glyphsPerBar = (int)Math.Floor((double) ((Width-4) / bars.Count));
+            //all the functions take in a int - but this var is a float, the reason is it being an int fucks with math
 
             int index = 0;
-
-            foreach (KeyValuePair<string, List<Affliction>> Bar in Bars) {
-                ShapeParameters shape = ShapeParameters.CreateBorder(new ColoredGlyph(Color.Green, Color.Black,176));
-                Surface.DrawBox(new Rectangle((glyphsPerBar + 1) * index+1, 1, glyphsPerBar -3, 2), shape);
-                Surface.Print((glyphsPerBar + 1) * index + 1, 0, Bar.Key);
+            bool even = true;
+            foreach (KeyValuePair<string, List<Affliction>> Bar in bars)
+            {
+                even = !even;
+                ShapeParameters shape = ShapeParameters.CreateBorder(new ColoredGlyph(Color.Green, Color.Black, 176));
+                int barStart =  1+(int)((glyphsPerBar+1) * index);
+                Surface.DrawBox(new Rectangle(barStart, 1, (int)glyphsPerBar, 2), shape);
+                
+               
+              //  Surface.DrawBox(new Rectangle(glyphsPerBar * index+1, 1, glyphsPerBar -3, 2), shape);
+                Surface.Print((int) ((glyphsPerBar + 1) * index + 1), 0, Bar.Key);
                 int percentage = 0;
                 foreach (Affliction a in Bar.Value) {
 
-                    shape = ShapeParameters.CreateStyledBoxFilled(ICellSurface.ConnectedLineThick, new ColoredGlyph(a.color.Lerp(counter), a.color.Lerp(counter)), new ColoredGlyph(a.color.Lerp(counter), a.color.Lerp(counter)));
-                    Surface.DrawBox(new Rectangle(((glyphsPerBar + 1) * index + 1)+ (glyphsPerBar - 3) / 100 * percentage, 1, (glyphsPerBar - 3)/100*a.percentage, 2), shape);
+                    shape = ShapeParameters.CreateStyledBoxFilled(ICellSurface.ConnectedLineThin, new ColoredGlyph(a.color.Lerp(counter), a.color.Lerp(counter)), new ColoredGlyph(a.color.Lerp(counter), a.color.Lerp(counter)));
+                    int afflictionStart = (int) (barStart + glyphsPerBar / 100 * percentage);
+                    int afflictionLenght = (int) Math.Ceiling(glyphsPerBar / 100 * a.percentage);
+                    Surface.DrawBox(new Rectangle(afflictionStart , 1, afflictionLenght, 2), shape);
                     
 
-                    if (a.name.Length < (glyphsPerBar - 3) / 100 * a.percentage)
+               
+
+                    if (a.name.Length < afflictionLenght)
                     {
-                        Surface.Print(((glyphsPerBar + 1) * index + 1) + (glyphsPerBar - 3) / 100 * percentage, 2, new ColoredString(a.name, a.color.Lerp(counter), Color.Black));
+                        Surface.Print(afflictionStart, 2, new ColoredString(a.name, a.color.Lerp(counter), Color.Black));
 
                     }
+                    else
+                    {
+                        //print above/below
+                        Surface.Print(afflictionStart, even ? 3 : 0, new ColoredString(a.name, a.color.Lerp(counter), Color.Black));
 
-
-                    percentage += a.percentage;
-
+                    }
+                        
+                    percentage += a.percentage;   
                 }
+
+
                 index++;
+
             }
+          
+            
+        }
         }
 
 
-	}
+	
 
     public struct Affliction
     {
