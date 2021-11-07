@@ -106,7 +106,7 @@ namespace HeartSignal
         }
         private void DrawContents(NestedInfo info,int layer) {
    
-                string[] returned = Utility.SplitThingID(info.Header);
+                string[] returned = Utility.SplitThingId(info.Header);
                 string thing = returned[0];
                 string id = returned[1];
                 this.DrawLine(Cursor.Position, Cursor.Position + new Point(layer, 0), ICellSurface.ConnectedLineThin[1]);

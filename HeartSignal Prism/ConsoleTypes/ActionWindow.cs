@@ -74,7 +74,7 @@ namespace HeartSignal
 
             this.Resize(40, 5, 40, 5, false);
 
-            string[] returned = Utility.SplitThingID(item);
+            string[] returned = Utility.SplitThingId(item);
             string thing = returned[0];
             string id = returned[1];
 

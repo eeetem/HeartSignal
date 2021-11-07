@@ -1,10 +1,6 @@
 ﻿using System;
 using SadConsole;
-using Console = SadConsole.Console;
 using SadRogue.Primitives;
-using PrimS.Telnet;
-using System.Threading.Tasks;
-using SadConsole.Input;
 
 namespace HeartSignal
 {
@@ -34,7 +30,7 @@ namespace HeartSignal
 
                 actionWindow.IsVisible = false;
                 actionWindow.IsEnabled = false;
-                }
+            }
 
             
         }

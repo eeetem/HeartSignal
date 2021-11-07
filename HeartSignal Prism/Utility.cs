@@ -20,7 +20,7 @@ namespace HeartSignal
         }
 
 
-        public static string[] SplitThingID(string thingid) {
+        public static string[] SplitThingId(string thingid) {
 
 
             
@@ -71,10 +71,10 @@ namespace HeartSignal
         }
 
         public static void CreateToolTip(string name, string tip, SadConsole.UI.ControlsConsole console, ActionWindow ac) {
-            name.Replace("_", " ");
+            name = name.Replace("_", " ");
             string realtext = RemoveParserTags(name);
 
-            bool forceApearance = realtext == name;
+            bool forceAppearance = realtext == name;
 
 
             if (realtext.Length + console.Cursor.Position.X > console.Width)
@@ -83,15 +83,16 @@ namespace HeartSignal
             }
             Point pos = console.Cursor.Position;
 
-            //pos = new Point(pos.X + Offset.X, pos.Y + Offset.Y);
 
+            pos = new Point(Math.Clamp(pos.X,  0, console.Width), pos.Y);
+            
 
             
             var button = new Button(name.Length, 1)
             {
                 Text = name,
                 Position = console.Cursor.Position,
-                Theme = new ThingButtonTheme(new Gradient(Color.Green, Color.LimeGreen, Color.Green), forceApearance)
+                Theme = new ThingButtonTheme(new Gradient(Color.Green, Color.LimeGreen, Color.Green), forceAppearance)
             };
 
 
@@ -247,7 +248,7 @@ namespace HeartSignal
 
                     text2 = text2.Remove(text2.IndexOf('>'), text2.Length - text2.IndexOf('>'));
                     text2 = text2.Replace("<", "").Replace(">", "");
-                    Utility.CreateButtonThingId(Utility.SplitThingID(text2.Replace("_", " ")), con, ac, explicitLook,
+                    Utility.CreateButtonThingId(Utility.SplitThingId(text2.Replace("_", " ")), con, ac, explicitLook,
                         null, true);
                     con.Cursor.Print(leftover).Right(1);
                 }

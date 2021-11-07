@@ -13,7 +13,7 @@ namespace HeartSignal
         public string Prompt { get; set; }
 
 
-        //a lot of repeating of other things here should be parented to another console at some poin
+        //a lot of repeating of other things here should be parented to another console at some point
         public ClassicConsole(int width,int height): base(width, height)
         {
 
