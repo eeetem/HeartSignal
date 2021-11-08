@@ -55,6 +55,8 @@ namespace HeartSignal
         public void ClearText()
         {
             this.Clear();
+            Surface.ViewPosition = new Point(0, 0);
+            Cursor.Position = new Point(0, 0);
         }
 
 
@@ -87,7 +89,7 @@ namespace HeartSignal
                 System.Console.WriteLine(value);
             }
 
-
+            Surface.ViewPosition = new Point(0, Math.Max(0,Cursor.Position.Y-ViewHeight-1));
 
 
         }

@@ -158,7 +158,7 @@ namespace HeartSignal
 
 			int width = Program.Width - (inventoryWidth * 2) - 2;
 			int height = Program.Height - (topConsoleRowHeight + barConsoleHeight + 4);
-			MainConsole.Resize(width / 2, height / 2, width / 2, height / 2, false);
+			MainConsole.Resize(width / 2, height / 2, width / 2, 256, false);
 			MainConsole.Position = new Point((inventoryWidth + 2) / 2, (topConsoleRowHeight + barConsoleHeight) / 2);
 
 			//cringus
@@ -248,7 +248,7 @@ namespace HeartSignal
 		public static List<string> ExtractQuotationStrings(string s)
 		{
 
-			List<string> stringlist = new List<string>();
+			List<string> strings = new List<string>();
 
 			while (true)
 			{
@@ -258,7 +258,7 @@ namespace HeartSignal
 					int posTo = s.IndexOf('"', posFrom + 1);
 					if (posTo != -1) //if found char
 					{
-						stringlist.Add(s.Substring(posFrom + 1, posTo - posFrom - 1));
+						strings.Add(s.Substring(posFrom + 1, posTo - posFrom - 1));
 
 						s = s.Remove(0, posTo + 1);//+1 to cut the comma
 
@@ -270,7 +270,7 @@ namespace HeartSignal
 			}
 
 
-			return stringlist;
+			return strings;
 
 		}
 		private static void SplitInput(string input)
@@ -298,7 +298,16 @@ namespace HeartSignal
 			if (idx > 0)
 			{
 				ParseServerInput(input.Substring(0, idx));
-				input = input.Remove(0, idx + 2);//i'm not exactly sure why the +2 is needed, but it works, dont touch it
+				try
+				{
+					
+					input = input.Remove(0, idx + 1);
+				}
+				catch
+				{
+					return;
+				}
+
 				if (input.Length > 1)
 				{
 
@@ -629,7 +638,7 @@ namespace HeartSignal
 			//      SplitInput("room:{ \"\", \"Wow.\", \" !+!fear!+!(hello_123_[c:r;f:red]hangs;on;the;wall[c:u]_fuck_you)!+! . Your eyes are offended by <two_despicable_crogi(#161,#286)>.\"}");  
 			//SplitInput("tagline:somthing funny");
 		//	SplitInput("[tag]bars:Corpus{\"brown:hunger:25\",\"blue:chungus syndrome:5\",\"64,64,64:testtest:35\"}");
-		//	SplitInput("[tag]bars:Psyche{\"brown:hunger:25\",\"blue:thirst:25\",\"64,64,64:testtest:25\",\"green:chungus:25\"}");
+			
 #if DEBUG
             MainConsole.ReciveExternalInput("This is a debug build of HeartSignal, report to developers if you see this message");
             string ans = await MainConsole.AskForInput("Do you want verbose logging?(y/n)");
@@ -638,10 +647,10 @@ namespace HeartSignal
                 verboseDebug = true;
             }
 
-
+            //  SplitInput("[c:ga;f:200,0,0:128,0,0:64,0,0:128,0,0:9:b:0,0,0:9]FUCKED;UP[c:u]");
             string login = await MainConsole.AskForInput("Enter Login");
             string pass = await MainConsole.AskForInput("Enter Password");
-            MainConsole.Clear();
+            MainConsole.ClearText();
             MainConsole.Cursor.NewLine();
             MainConsole.Cursor.Print("Attempting server connection....").NewLine();
 #endif
