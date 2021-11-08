@@ -89,7 +89,7 @@ namespace HeartSignal
                 System.Console.WriteLine(value);
             }
 
-            Surface.ViewPosition = new Point(0, Math.Max(0,Cursor.Position.Y-ViewHeight-1));
+            Surface.ViewPosition = new Point(0, Math.Max(0,Cursor.Position.Y-ViewHeight));
 
 
         }
