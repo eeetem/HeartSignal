@@ -277,22 +277,22 @@ namespace HeartSignal
 		{
 
 
-
-			int idx = input.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+			int idx = 0;
+			//int idx = input.IndexOf(Environment.NewLine, StringComparison.Ordinal);
 			//          if (idx < 1) {
 
 
 			//       idx = input.IndexOf('\n');
 
-			if (idx < 1)
-			{
+			//if (idx < 1)
+			//{
 
 
 				idx = input.IndexOf('\r');
 
 
 
-			}
+		//	}
 
 			// }
 			if (idx > 0)
@@ -301,7 +301,7 @@ namespace HeartSignal
 				try
 				{
 					
-					input = input.Remove(0, idx + 1);
+					input = input.Remove(0, idx + 2);
 				}
 				catch
 				{
