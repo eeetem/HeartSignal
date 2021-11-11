@@ -383,8 +383,17 @@ namespace HeartSignal
 
 						returned = RemoveParseTag(cutstring);
 						cutstring = returned[0];
-						File.WriteAllText("debug.txt", cutstring+"\n");
-						MapConsole.mapdata = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+						try
+						{
+							MapConsole.mapdata =
+								ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+						}
+						catch (Exception E)
+						{
+							MainConsole.ReciveExternalInput("Map Exception, please report this : "+E);
+							
+						}
+
 						MapConsole.ReDraw();
 						break;
 					case "cexits":
@@ -681,7 +690,7 @@ namespace HeartSignal
 							}
 						}
 
-						string response = await client.ReadAsync(TimeSpan.FromMilliseconds(50));
+						string response = await client.ReadAsync(TimeSpan.FromMilliseconds(150));
 						if (response.Length > 1)
 						{
 							SplitInput(response);
