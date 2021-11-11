@@ -229,28 +229,43 @@ namespace HeartSignal
             {
                 if (word.Contains("!+!"))
                 {
-                    string text;
-                    text = word.Replace("!+!", "").Replace("_", " ");
-                    string tip = text.Substring(text.IndexOf('(') + 1, text.Length - (text.IndexOf('(') + 2));
-                    text = text.Remove(text.IndexOf('('), text.Length - text.IndexOf('('));
+                    try
+                    {
+                        string text;
+                        text = word.Replace("!+!", "").Replace("_", " ");
+                        string tip = text.Substring(text.IndexOf('(') + 1, text.Length - (text.IndexOf('(') + 2));
+                        text = text.Remove(text.IndexOf('('), text.Length - text.IndexOf('('));
 
 
-                    Utility.CreateToolTip(text, tip, con, ac);
+                        Utility.CreateToolTip(text, tip, con, ac);
+                    }
+                    catch (Exception E)
+                    {
+                        Program.MainConsole.ReciveExternalInput("PrintParser Exception, please report this : "+E);
+							
+                    }
                 }
                 else if (word.Contains("<"))
                 {
-                    string text2 = word;
-                    string leftover = "";
-                    if (text2.Length > text2.IndexOf('>'))
-                    {
-                        leftover = text2.Substring(text2.IndexOf('>') + 1, text2.Length - (text2.IndexOf('>') + 1));
-                    }
+                    try{
+                        string text2 = word;
+                        string leftover = "";
+                        if (text2.Length > text2.IndexOf('>'))
+                        {
+                            leftover = text2.Substring(text2.IndexOf('>') + 1, text2.Length - (text2.IndexOf('>') + 1));
+                        }
 
-                    text2 = text2.Remove(text2.IndexOf('>'), text2.Length - text2.IndexOf('>'));
-                    text2 = text2.Replace("<", "").Replace(">", "");
-                    Utility.CreateButtonThingId(Utility.SplitThingId(text2.Replace("_", " ")), con, ac, explicitLook,
-                        null, true);
-                    con.Cursor.Print(leftover).Right(1);
+                        text2 = text2.Remove(text2.IndexOf('>'), text2.Length - text2.IndexOf('>'));
+                        text2 = text2.Replace("<", "").Replace(">", "");
+                        Utility.CreateButtonThingId(Utility.SplitThingId(text2.Replace("_", " ")), con, ac, explicitLook,
+                            null, true);
+                        con.Cursor.Print(leftover).Right(1);
+                    }
+                    catch (Exception E)
+                    {
+                        Program.MainConsole.ReciveExternalInput("PrintParser Exception, please report this : "+E);
+							
+                    }
                 }
                 else
                 {

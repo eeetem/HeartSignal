@@ -158,15 +158,28 @@ namespace HeartSignal
 
 			int width = Program.Width - (inventoryWidth * 2) - 2;
 			int height = Program.Height - (topConsoleRowHeight + barConsoleHeight + 4);
-			MainConsole.Resize(width / 2, height / 2, width / 2, 256, false);
+			InputConsole input = MainConsole.GetInputSource();
+			input.Resize(width, 30, width, 30, false);//fun fact: input console is gigantic - just hidden under
+			input.Position = new Point(0, height + 2);
+			input.Cursor.Position = new Point(0, 0);
+			input.Clear();
+			input.Cursor.Print(">");
+			if (height > 24)
+			{
+				MainConsole.FontSize = MainConsole.Font.GetFontSize(IFont.Sizes.Two);
+				width = width / 2;
+				height = height / 2;
+			}
+			else
+			{
+				MainConsole.FontSize = MainConsole.Font.GetFontSize(IFont.Sizes.One);
+			}
+
+			MainConsole.Resize(width , height , width , 256, false);
 			MainConsole.Position = new Point((inventoryWidth + 2) / 2, (topConsoleRowHeight + barConsoleHeight) / 2);
 
 			//cringus
-			MainConsole.GetInputSource().Resize(width, 30, width, 30, false);//fun fact: input console is gigantic - just hidden under
-			MainConsole.GetInputSource().Position = new Point(0, height + 2);
-			MainConsole.GetInputSource().Cursor.Position = new Point(0, 0);
-			MainConsole.GetInputSource().Clear();
-			MainConsole.GetInputSource().Cursor.Print(">");
+
 
 			width = (inventoryWidth / 2) + 1;
 			height = MapConsoleHeight;
