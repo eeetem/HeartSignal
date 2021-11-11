@@ -42,7 +42,7 @@ namespace HeartSignal
 
 	
 			Settings.WindowTitle = File.ReadAllText("tagline.txt");
-		
+			File.WriteAllText("debuglog.txt", "Begining log for current session:\n");
 
 			Settings.UseDefaultExtendedFont = true;
 
@@ -288,16 +288,15 @@ namespace HeartSignal
 			//{
 
 
-				idx = input.IndexOf('\r');
+			idx = input.IndexOf('\r');
 
+			
 
-
-		//	}
-
-			// }
 			if (idx > 0)
 			{
-				ParseServerInput(input.Substring(0, idx));
+				string MSG = input.Substring(0, idx);
+				File.AppendAllText("debuglog.txt", MSG+"\n");
+				ParseServerInput(MSG);
 				try
 				{
 					
@@ -305,6 +304,7 @@ namespace HeartSignal
 				}
 				catch
 				{
+					File.AppendAllText("debuglog.txt", "returned due to index exception\n");
 					return;
 				}
 
@@ -315,6 +315,7 @@ namespace HeartSignal
 
 
 				}
+				File.AppendAllText("debuglog.txt", "returned as expected");
 				return;
 			}
 
