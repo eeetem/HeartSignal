@@ -275,7 +275,7 @@ namespace HeartSignal
 		}
 		private static void SplitInput(string input)
 		{
-
+			File.AppendAllText("debuglog.txt", "splitting:"+input+"\n");
 
 			int idx = 0;
 			//int idx = input.IndexOf(Environment.NewLine, StringComparison.Ordinal);
@@ -295,7 +295,7 @@ namespace HeartSignal
 			if (idx > 0)
 			{
 				string MSG = input.Substring(0, idx);
-				File.AppendAllText("debuglog.txt", MSG+"\n");
+				File.AppendAllText("debuglog.txt", "parsing:"+MSG+"\n");
 				ParseServerInput(MSG);
 				try
 				{
