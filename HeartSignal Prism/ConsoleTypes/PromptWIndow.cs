@@ -25,11 +25,12 @@ namespace HeartSignal
             SadComponents.Add( new MouseHandler());
         }
 
+        public List<string> args = new List<string>();
 
          public string toptext;
         public string middletext;
         public enum PopupType { 
-        Binary,
+        Choice,
         Text,
         Permanent,//has to be manually hid by other code
         
@@ -42,9 +43,9 @@ namespace HeartSignal
         {
       
                needsDraw = false;
-            this.Clear();
+            this.Resize(Width, 128, Width, 128, true);
             Controls.Clear();
-
+        
             this.Cursor.Position = new Point(1, 1);
             string[] words = middletext.Split(' ');
             foreach (string word in words)
@@ -55,43 +56,47 @@ namespace HeartSignal
                 }
                 Cursor.Print(word.Replace(";", " ")).RightWrap(1);
             }
-            if (Type == PopupType.Binary)
+            if (Type == PopupType.Choice)
             {
-                var button = new Button(5, 1)
+                Cursor.Position = new Point(1, Cursor.Position.Y+2);
+                foreach (string arg in args)
                 {
-                    Text = "yes",
-                    Position = new Point(1, Height - 2),
-                    // Theme = new but
-                };
+                    if (Cursor.Position.X + arg.Length + 2 + 1 > Width)
+                    {
+                        Cursor.NewLine().Right(1);
 
-                button.Click += (s, a) => Program.SendNetworkMessage("yes");
-                button.Click += (s, a) => this.IsVisible = false;
-                this.Controls.Add(button);
-                button = new Button(4, 1)
-                {
-                    Text = "no",
-                    Position = new Point(Width - 5, Height - 2)
-                    // Theme = new but
-                };
+                    }
 
-                button.Click += (s, a) => Program.SendNetworkMessage("no");
-                button.Click += (s, a) => this.IsVisible = false;
-                this.Controls.Add(button);
+                    var button = new Button(arg.Length+2, 1)
+                    {
+                        Text = arg,
+                        Position = Cursor.Position
+                        // Theme = new but
+                    };
+                    Cursor.RightWrap(arg.Length + 2 +1);
+                    button.Click += (s, a) => Program.SendNetworkMessage("yes");
+                    button.Click += (s, a) => this.IsEnabled = false;
+                    button.Click += (s, a) => this.IsVisible = false;
+                    this.Controls.Add(button);
+                    
+                    
+                    
+                }
             }
             else if (Type == PopupType.Text)
             {
-
-                var text = new TextBox(15)
+                Cursor.NewLine();
+                var text = new TextBox(14)
                 {
                     // Mask = '*',
-                    Position = new Point(Width / 2 - 15, Height - 2)
+                    Position = new Point(Width / 2 -14/2, Cursor.Position.Y)
                 };
                 Controls.Add(text);
-
+                Cursor.NewLine();
                 var button = new Button(4, 1)
                 {
                     Text = "OK",
-                    Position = new Point(Width / 2 - 4, Height - 1)
+                    Position = new Point(Width / 2 - 4/2, Cursor.Position.Y)
                 };
                 button.Click += (s, a) => Program.SendNetworkMessage(text.Text);
                 button.Click += (s, a) => this.IsVisible = false;
@@ -114,7 +119,7 @@ namespace HeartSignal
             this.Resize(Width, Cursor.Position.Y + 2, Width, Cursor.Position.Y + 2, false);
             var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.LightGray, Color.Transparent));
             this.DrawBox(new Rectangle(0, 0, Width, Height), boxShape);
-            this.Print(0, 0, toptext);
+            this.Print(Width/2-toptext.Length/2, 0, toptext);
             this.IsVisible = true;
 
 

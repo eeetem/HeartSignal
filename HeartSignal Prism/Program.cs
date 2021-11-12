@@ -496,12 +496,23 @@ namespace HeartSignal
 
 						returned = RemoveParseTag(cutstring);
 						cutstring = returned[0];
-
-						PromptWindow.toptext = returned[1];
+						string[] titles = returned[1].Split(";");
+						PromptWindow.toptext = titles[0];
+						PromptWindow.middletext = titles[1];
 						List<string> args4 = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-						PromptWindow.middletext = args4[0];
-						//cringe
-						PromptWindow.Type = (PromptWindow.PopupType)Enum.Parse(typeof(PromptWindow.PopupType), args4[1]);
+						if (args4.Count > 0)
+						{
+							PromptWindow.Type = PromptWindow.PopupType.Choice;
+							PromptWindow.args = args4;
+						}
+						else
+						{
+							PromptWindow.Type = PromptWindow.PopupType.Text;
+							PromptWindow.args = null;
+
+						}
+
+
 						PromptWindow.needsDraw = true;
 
 
@@ -660,7 +671,7 @@ namespace HeartSignal
 			MainConsole.Cursor.NewLine();
 			//      SplitInput("room:{ \"\", \"Wow.\", \" !+!fear!+!(hello_123_[c:r;f:red]hangs;on;the;wall[c:u]_fuck_you)!+! . Your eyes are offended by <two_despicable_crogi(#161,#286)>.\"}");  
 			//SplitInput("tagline:somthing funny");
-		//	SplitInput("[tag]bars:Corpus{\"brown:hunger:25\",\"blue:chungus syndrome:5\",\"64,64,64:testtest:35\"}");
+			SplitInput("[tag]prompt:Hello;How are you?{\"incredible\",\"horrible\",\"terrible\"}");
 			
 #if DEBUG
             MainConsole.ReciveExternalInput("This is a debug build of HeartSignal, report to developers if you see this message");
