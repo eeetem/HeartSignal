@@ -74,7 +74,7 @@ namespace HeartSignal
                         // Theme = new but
                     };
                     Cursor.RightWrap(arg.Length + 2 +1);
-                    button.Click += (s, a) => Program.SendNetworkMessage("yes");
+                    button.Click += (s, a) => Program.SendNetworkMessage(arg);
                     button.Click += (s, a) => this.IsEnabled = false;
                     button.Click += (s, a) => this.IsVisible = false;
                     this.Controls.Add(button);
