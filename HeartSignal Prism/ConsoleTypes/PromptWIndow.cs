@@ -58,7 +58,9 @@ namespace HeartSignal
             }
             if (Type == PopupType.Choice)
             {
-                Cursor.Position = new Point(1, Cursor.Position.Y+2);
+                Cursor.NewLine();
+                Cursor.Position = new Point(1, Cursor.Position.Y);
+                
                 foreach (string arg in args)
                 {
                     if (Cursor.Position.X + arg.Length + 2 + 1 > Width)
@@ -75,7 +77,6 @@ namespace HeartSignal
                     };
                     Cursor.RightWrap(arg.Length + 2 +1);
                     button.Click += (s, a) => Program.SendNetworkMessage(arg);
-                    button.Click += (s, a) => this.IsEnabled = false;
                     button.Click += (s, a) => this.IsVisible = false;
                     this.Controls.Add(button);
                     

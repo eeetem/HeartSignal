@@ -393,7 +393,7 @@ namespace HeartSignal
 						BarConsole.AddBar(returned[1], ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));
 						break;
 					case "map":
-
+						
 
 						returned = RemoveParseTag(cutstring);
 						cutstring = returned[0];
@@ -670,8 +670,7 @@ namespace HeartSignal
 
 			MainConsole.Cursor.NewLine();
 			//      SplitInput("room:{ \"\", \"Wow.\", \" !+!fear!+!(hello_123_[c:r;f:red]hangs;on;the;wall[c:u]_fuck_you)!+! . Your eyes are offended by <two_despicable_crogi(#161,#286)>.\"}");  
-			//SplitInput("tagline:somthing funny");
-		//	SplitInput("[tag]prompt:Hello;How are you?{\"fuck\", \"shit\", \"DAMN\"}");
+
 			
 #if DEBUG
             MainConsole.ReciveExternalInput("This is a debug build of HeartSignal, report to developers if you see this message");
@@ -687,6 +686,7 @@ namespace HeartSignal
             MainConsole.ClearText();
             MainConsole.Cursor.NewLine();
             MainConsole.Cursor.Print("Attempting server connection....").NewLine();
+            
 #endif
 			try
 			{
@@ -700,7 +700,7 @@ namespace HeartSignal
 					TelnetClient = client;
 					while (true)
 					{
-
+						
 						if (needToSendMessage)
 						{
 							foreach (string message in new List<string>(messageQueue))
