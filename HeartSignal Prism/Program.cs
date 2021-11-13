@@ -671,7 +671,7 @@ namespace HeartSignal
 			MainConsole.Cursor.NewLine();
 			//      SplitInput("room:{ \"\", \"Wow.\", \" !+!fear!+!(hello_123_[c:r;f:red]hangs;on;the;wall[c:u]_fuck_you)!+! . Your eyes are offended by <two_despicable_crogi(#161,#286)>.\"}");  
 			//SplitInput("tagline:somthing funny");
-			SplitInput("[tag]prompt:Hello;How are you?{\"incredible\",\"horrible\",\"terrible\"}");
+		//	SplitInput("[tag]prompt:Hello;How are you?{\"fuck\", \"shit\", \"DAMN\"}");
 			
 #if DEBUG
             MainConsole.ReciveExternalInput("This is a debug build of HeartSignal, report to developers if you see this message");

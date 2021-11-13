@@ -77,14 +77,14 @@ namespace HeartSignal
             bool forceAppearance = realtext == name;
 
 
-            if (realtext.Length + console.Cursor.Position.X > console.Width)
+            if (realtext.Length + console.Cursor.Position.X +2 > console.Width)
             {
                 console.Cursor.NewLine().Right(1);
             }
             Point pos = console.Cursor.Position;
 
 
-            pos = new Point(Math.Clamp(pos.X,  0, console.Width - (ac.Width+1)), pos.Y);
+            pos = new Point(Math.Clamp(pos.X,  0, Math.Max(0, (console.Width - (ac.Width+1)))), pos.Y);
             
 
             
