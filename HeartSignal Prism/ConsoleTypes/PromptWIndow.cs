@@ -58,30 +58,52 @@ namespace HeartSignal
             }
             if (Type == PopupType.Choice)
             {
-                Cursor.NewLine();
-                Cursor.Position = new Point(1, Cursor.Position.Y);
-                
-                foreach (string arg in args)
-                {
-                    if (Cursor.Position.X + arg.Length + 2 + 1 > Width)
-                    {
-                        Cursor.NewLine().Right(1);
 
+                List<string> fullArgList = args.ToList();
+                while (fullArgList.Count > 0)
+                { 
+                    Cursor.NewLine().Right(1);
+                    
+                
+                    int argLenght = 2;//start accounting for borders
+                    List<string> argsToPrint = new List<string>();
+                    foreach (var arg in fullArgList)
+                    {
+                        if (argLenght + arg.Length + 2 > Width)
+                        {
+                            break;
+                        }
+                    
+                        argsToPrint.Add(arg);
+                        argLenght += arg.Length+2;
                     }
 
-                    var button = new Button(arg.Length+2, 1)
+                    float glyphsPerArg = Width / argsToPrint.Count;
+
+                    foreach (string arg in argsToPrint)
                     {
-                        Text = arg,
-                        Position = Cursor.Position
-                        // Theme = new but
-                    };
-                    Cursor.RightWrap(arg.Length + 2 +1);
-                    button.Click += (s, a) => Program.SendNetworkMessage(arg);
-                    button.Click += (s, a) => this.IsVisible = false;
-                    this.Controls.Add(button);
+                        int padding = (int)Math.Round(glyphsPerArg) - (arg.Length+2);
+                        Cursor.Right(padding / 2);
+
+                        var button = new Button(arg.Length+2, 1)
+                        {
+                            Text = arg,
+                            Position = Cursor.Position
+                            // Theme = new but
+                        };
+                        Cursor.Right(arg.Length + 2);
+                        Cursor.Right(padding / 2);
+                        button.Click += (s, a) => Program.SendNetworkMessage(arg);
+                        button.Click += (s, a) => this.IsVisible = false;
+                        this.Controls.Add(button);
                     
                     
                     
+                    }
+                    fullArgList.RemoveRange(0,argsToPrint.Count);
+                    
+                    
+                   
                 }
             }
             else if (Type == PopupType.Text)

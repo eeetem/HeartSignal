@@ -95,7 +95,7 @@ namespace HeartSignal
             
             
 
-			PromptWindow = new PromptWindow(30, 10, new Point(Width / 2 - 15, Height / 2 - 5));
+			PromptWindow = new PromptWindow(40, 10, new Point(Width / 2 - 15, Height / 2 - 5));
 
 			root.Children.Add(PromptWindow);
 
@@ -668,8 +668,9 @@ namespace HeartSignal
 		private static async void ServerLoop()
 		{
 
-			MainConsole.Cursor.NewLine();
-			//      SplitInput("room:{ \"\", \"Wow.\", \" !+!fear!+!(hello_123_[c:r;f:red]hangs;on;the;wall[c:u]_fuck_you)!+! . Your eyes are offended by <two_despicable_crogi(#161,#286)>.\"}");  
+			MainConsole.Cursor.NewLine(); 
+			//SplitInput("[tag]prompt:hello;xddddddddd{ \"big chungus\", \"asd\", \"ftest123\",\"argh argh\",\"shitfuck\"}"); 
+		
 
 			
 #if DEBUG
@@ -700,7 +701,7 @@ namespace HeartSignal
 					TelnetClient = client;
 					while (true)
 					{
-						
+				
 						if (needToSendMessage)
 						{
 							foreach (string message in new List<string>(messageQueue))
