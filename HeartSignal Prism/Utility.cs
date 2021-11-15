@@ -84,7 +84,7 @@ namespace HeartSignal
             Point pos = console.Cursor.Position;
 
 
-            pos = new Point(Math.Clamp(pos.X,  0, console.Width), pos.Y);
+         //   pos = new Point(Math.Clamp(pos.X,  0, console.Width), pos.Y);
             
 
             
