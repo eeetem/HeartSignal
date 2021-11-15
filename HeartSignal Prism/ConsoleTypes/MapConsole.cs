@@ -13,7 +13,7 @@ namespace HeartSignal
     class MapConsole : BaseConsole, IMouseInputReciver
     {
         public MapConsole(int width, int height) : base(width, height,false)
-        {
+        {//todo fix border scaling
 
 
 

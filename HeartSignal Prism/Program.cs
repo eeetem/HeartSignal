@@ -42,7 +42,7 @@ namespace HeartSignal
 
 	
 			Settings.WindowTitle = File.ReadAllText("tagline.txt");
-		
+			File.WriteAllText("debuglog.txt", "Begining log for current session:\n");
 
 			Settings.UseDefaultExtendedFont = true;
 
@@ -95,7 +95,7 @@ namespace HeartSignal
             
             
 
-			PromptWindow = new PromptWindow(30, 10, new Point(Width / 2 - 15, Height / 2 - 5));
+			PromptWindow = new PromptWindow(40, 10, new Point(Width / 2 - 15, Height / 2 - 5));
 
 			root.Children.Add(PromptWindow);
 
@@ -158,15 +158,28 @@ namespace HeartSignal
 
 			int width = Program.Width - (inventoryWidth * 2) - 2;
 			int height = Program.Height - (topConsoleRowHeight + barConsoleHeight + 4);
-			MainConsole.Resize(width / 2, height / 2, width / 2, 256, false);
+			InputConsole input = MainConsole.GetInputSource();
+			input.Resize(width, 30, width, 30, false);//fun fact: input console is gigantic - just hidden under
+			input.Position = new Point(0, height + 2);
+			input.Cursor.Position = new Point(0, 0);
+			input.Clear();
+			input.Cursor.Print(">");
+			if (height > 24)
+			{
+				MainConsole.FontSize = MainConsole.Font.GetFontSize(IFont.Sizes.Two);
+				width = width / 2;
+				height = height / 2;
+			}
+			else
+			{
+				MainConsole.FontSize = MainConsole.Font.GetFontSize(IFont.Sizes.One);
+			}
+
+			MainConsole.Resize(width , height , width , 256, false);
 			MainConsole.Position = new Point((inventoryWidth + 2) / 2, (topConsoleRowHeight + barConsoleHeight) / 2);
 
 			//cringus
-			MainConsole.GetInputSource().Resize(width, 30, width, 30, false);//fun fact: input console is gigantic - just hidden under
-			MainConsole.GetInputSource().Position = new Point(0, height + 2);
-			MainConsole.GetInputSource().Cursor.Position = new Point(0, 0);
-			MainConsole.GetInputSource().Clear();
-			MainConsole.GetInputSource().Cursor.Print(">");
+
 
 			width = (inventoryWidth / 2) + 1;
 			height = MapConsoleHeight;
@@ -275,7 +288,7 @@ namespace HeartSignal
 		}
 		private static void SplitInput(string input)
 		{
-
+			File.AppendAllText("debuglog.txt", "splitting:"+input+"\n");
 
 			int idx = 0;
 			//int idx = input.IndexOf(Environment.NewLine, StringComparison.Ordinal);
@@ -288,16 +301,15 @@ namespace HeartSignal
 			//{
 
 
-				idx = input.IndexOf('\r');
+			idx = input.IndexOf('\r');
 
+			
 
-
-		//	}
-
-			// }
 			if (idx > 0)
 			{
-				ParseServerInput(input.Substring(0, idx));
+				string MSG = input.Substring(0, idx);
+				File.AppendAllText("debuglog.txt", "parsing:"+MSG+"\n");
+				ParseServerInput(MSG);
 				try
 				{
 					
@@ -305,6 +317,7 @@ namespace HeartSignal
 				}
 				catch
 				{
+					File.AppendAllText("debuglog.txt", "returned due to index exception\n");
 					return;
 				}
 
@@ -315,6 +328,7 @@ namespace HeartSignal
 
 
 				}
+				File.AppendAllText("debuglog.txt", "returned as expected");
 				return;
 			}
 
@@ -379,12 +393,21 @@ namespace HeartSignal
 						BarConsole.AddBar(returned[1], ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));
 						break;
 					case "map":
-
+						
 
 						returned = RemoveParseTag(cutstring);
 						cutstring = returned[0];
-						File.WriteAllText("debug.txt", cutstring+"\n");
-						MapConsole.mapdata = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+						try
+						{
+							MapConsole.mapdata =
+								ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+						}
+						catch (Exception E)
+						{
+							MainConsole.ReciveExternalInput("Map Exception, please report this : "+E);
+							
+						}
+
 						MapConsole.ReDraw();
 						break;
 					case "cexits":
@@ -473,12 +496,23 @@ namespace HeartSignal
 
 						returned = RemoveParseTag(cutstring);
 						cutstring = returned[0];
-
-						PromptWindow.toptext = returned[1];
+						string[] titles = returned[1].Split(";");
+						PromptWindow.toptext = titles[0];
+						PromptWindow.middletext = titles[1];
 						List<string> args4 = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-						PromptWindow.middletext = args4[0];
-						//cringe
-						PromptWindow.Type = (PromptWindow.PopupType)Enum.Parse(typeof(PromptWindow.PopupType), args4[1]);
+						if (args4.Count > 0)
+						{
+							PromptWindow.Type = PromptWindow.PopupType.Choice;
+							PromptWindow.args = args4;
+						}
+						else
+						{
+							PromptWindow.Type = PromptWindow.PopupType.Text;
+							PromptWindow.args = null;
+
+						}
+
+
 						PromptWindow.needsDraw = true;
 
 
@@ -634,10 +668,10 @@ namespace HeartSignal
 		private static async void ServerLoop()
 		{
 
-			MainConsole.Cursor.NewLine();
-			//      SplitInput("room:{ \"\", \"Wow.\", \" !+!fear!+!(hello_123_[c:r;f:red]hangs;on;the;wall[c:u]_fuck_you)!+! . Your eyes are offended by <two_despicable_crogi(#161,#286)>.\"}");  
-			//SplitInput("tagline:somthing funny");
-		//	SplitInput("[tag]bars:Corpus{\"brown:hunger:25\",\"blue:chungus syndrome:5\",\"64,64,64:testtest:35\"}");
+			MainConsole.Cursor.NewLine(); 
+			//SplitInput("[tag]prompt:hello;xddddddddd{ \"big chungus\", \"asd\", \"ftest123\",\"argh argh\",\"shitfuck\"}"); 
+		
+
 			
 #if DEBUG
             MainConsole.ReciveExternalInput("This is a debug build of HeartSignal, report to developers if you see this message");
@@ -653,6 +687,7 @@ namespace HeartSignal
             MainConsole.ClearText();
             MainConsole.Cursor.NewLine();
             MainConsole.Cursor.Print("Attempting server connection....").NewLine();
+            
 #endif
 			try
 			{
@@ -666,7 +701,7 @@ namespace HeartSignal
 					TelnetClient = client;
 					while (true)
 					{
-
+				
 						if (needToSendMessage)
 						{
 							foreach (string message in new List<string>(messageQueue))
@@ -681,7 +716,7 @@ namespace HeartSignal
 							}
 						}
 
-						string response = await client.ReadAsync(TimeSpan.FromMilliseconds(50));
+						string response = await client.ReadAsync(TimeSpan.FromMilliseconds(150));
 						if (response.Length > 1)
 						{
 							SplitInput(response);

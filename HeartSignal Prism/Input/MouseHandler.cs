@@ -56,20 +56,27 @@ namespace HeartSignal
                 
 
             }
+            
+            BaseConsole consolehost = host as BaseConsole;
+            if (consolehost != null)
+            {
+                ICellSurface surface = consolehost.Surface;
+                if (state.CellPosition.Y-surface.ViewPosition.Y < 4 )
+                {
+                    surface.ViewPosition = surface.ViewPosition.Translate(new Point(0, -1));
+                }else  if (state.CellPosition.Y-surface.ViewPosition.Y  > surface.ViewHeight-4)
+                {
+                    surface.ViewPosition = surface.ViewPosition.Translate(new Point(0, 1));
+                }
 
-            Console consolehost = (Console) host;
-            ICellSurface surface = consolehost.Surface;
-            if (state.CellPosition.Y-surface.ViewPosition.Y < 4 )
-            {
-                surface.ViewPosition = surface.ViewPosition.Translate(new Point(0, -1));
-            }else  if (state.CellPosition.Y-surface.ViewPosition.Y  > surface.ViewHeight-4)
-            {
-                surface.ViewPosition = surface.ViewPosition.Translate(new Point(0, 1));
+
+                surface.ViewPosition = surface.ViewPosition.Translate(new Point(0, (int)(state.Mouse.ScrollWheelValueChange*0.01)));
+                if (surface.ViewPosition.Y > consolehost.MaxScroll)
+                {
+
+                    surface.ViewPosition = new Point(0, consolehost.MaxScroll);
+                }
             }
-
-
-            surface.ViewPosition = surface.ViewPosition.Translate(new Point(0, (int)(state.Mouse.ScrollWheelValueChange*0.01)));
-
         }
 
 

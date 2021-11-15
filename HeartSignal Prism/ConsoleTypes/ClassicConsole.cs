@@ -20,7 +20,7 @@ namespace HeartSignal
 
 
             ClearText();
-            FontSize = Font.GetFontSize(IFont.Sizes.Two);
+            
             // Disable the cursor since our keyboard handler will do the work.
             Cursor.IsEnabled = false;
             Cursor.IsVisible = false;

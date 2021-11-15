@@ -20,6 +20,8 @@ namespace HeartSignal
 
         }
 
+        private bool modifying = true;
+
         Dictionary<string,List<Affliction>> bars = new Dictionary<string,List<Affliction>>();
 		public void AddBar(string barName, List<string> affs) {
 
@@ -62,6 +64,7 @@ namespace HeartSignal
 		}
 		protected void  DrawConsole(TimeSpan delta) {
             if (bars.Count == 0) return;
+            
 
             counter += (float)delta.TotalSeconds/4 * AnimatedBorderComponent.speed;
             if (counter > 1) {
@@ -74,7 +77,7 @@ namespace HeartSignal
 
             int index = 0;
             bool even = true;
-            foreach (KeyValuePair<string, List<Affliction>> Bar in bars)
+            foreach (KeyValuePair<string, List<Affliction>> Bar in bars.ToList())
             {
                 even = !even;
                 ShapeParameters shape = ShapeParameters.CreateBorder(new ColoredGlyph(Color.Green, Color.Black, 176));

@@ -19,6 +19,7 @@ namespace HeartSignal
         }
         public bool ExplicitLook = false;
         public List<string> lines = new List<string>();
+
         protected override void DrawConsole()
         {
             Resize(ViewWidth,ViewHeight,Width,50,false);
@@ -29,7 +30,8 @@ namespace HeartSignal
             }
             //TODO ADD THIS BACK WHEN SADCONSOLE FIXED EFFECT CLEARING
             //Resize(ViewWidth,ViewHeight,Width,Math.Max(Cursor.Position.Y,ViewHeight),false);
-        
+            //temp fix
+            MaxScroll = Math.Max(Cursor.Position.Y, ViewHeight) - ViewHeight;
         }
 
       
