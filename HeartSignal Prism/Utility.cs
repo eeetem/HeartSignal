@@ -233,7 +233,7 @@ namespace HeartSignal
                     text = word.Replace("!+!", "").Replace("_", " ");
                     string tip = text.Substring(text.IndexOf('(') + 1, text.Length - (text.IndexOf('(') + 2));
                     text = text.Remove(text.IndexOf('('), text.Length - text.IndexOf('('));
-
+                    tip = tip.Replace(")", "");
 
                     Utility.CreateToolTip(text, tip, con, ac);
                 }
