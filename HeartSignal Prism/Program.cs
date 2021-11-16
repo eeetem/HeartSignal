@@ -716,7 +716,22 @@ namespace HeartSignal
 							}
 						}
 
-						string response = await client.ReadAsync(TimeSpan.FromMilliseconds(150));
+						string response = "";
+						while (true)
+						{
+							string recived = await client.ReadAsync(TimeSpan.FromMilliseconds(100));
+							if (recived.Length > 1)
+							{
+								//if we recived something - try reciving again since the message might have been cut halfway
+								response += recived;
+								continue;
+							}
+							//if nothing was recived in last 100ms process it
+							break;
+
+						}
+
+						
 						if (response.Length > 1)
 						{
 							SplitInput(response);
