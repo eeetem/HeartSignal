@@ -41,6 +41,9 @@ namespace HeartSignal
 
                 Position = (Point) newPosition - new Point(0, surface.ViewPosition.Y);
             }
+            Position = new Point(Math.Clamp(Position.X,  0, Math.Max(0,surface.ViewWidth-(this.Width-2))), Position.Y);
+
+
             this.Clear();
             Controls.Clear();
 
