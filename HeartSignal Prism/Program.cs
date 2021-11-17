@@ -49,12 +49,15 @@ namespace HeartSignal
 			Settings.AllowWindowResize = true;
 			Library.Default.Colors.Lines = new AdjustableColor(Color.Red, "red");
 
-
+			
 
 			Game.Create(SCREEN_WIDTH, SCREEN_HEIGHT);
+			//Game.Instance.DefaultFont = new fon
+
 			Game.Instance.OnStart = Init;
 			Game.Instance.Run();
 
+			
 			Game.Instance.Dispose();
 
 		}
@@ -177,8 +180,6 @@ namespace HeartSignal
 
 			MainConsole.Resize(width , height , width , 256, false);
 			MainConsole.Position = new Point((inventoryWidth + 2) / 2, (topConsoleRowHeight + barConsoleHeight) / 2);
-
-			//cringus
 
 
 			width = (inventoryWidth / 2) + 1;
@@ -328,7 +329,7 @@ namespace HeartSignal
 
 
 				}
-				File.AppendAllText("debuglog.txt", "returned as expected");
+				//File.AppendAllText("debuglog.txt", "returned as expected\n");
 				return;
 			}
 
@@ -669,8 +670,7 @@ namespace HeartSignal
 		{
 
 			MainConsole.Cursor.NewLine(); 
-			//SplitInput("[tag]prompt:hello;xddddddddd{ \"big chungus\", \"asd\", \"ftest123\",\"argh argh\",\"shitfuck\"}"); 
-		
+	
 
 			
 #if DEBUG
@@ -695,7 +695,7 @@ namespace HeartSignal
 				{
 					await client.TryLoginAsync("", "", 1000);
 #if DEBUG
-                await client.WriteLine("connect " + login + " " + pass);
+					await client.WriteLine("connect " + login + " " + pass);
 #endif
 
 					TelnetClient = client;

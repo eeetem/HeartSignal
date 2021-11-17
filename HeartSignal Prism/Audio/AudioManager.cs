@@ -41,6 +41,9 @@ namespace HeartSignal
 						playSound(ID, param);
 					}
 					break;
+				case "stopall":
+					StopAllSounds();
+					break;
 				case "forceplay":
 					if (Sounds.ContainsKey(ID))
 					{
@@ -93,20 +96,23 @@ namespace HeartSignal
 				case "pan":
 					if (Sounds.ContainsKey(ID))
 					{
-						Sounds[ID].Pan = float.Parse(param) ;
+						float setting =  Math.Clamp(float.Parse(param), -1, 1);
+						Sounds[ID].Pan = setting;
 					}
 					break;
 
 				case "pitch":
 					if (Sounds.ContainsKey(ID))
 					{
-						Sounds[ID].Pitch = float.Parse(param);
+						float setting =  Math.Clamp(float.Parse(param), -1, 1);
+						Sounds[ID].Pitch =setting;
 					}
 					break;
 				case "volume":
 					if (Sounds.ContainsKey(ID))
 					{
-						Sounds[ID].Volume = float.Parse(param);
+						float setting =  Math.Clamp(float.Parse(param), -1, 1);
+						Sounds[ID].Volume = setting;
 					}
 					break;
 
