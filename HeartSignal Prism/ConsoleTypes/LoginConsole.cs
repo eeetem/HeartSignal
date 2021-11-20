@@ -46,7 +46,7 @@ namespace HeartSignal
         private int blurCounter;
         private int contrastCounter;
         private int gammaCounter;
-        private int colorCounter;
+
         
         private bool surfaceCreated = false;
         private Color[] pixelCache;//since you cant load pixels on a non UI thread - surface generation works the following way: 1.Main thread calls for surface generation 2.Main thread loads Pixels of OLD texture 3. new texture is generated 4. OLD cached pixels are turned into a surface. so image gets generated and printed into surface in 1 go however the surface print is from previous cycle

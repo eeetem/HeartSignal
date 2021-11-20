@@ -20,7 +20,7 @@ namespace HeartSignal
 
         }
 
-        private bool modifying = true;
+
 
         private Dictionary<string, Bar> bars = new Dictionary<string, Bar>();
 
