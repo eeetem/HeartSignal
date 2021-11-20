@@ -26,6 +26,12 @@ namespace HeartSignal
 		public void AddBar(string barName, List<string> affs) {
 
             List<Affliction> afflictions = new List<Affliction>();
+            if (affs.Count == 0)
+            {
+                bars[barName] = new List<Affliction>();
+                return;
+            }
+
             if (affs[0] == "delete") {
 
                 bars.Remove(barName);

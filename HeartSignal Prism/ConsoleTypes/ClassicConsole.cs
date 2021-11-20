@@ -55,6 +55,7 @@ namespace HeartSignal
         public void ClearText()
         {
             this.Clear();
+            this.Effects.RemoveAll();
             Surface.ViewPosition = new Point(0, 0);
             Cursor.Position = new Point(0, 0);
             Cursor.NewLine();
