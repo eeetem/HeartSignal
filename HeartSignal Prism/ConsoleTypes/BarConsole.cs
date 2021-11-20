@@ -20,7 +20,7 @@ namespace HeartSignal
 
         }
 
-        private bool modifying = true;
+
 
         Dictionary<string,List<Affliction>> bars = new Dictionary<string,List<Affliction>>();
 		public void AddBar(string barName, List<string> affs) {
