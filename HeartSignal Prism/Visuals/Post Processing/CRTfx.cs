@@ -23,34 +23,44 @@ namespace HeartSignal
 
 			DrawOrder = 6;
 
-			gradient = new ColorGradient(Color.Red, Color.Black, Color.Blue, Color.Black, Color.Green, Color.Black,Color.Red);
-
-
 		}
 
 		private Effect crtEffect;
 
-		private ColorGradient gradient;
-
-		private float counter;
 		//When we need to draw to the screen, it's done here.
 		public override void Draw(GameTime gameTime)
 		{
+			try
+			{
+				crtEffect.Parameters["hardScan"]?.SetValue(-20f);
+				crtEffect.Parameters["hardPix"]?.SetValue(-20f);
+				crtEffect.Parameters["warpX"]?.SetValue(0.5f);
+				crtEffect.Parameters["warpY"]?.SetValue(0.5f);
+				crtEffect.Parameters["maskDark"]?.SetValue(2f);
+				crtEffect.Parameters["maskLight"]?.SetValue(1.5f);
+				crtEffect.Parameters["scaleInLinearGamma"]?.SetValue(1.0f);
+				crtEffect.Parameters["shadowMask"]?.SetValue(1.0f);
+				crtEffect.Parameters["brightboost"]?.SetValue(2.0f);
+				crtEffect.Parameters["hardBloomScan"]?.SetValue(-1.5f);
+				crtEffect.Parameters["hardBloomPix"]?.SetValue(-2.0f);
+				crtEffect.Parameters["bloomAmount"]?.SetValue(0.15f);
+				crtEffect.Parameters["shape"]?.SetValue(1.0f);
+				crtEffect.Parameters["textureSize"].SetValue(new Vector2(Global.RenderOutput.Width, Global.RenderOutput.Height));
+				crtEffect.Parameters["videoSize"].SetValue(new Vector2(Global.RenderOutput.Width, Global.RenderOutput.Height));
+				crtEffect.Parameters["outputSize"].SetValue(new Vector2(SadConsole.Settings.Rendering.RenderRect.Width, SadConsole.Settings.Rendering.RenderRect.Height));
+
+				Global.SharedSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
 
 
-			counter += (float) gameTime.ElapsedGameTime.Milliseconds / 5000;
-			if (counter > 1)
-				counter = 0;
-			Color c = gradient.Lerp(counter);
-			crtEffect.Parameters["tint"].SetValue(new Vector4((float)c.R/255,(float)c.B/255,(float)c.G/255,1));
-			
-			Global.SharedSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+				crtEffect.CurrentTechnique.Passes[0].Apply();
 
-
-			crtEffect.CurrentTechnique.Passes[0].Apply();
-
-			Global.SharedSpriteBatch.Draw(Global.RenderOutput, Global.RenderOutput.Bounds, Microsoft.Xna.Framework.Color.White);
-			Global.SharedSpriteBatch.End();
+				Global.SharedSpriteBatch.Draw(Global.RenderOutput, Global.RenderOutput.Bounds, Microsoft.Xna.Framework.Color.White);
+				Global.SharedSpriteBatch.End();
+			}
+			finally
+			{
+				
+			}
 
 		}
 		
