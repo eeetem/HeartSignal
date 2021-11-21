@@ -70,8 +70,9 @@ namespace HeartSignal
 
 		private static void Init()
 		{
-			Game.Instance.MonoGameInstance.Components.Add(new CRTfx());
 			SadConsole.Host.Global.GraphicsDeviceManager.GraphicsProfile = GraphicsProfile.HiDef;
+			Game.Instance.MonoGameInstance.Components.Add(new CRTfx());
+			
 			ColoredString.CustomProcessor = Utility.CustomParseCommand;
 			root = new Console(1, 1);
 			MainConsole = new ClassicConsole(1, 1);
