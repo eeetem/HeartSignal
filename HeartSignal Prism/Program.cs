@@ -72,7 +72,7 @@ namespace HeartSignal
 		{
 			SadConsole.Host.Global.GraphicsDeviceManager.GraphicsProfile = GraphicsProfile.HiDef;
 			Game.Instance.MonoGameInstance.Components.Add(new CRTfx());
-			
+			Game.Instance.MonoGameInstance.Components.Add(new CustomMouseFX());
 			ColoredString.CustomProcessor = Utility.CustomParseCommand;
 			root = new Console(1, 1);
 			MainConsole = new ClassicConsole(1, 1);
