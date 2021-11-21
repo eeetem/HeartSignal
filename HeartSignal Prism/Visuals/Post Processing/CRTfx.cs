@@ -19,11 +19,15 @@ namespace HeartSignal
 
 
 			crtEffect = SadConsole.Game.Instance.MonoGameInstance.Content.Load<Effect>("CRT");
+			SadConsole.Game.Instance.MonoGameInstance.IsMouseVisible = false;//hide default mouse
+			cursorTexture2D = SadConsole.Game.Instance.MonoGameInstance.Content.Load<Texture2D>("cursor");
 
-
-			DrawOrder = 6;
+			DrawOrder = 7;
 
 		}
+		
+		private Texture2D cursorTexture2D;
+
 
 		private Effect crtEffect;
 
@@ -34,7 +38,7 @@ namespace HeartSignal
 			{
 				crtEffect.Parameters["hardScan"]?.SetValue(-20f);
 				crtEffect.Parameters["hardPix"]?.SetValue(-20f);
-				crtEffect.Parameters["warpX"]?.SetValue(0.5f);
+				crtEffect.Parameters["warpX"]?.SetValue(2f);
 				crtEffect.Parameters["warpY"]?.SetValue(0.5f);
 				crtEffect.Parameters["maskDark"]?.SetValue(2f);
 				crtEffect.Parameters["maskLight"]?.SetValue(1.5f);
@@ -51,10 +55,14 @@ namespace HeartSignal
 
 				Global.SharedSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
 
+				
 
 				crtEffect.CurrentTechnique.Passes[0].Apply();
 
+				
 				Global.SharedSpriteBatch.Draw(Global.RenderOutput, Global.RenderOutput.Bounds, Microsoft.Xna.Framework.Color.White);
+				//Global.SharedSpriteBatch.Draw(cursorTexture2D, new Vector2(SadConsole.Game.Instance.Mouse.ScreenPosition.X,SadConsole.Game.Instance.Mouse.ScreenPosition.Y), Microsoft.Xna.Framework.Color.White);
+					
 				Global.SharedSpriteBatch.End();
 			}
 			finally
@@ -63,6 +71,10 @@ namespace HeartSignal
 			}
 
 		}
-		
+
 	}
+
+
+
+
 }
