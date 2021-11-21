@@ -70,7 +70,8 @@ namespace HeartSignal
 		}
 		protected void  DrawConsole(TimeSpan delta) {
             if (bars.Count == 0) return;
-            
+            this.Clear();
+            this.Effects.RemoveAll();
 
             counter += (float)delta.TotalSeconds/4 * AnimatedBorderComponent.speed;
             if (counter > 1) {
@@ -112,7 +113,7 @@ namespace HeartSignal
                     else
                     {
                         //print above/below
-                        Surface.Print(afflictionStart, even ? 3 : 0, new ColoredString(a.name, a.color.Lerp(counter), Color.Black));
+                        Surface.Print(afflictionStart, even ? 0 : 3, new ColoredString(a.name, a.color.Lerp(counter), Color.Black));
 
                     }
                         
