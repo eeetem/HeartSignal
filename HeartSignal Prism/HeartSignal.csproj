@@ -26,13 +26,9 @@
     <Reference Include="csvorbis">
       <HintPath>..\csvorbis.dll</HintPath>
     </Reference>
-    <Reference Include="System.Windows.Forms">
-      <HintPath>C:\Windows\Microsoft.NET\Framework\v2.0.50727\System.Windows.Forms.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="asd.png" />
     <None Update="lobby.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

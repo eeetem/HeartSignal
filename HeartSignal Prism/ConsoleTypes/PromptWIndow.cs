@@ -93,7 +93,7 @@ namespace HeartSignal
                         };
                         Cursor.Right(arg.Length + 2);
                         Cursor.Right(padding / 2);
-                        button.Click += (s, a) => Program.SendNetworkMessage(arg);
+                        button.Click += (s, a) => NetworkManager.SendNetworkMessage(arg);
                         button.Click += (s, a) => this.IsVisible = false;
                         this.Controls.Add(button);
                     
@@ -121,7 +121,7 @@ namespace HeartSignal
                     Text = "OK",
                     Position = new Point(Width / 2 - 4/2, Cursor.Position.Y)
                 };
-                button.Click += (s, a) => Program.SendNetworkMessage(text.Text);
+                button.Click += (s, a) => NetworkManager.SendNetworkMessage(text.Text);
                 button.Click += (s, a) => this.IsVisible = false;
                 Controls.Add(button);
 

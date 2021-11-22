@@ -218,8 +218,7 @@ namespace HeartSignal
 				path = "sfx/" + path;
 				//TODO IMPLEMENT OTHER PLATFORMS ALSO TURN THIS INTO COMPILE TIME IF RATHER THAN RUNTIME
 
-				if (OperatingSystem.IsWindows())
-				{
+			
 					SoundEffectInstance player;
 					if (path.EndsWith(".ogg"))
 					{
@@ -245,7 +244,7 @@ namespace HeartSignal
 
 					Sounds.Add(id, player);
 
-				}
+				
 			}
 			catch (Exception e) {
 

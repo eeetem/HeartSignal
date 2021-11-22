@@ -218,7 +218,7 @@ namespace HeartSignal
         {
 
             //this being outside the IF causes ex spam but currently it's needed for descriptions, definatelly possible to optimise this if needed
-            Program.SendNetworkMessage("ex " + id);
+            NetworkManager.SendNetworkMessage("ex " + id);
 
 
         }
