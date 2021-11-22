@@ -113,8 +113,7 @@ namespace HeartSignal
             Program.MainConsole.Cursor.Print("Attempting server connection....").NewLine();
             
 #endif
-			try
-			{
+		
 				using (Client client = new Client("deathcult.today", 6666, new CancellationToken()))
 				{
 					await client.TryLoginAsync("", "", 1000);
@@ -123,7 +122,7 @@ namespace HeartSignal
 #endif
 
 					TelnetClient = client;
-					while (true)
+					while (TelnetClient.IsConnected)
 					{
 				
 						if (needToSendMessage)
@@ -177,21 +176,13 @@ namespace HeartSignal
 						//await Task.Delay(50);
 					}
 				}
-			}
-			catch (InvalidOperationException)
-			{
-				
-				if (Program.loginConsole != null)
-				{
-					Program.loginConsole.miniDisplay.Cursor.Print("Could not connect to server").NewLine();
-				}
-				else
-				{
+			
+		
+		
+			Program.loginConsole.miniDisplay.Cursor.Print("Could not connect to server").NewLine();
+			
 
-					Program.MainConsole.ReciveExternalInput("Could not connect to server");
-				}
-			}
-			Program.MainConsole.Cursor.Print("Server Connection Ended").NewLine();
+			Program.MainConsole.ReciveExternalInput("Could not connect to server");
 
 		}
 

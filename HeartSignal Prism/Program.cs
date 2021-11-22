@@ -153,7 +153,7 @@ namespace HeartSignal
 
 			int MapConsoleHeight = 7;
 			int inventoryWidth = 29;
-			int roomConsoleWidth = (Program.Width - (inventoryWidth * 3)) / 2;
+			int roomConsoleWidth = Math.Max((Program.Width - (inventoryWidth * 3)) / 2,4);
 			int barConsoleHeight = 6; //ONLY EVEN due to map console size increase
 			int topConsoleRowHeight = 20;
 
@@ -323,12 +323,20 @@ namespace HeartSignal
 						MainConsole.ReciveExternalInput(cutstring);
 						break;
 					case "bars":
-						returned = RemoveParseTag(cutstring);
-						cutstring = returned[0];
+						try{
+							returned = RemoveParseTag(cutstring);
+							cutstring = returned[0];
+						
 
 
-						BarConsole.AddBar(returned[1],
-							ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));
+							BarConsole.AddBar(returned[1],
+								ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));
+						}
+						catch (Exception E)
+						{
+							MainConsole.ReciveExternalInput("Bar Exception, please report this : " + E);
+
+						}
 						break;
 					case "map":
 

@@ -22,17 +22,16 @@ namespace HeartSignal
 
         private bool modifying = true;
 
-        Dictionary<string,List<Affliction>> bars = new Dictionary<string,List<Affliction>>();
-		public void AddBar(string barName, List<string> affs) {
+        private Dictionary<string, Bar> bars = new Dictionary<string, Bar>();
 
-            List<Affliction> afflictions = new List<Affliction>();
-            if (affs.Count == 0)
-            {
-                bars[barName] = new List<Affliction>();
-                return;
-            }
+        public void AddBar(string barName, List<string> affs)
+        {
+            
+            float capacity = float.Parse(barName.Substring(barName.IndexOf("[")+1, barName.IndexOf("]") - barName.IndexOf("[")-1));
+            barName = barName.Remove(barName.IndexOf("["), barName.IndexOf("]") - barName.IndexOf("[")+1);
+            bars[barName] = new Bar(barName, capacity);
 
-            if (affs[0] == "delete") {
+            if (affs.Count > 0 && affs[0] == "delete") {
 
                 bars.Remove(barName);
                 return;
@@ -55,10 +54,10 @@ namespace HeartSignal
                     index++;
                 }
                 
-                afflictions.Add(new Affliction(new Gradient(Colors), args[1], Int32.Parse(args[2])));
+                bars[barName].affs.Add(new Affliction(new Gradient(Colors), args[1], Int32.Parse(args[2])));
 
             }
-            bars[barName] = afflictions;
+      
 
         }
         float counter = 0;
@@ -84,7 +83,7 @@ namespace HeartSignal
 
             int index = 0;
             bool even = true;
-            foreach (KeyValuePair<string, List<Affliction>> Bar in bars.ToList())
+            foreach (KeyValuePair<string, Bar> bar in bars.ToList())
             {
                 even = !even;
                 ShapeParameters shape = ShapeParameters.CreateBorder(new ColoredGlyph(Color.Green, Color.Black, 176));
@@ -93,13 +92,13 @@ namespace HeartSignal
                 
                
               //  Surface.DrawBox(new Rectangle(glyphsPerBar * index+1, 1, glyphsPerBar -3, 2), shape);
-                Surface.Print((int) ((glyphsPerBar + 1) * index + 1), 0, Bar.Key);
+                
                 int percentage = 0;
-                foreach (Affliction a in Bar.Value) {
+                foreach (Affliction a in bar.Value.affs) {
 
                     shape = ShapeParameters.CreateStyledBoxFilled(ICellSurface.ConnectedLineThin, new ColoredGlyph(a.color.Lerp(counter), a.color.Lerp(counter)), new ColoredGlyph(a.color.Lerp(counter), a.color.Lerp(counter)));
-                    int afflictionStart = (int) (barStart + glyphsPerBar / 100 * percentage);
-                    int afflictionLenght = (int) Math.Ceiling(glyphsPerBar / 100 * a.percentage);
+                    int afflictionStart = (int) (barStart + glyphsPerBar / bar.Value.capacity * percentage);
+                    int afflictionLenght = (int) Math.Ceiling(glyphsPerBar / bar.Value.capacity * a.percentage);
                     Surface.DrawBox(new Rectangle(afflictionStart , 1, afflictionLenght, 2), shape);
                     
 
@@ -112,13 +111,23 @@ namespace HeartSignal
                     }
                     else
                     {
-                        //print above/below
-                        Surface.Print(afflictionStart, even ? 0 : 3, new ColoredString(a.name, a.color.Lerp(counter), Color.Black));
+                        System.Console.WriteLine(Game.Instance.Mouse.ScreenPosition.X );
+                        //print below if mousing oversu
+                        
+                        
+                        if (Game.Instance.Mouse.ScreenPosition.X >= afflictionStart*Font.GlyphWidth &&
+                            Game.Instance.Mouse.ScreenPosition.X <= (afflictionStart + afflictionLenght)*Font.GlyphWidth &&
+                            Game.Instance.Mouse.ScreenPosition.Y < 4 * Font.GlyphHeight
+                            )
+                        {
+                            Surface.Print(afflictionStart, 3, new ColoredString(a.name, a.color.Lerp(counter), Color.Black));
+                        }
 
                     }
                         
                     percentage += a.percentage;   
                 }
+                Surface.Print((int) ((glyphsPerBar + 1) * index + 1), 0, bar.Key+" ("+percentage+"/"+bar.Value.capacity+")");
 
 
                 index++;
@@ -140,13 +149,32 @@ namespace HeartSignal
             color = c;
             name = n;
             percentage = p;
-    
-            
+  
+
 
         }
         public Gradient color;
         public string name;
         public int percentage;
+ 
+
+    }
+    public struct Bar
+    {
+        public Bar(string n, float c)
+        {
+
+            affs = new List<Affliction>();
+            name = n;
+            capacity = c;
   
+
+
+        }
+        public List<Affliction> affs;
+        readonly string name;
+        public float capacity;
+ 
+
     }
 }
