@@ -126,27 +126,9 @@ namespace HeartSignal
             
             
             }
-           
 
 
-
-/*
-            if (value.ToLower() == "exit" || value.ToLower() == "quit")
-            {
-#if WINDOWS_UAP
-                //Windows.UI.Xaml.Application.Current.Exit();       Not working?
-#else
-                Environment.Exit(0);
-#endif
-            }*/
-            if (Program.TelnetClient == null|| (Program.TelnetClient!=null&& !Program.TelnetClient.IsConnected)) {
-
-                Cursor.Print("no connection to server").NewLine();
-                return;
-
-            }
-
-            Program.SendNetworkMessage(value);
+            NetworkManager.SendNetworkMessage(value);
 
         }
     }

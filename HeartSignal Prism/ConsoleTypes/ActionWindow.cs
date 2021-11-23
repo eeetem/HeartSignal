@@ -293,7 +293,7 @@ namespace HeartSignal
         private void DoAction(string id, string action)
         {
             //index++;///arrays starting at 1 momment
-            Program.SendNetworkMessage(action + " " + id);
+            NetworkManager.SendNetworkMessage(action + " " + id);
 
         }
 
@@ -320,7 +320,7 @@ namespace HeartSignal
             if (awaitingItemClick)
             {
                 Program.PromptWindow.IsVisible = false;
-                Program.SendNetworkMessage(PendingArgMessage.Replace("[whatever]",item));
+                NetworkManager.SendNetworkMessage(PendingArgMessage.Replace("[whatever]",item));
                 awaitingItemClick = false;
              
                 return;
@@ -328,29 +328,29 @@ namespace HeartSignal
             
             if (mouse.OriginalMouseState.Mouse.LeftClicked) {
                 if (Game.Instance.Keyboard.IsKeyDown(Keys.LeftShift)){
-                    Program.SendNetworkMessage("lmbshift " + item);
+                    NetworkManager.SendNetworkMessage("lmbshift " + item);
 
                 } else if (Game.Instance.Keyboard.IsKeyDown(Keys.LeftControl)){
-                    Program.SendNetworkMessage("lmbctrl " + item);
+                    NetworkManager.SendNetworkMessage("lmbctrl " + item);
                 } 
                 else {
-                    Program.SendNetworkMessage("lmb " + item);
+                    NetworkManager.SendNetworkMessage("lmb " + item);
                 }
             }
             if (mouse.OriginalMouseState.Mouse.RightClicked)
             {
                 if (Game.Instance.Keyboard.IsKeyDown(Keys.LeftShift))
                 {
-                    Program.SendNetworkMessage("rmbshift " + item);
+                    NetworkManager.SendNetworkMessage("rmbshift " + item);
 
                 }
                 else if (Game.Instance.Keyboard.IsKeyDown(Keys.LeftControl))
                 {
-                    Program.SendNetworkMessage("rmbctrl " + item);
+                    NetworkManager.SendNetworkMessage("rmbctrl " + item);
                 }
                 else
                 {
-                    Program.SendNetworkMessage("rmb " + item);
+                    NetworkManager.SendNetworkMessage("rmb " + item);
                 }
 
             }
@@ -358,7 +358,7 @@ namespace HeartSignal
 
         public static void GetDesc(string id)
         {
-            Program.SendNetworkMessage("look " + id);
+            NetworkManager.SendNetworkMessage("look " + id);
 
         }
 

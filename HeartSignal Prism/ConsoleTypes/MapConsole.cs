@@ -37,42 +37,42 @@ namespace HeartSignal
             }
             
             if (angle == 0) {
-                Program.SendNetworkMessage("west");
+                NetworkManager.SendNetworkMessage("west");
 
             }
             else if (angle==180)
             {
-                Program.SendNetworkMessage("east");
+                NetworkManager.SendNetworkMessage("east");
 
             }
             else if (angle == 90)
             {
-                Program.SendNetworkMessage("north");
+                NetworkManager.SendNetworkMessage("north");
 
             }
             else if (angle == -90)
             {
-                Program.SendNetworkMessage("south");
+                NetworkManager.SendNetworkMessage("south");
 
             }
             else if (angle > 0 && angle < 90)
             {
-                Program.SendNetworkMessage("northwest");
+                NetworkManager.SendNetworkMessage("northwest");
 
             }
             else if (angle > 90 && angle < 180)
             {
-                Program.SendNetworkMessage("northeast");
+                NetworkManager.SendNetworkMessage("northeast");
 
             }
             else if (angle > -90 && angle < 0)
             {
-                Program.SendNetworkMessage("southwest");
+                NetworkManager.SendNetworkMessage("southwest");
 
             }
             else if (angle > -180 && angle < -90)
             {
-                Program.SendNetworkMessage("southeast");
+                NetworkManager.SendNetworkMessage("southeast");
 
             }
 

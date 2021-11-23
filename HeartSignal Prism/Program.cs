@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Threading;
-using Microsoft.Xna.Framework.Graphics;
 using PrimS.Telnet;
 using SadConsole;
 using SadConsole.UI;
@@ -35,7 +34,7 @@ namespace HeartSignal
 		[STAThread]
 		private static void Main()
 		{
-	
+
 
 
 			var SCREEN_WIDTH = (96 * 2) + 30;
@@ -43,7 +42,7 @@ namespace HeartSignal
 
 	
 			Settings.WindowTitle = File.ReadAllText("tagline.txt");
-			File.WriteAllText("debuglog.txt", "Beginning log for current session:\n");
+			File.WriteAllText("debuglog.txt", "Begining log for current session:\n");
 
 			Settings.UseDefaultExtendedFont = true;
 
@@ -58,7 +57,7 @@ namespace HeartSignal
 
 			Game.Create(SCREEN_WIDTH, SCREEN_HEIGHT);
 			//Game.Instance.DefaultFont = new fon
-			
+
 			Game.Instance.OnStart = Init;
 			Game.Instance.Run();
 
