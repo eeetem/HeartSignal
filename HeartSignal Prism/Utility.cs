@@ -265,5 +265,11 @@ namespace HeartSignal
 
             con.Cursor.NewLine();
         }
+
+        public static float Lerp(float firstFloat, float secondFloat, float by)
+        {
+            by = Math.Clamp(by, 0, 1);
+            return firstFloat * (1 - by) + secondFloat * by;
+        }
     }
 }

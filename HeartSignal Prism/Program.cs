@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using ImageProcessor.Imaging.Helpers;
 using SadConsole;
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole.UI;
@@ -248,22 +250,6 @@ namespace HeartSignal
 
 
 
-		static List<string> messageQueue = new List<string>();
-		public static bool SendNetworkMessage(string message)
-		{
-
-			messageQueue.Add(message);
-			needToSendMessage = true;
-			if (verboseDebug)
-			{
-				System.Console.WriteLine("Sending Message: " + message);
-			}
-			return true;
-
-		}
-
-		static bool needToSendMessage = false;
-
 
 		public static List<string> ExtractQuotationStrings(string s)
 		{
@@ -305,6 +291,7 @@ namespace HeartSignal
 				string sub = input.Substring(0, idx).Replace("[tag]","");
 				string cutstring = input;
 				string[] returned;
+				List<string> args;
 				//  System.Console.WriteLine(input);
 				switch (sub)
 				{
@@ -328,7 +315,7 @@ namespace HeartSignal
 						returned = RemoveParseTag(cutstring);
 						cutstring = returned[0];
 
-						string[] args = returned[1].Split("-");
+						args = returned[1].Split("-").ToList();
 						if (!ActionWindow.actionDatabase.ContainsKey(args[0]))
 						{
 							ActionWindow.actionDatabase[args[0]] = new Dictionary<string, List<string>>();
@@ -433,9 +420,17 @@ namespace HeartSignal
 					case "sound":
 						returned = RemoveParseTag(cutstring);
 						cutstring = returned[0];
-						List<string> args3 = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-						AudioManager.ParseRequest(returned[1], args3[0], args3[1]);
+						args = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+						AudioManager.ParseRequest(returned[1], args[0], args[1]);
 
+						break;
+					case "effect":
+						returned = RemoveParseTag(cutstring);
+						cutstring = returned[0];
+						string effectToAdjust = returned[1];//for when we get more effects
+						args = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+						PostPorcessing.AddTween(args[0],float.Parse(args[1]),float.Parse(args[2]));
+					
 						break;
 
 					case "border":
@@ -501,7 +496,8 @@ namespace HeartSignal
 							Settings.WindowTitle = loginConsole.Tagline;
 							loginConsole.MakeSurfaceImage();
 						}
-                        
+
+						
 						break;
 
 					default:

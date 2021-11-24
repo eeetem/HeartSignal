@@ -112,6 +112,7 @@ namespace HeartSignal
             Program.MainConsole.Cursor.NewLine();
             Program.MainConsole.Cursor.Print("Attempting server connection....").NewLine();
             
+            
 #endif
 		
 				using (Client client = new Client("deathcult.today", 6666, new CancellationToken()))
@@ -122,6 +123,8 @@ namespace HeartSignal
 #endif
 
 					TelnetClient = client;
+
+					
 					while (TelnetClient.IsConnected)
 					{
 				
