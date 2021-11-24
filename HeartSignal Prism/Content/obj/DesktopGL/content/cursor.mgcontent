@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SourceFile>E:/my games/HeartSignal/HeartSignal Prism/Content/cursor.png</SourceFile>
-  <SourceTime>2021-11-23T18:15:24.5886693+00:00</SourceTime>
+  <SourceTime>2021-11-24T18:43:21.169387+00:00</SourceTime>
   <DestFile>E:/my games/HeartSignal/HeartSignal Prism/Content/bin/DesktopGL/content/cursor.xnb</DestFile>
-  <DestTime>2021-11-23T18:15:37.7037083+00:00</DestTime>
+  <DestTime>2021-11-24T18:43:42.3855587+00:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2020-08-10T17:17:54+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

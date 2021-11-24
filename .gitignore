@@ -2,3 +2,5 @@
 HeartSignal Prism/bin/
 HeartSignal Prism/obj/
 *.xnb
+*.mgcontent
+HeartSignal Prism/Content/obj/DesktopGL/content/.mgstats
