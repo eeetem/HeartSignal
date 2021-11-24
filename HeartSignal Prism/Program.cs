@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using SadConsole;
+using Microsoft.Xna.Framework.Graphics;
 using SadConsole.UI;
 using SadConsole.UI.Themes;
 using SadRogue.Primitives;
@@ -32,30 +33,34 @@ namespace HeartSignal
 		[STAThread]
 		private static void Main()
 		{
-
+	
 
 
 			var SCREEN_WIDTH = (96 * 2) + 30;
 			var SCREEN_HEIGHT = 54 + 5;
 
-
+	
 			Settings.WindowTitle = File.ReadAllText("tagline.txt");
-			File.WriteAllText("debuglog.txt", "Begining log for current session:\n");
+			File.WriteAllText("debuglog.txt", "Beginning log for current session:\n");
 
 			Settings.UseDefaultExtendedFont = true;
 
 			Settings.AllowWindowResize = true;
+			
+			Settings.DoFinalDraw = false;
+
+			
 			Library.Default.Colors.Lines = new AdjustableColor(Color.Red, "red");
 
-
+			
 
 			Game.Create(SCREEN_WIDTH, SCREEN_HEIGHT);
 			//Game.Instance.DefaultFont = new fon
-
+			
 			Game.Instance.OnStart = Init;
 			Game.Instance.Run();
 
-
+			
 			Game.Instance.Dispose();
 
 		}
@@ -64,6 +69,8 @@ namespace HeartSignal
 
 		private static void Init()
 		{
+			SadConsole.Host.Global.GraphicsDeviceManager.GraphicsProfile = GraphicsProfile.HiDef;
+			Game.Instance.MonoGameInstance.Components.Add(new PostPorcessing());
 			ColoredString.CustomProcessor = Utility.CustomParseCommand;
 			root = new Console(1, 1);
 			MainConsole = new ClassicConsole(1, 1);
@@ -87,14 +94,14 @@ namespace HeartSignal
 			root.Children.Add(GrasperConsole);
 			BarConsole = new BarConsole(1, 1);
 			root.Children.Add(BarConsole);
-
+            
 #if RELEASE
 
 			loginConsole = new LoginConsole(1, 1);
-
+			
 #endif
-
-
+            
+            
 
 			PromptWindow = new PromptWindow(40, 10, new Point(Width / 2 - 15, Height / 2 - 5));
 
@@ -109,14 +116,14 @@ namespace HeartSignal
 
             Game.Instance.Screen = root;
 #endif
-
+            
 			// This is needed because we replaced the initial screen object with our own.
 			Game.Instance.DestroyDefaultStartingConsole();
 
-
+  
 			Settings.ResizeMode = Settings.WindowResizeOptions.None;
 			Game.Instance.MonoGameInstance.WindowResized += (s, a) => PositionConsoles();
-
+			
 			NetworkManager.ConnectToServer();
 
 
@@ -131,38 +138,38 @@ namespace HeartSignal
 
 		static void PositionConsoles()
 		{
-
+            
 
 			Program.Width = Game.Instance.MonoGameInstance.WindowWidth / root.FontSize.X;
 			Program.Height = Game.Instance.MonoGameInstance.WindowHeight / root.FontSize.Y;
-#if RELEASE
+#if  RELEASE
 			if (loginConsole != null)
 			{
 				//LoginConsole.ImageDrawThread?.Interrupt();//bad things happen if we dont due to texture size and surface size mismatch
-
-				loginConsole.Resize(Program.Height * 2, Program.Height, Height * 2, Program.Height, false);
+				
+				loginConsole.Resize(Program.Height*2, Program.Height, Height*2, Program.Height, false);
 				loginConsole.MakeControlls();
 				return;
 			}
 #endif
 
-
-
+            
+            
 			root.Resize(Program.Width, Program.Height, Program.Width, Program.Height, false);
 
 
 			int MapConsoleHeight = 7;
 			int inventoryWidth = 29;
-			int roomConsoleWidth = Math.Max((Program.Width - (inventoryWidth * 3)) / 2,4);
-			int barConsoleHeight = 6; //ONLY EVEN due to map console size increase
+			int roomConsoleWidth = (Program.Width - (inventoryWidth * 3)) / 2;
+			int barConsoleHeight = 6;//ONLY EVEN due to map console size increase
 			int topConsoleRowHeight = 20;
 
 
 			int width = Program.Width - (inventoryWidth * 2) - 2;
 			int height = Program.Height - (topConsoleRowHeight + barConsoleHeight + 4);
 			InputConsole input = MainConsole.GetInputSource();
-			input.Resize(width, 3, width, 3, false); //fun fact: input console is gigantic - just hidden under
-			input.Position = new Point(0, height+2);
+			input.Resize(width, 30, width, 30, false);//fun fact: input console is gigantic - just hidden under
+			input.Position = new Point(0, height + 2);
 			input.Cursor.Position = new Point(0, 0);
 			input.Clear();
 			input.Cursor.Print(">");
@@ -177,16 +184,14 @@ namespace HeartSignal
 				MainConsole.FontSize = MainConsole.Font.GetFontSize(IFont.Sizes.One);
 			}
 
-			MainConsole.Resize(width, height, width, 256, false);
+			MainConsole.Resize(width , height , width , 256, false);
 			MainConsole.Position = new Point((inventoryWidth + 2) / 2, (topConsoleRowHeight + barConsoleHeight) / 2);
 
 
 			width = (inventoryWidth / 2) + 1;
 			height = MapConsoleHeight;
 			MapConsole.Resize(width, height, width, height, false);
-			MapConsole.Position =
-				new Point((Program.Width / 2) - (inventoryWidth / 2),
-					(barConsoleHeight) / 2); //dunno why +1 is here, it works, dont care
+			MapConsole.Position = new Point((Program.Width / 2) - (inventoryWidth / 2) , (barConsoleHeight) / 2);//dunno why +1 is here, it works, dont care
 			MapConsole.ReDraw();
 
 			width = roomConsoleWidth - 1;
@@ -206,7 +211,7 @@ namespace HeartSignal
 
 
 			width = inventoryWidth;
-			height = Program.Height - barConsoleHeight;
+			height = Program.Height -barConsoleHeight;
 			InventoryConsole.Resize(width, height, width, 100, true);
 			InventoryConsole.Position = new Point(0, barConsoleHeight);
 			InventoryConsole.ActionOffset = new Point(10, 1);
@@ -214,10 +219,9 @@ namespace HeartSignal
 
 
 			width = inventoryWidth;
-			height = Program.Height - (MapConsoleHeight * 2) - barConsoleHeight - 1;
+			height = Program.Height - (MapConsoleHeight * 2) - barConsoleHeight-1;
 			ExamInventoryConsole.Resize(width, height, width, 100, true);
-			ExamInventoryConsole.Position = new Point(Program.Width - inventoryWidth,
-				(MapConsoleHeight * 2) + 1 + barConsoleHeight);
+			ExamInventoryConsole.Position = new Point(Program.Width - inventoryWidth, (MapConsoleHeight * 2) + 1 + barConsoleHeight);
 			ExamInventoryConsole.ActionOffset = new Point(-30, 1);
 			ExamInventoryConsole.ReDraw();
 
@@ -244,6 +248,23 @@ namespace HeartSignal
 
 
 
+		static List<string> messageQueue = new List<string>();
+		public static bool SendNetworkMessage(string message)
+		{
+
+			messageQueue.Add(message);
+			needToSendMessage = true;
+			if (verboseDebug)
+			{
+				System.Console.WriteLine("Sending Message: " + message);
+			}
+			return true;
+
+		}
+
+		static bool needToSendMessage = false;
+
+
 		public static List<string> ExtractQuotationStrings(string s)
 		{
 
@@ -259,13 +280,12 @@ namespace HeartSignal
 					{
 						strings.Add(s.Substring(posFrom + 1, posTo - posFrom - 1));
 
-						s = s.Remove(0, posTo + 1); //+1 to cut the comma
+						s = s.Remove(0, posTo + 1);//+1 to cut the comma
 
 						continue;
 
 					}
 				}
-
 				break;
 			}
 
@@ -281,8 +301,8 @@ namespace HeartSignal
 			int idx = input.IndexOf(':');
 			if (idx > 0 && input.Contains("[tag]"))
 			{
-
-				string sub = input.Substring(0, idx).Replace("[tag]", "");
+				
+				string sub = input.Substring(0, idx).Replace("[tag]","");
 				string cutstring = input;
 				string[] returned;
 				//  System.Console.WriteLine(input);
@@ -314,8 +334,7 @@ namespace HeartSignal
 							ActionWindow.actionDatabase[args[0]] = new Dictionary<string, List<string>>();
 						}
 
-						ActionWindow.actionDatabase[args[0]][args[1]] =
-							ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+						ActionWindow.actionDatabase[args[0]][args[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
 						break;
 					//obsolete
 					case "argactions":
@@ -323,23 +342,14 @@ namespace HeartSignal
 						MainConsole.ReciveExternalInput(cutstring);
 						break;
 					case "bars":
-						try{
-							returned = RemoveParseTag(cutstring);
-							cutstring = returned[0];
-						
+						returned = RemoveParseTag(cutstring);
+						cutstring = returned[0];
 
-
-							BarConsole.AddBar(returned[1],
-								ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));
-						}
-						catch (Exception E)
-						{
-							MainConsole.ReciveExternalInput("Bar Exception, please report this : " + E);
-
-						}
+ 
+						BarConsole.AddBar(returned[1], ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));
 						break;
 					case "map":
-
+						
 
 						returned = RemoveParseTag(cutstring);
 						cutstring = returned[0];
@@ -350,8 +360,8 @@ namespace HeartSignal
 						}
 						catch (Exception E)
 						{
-							MainConsole.ReciveExternalInput("Map Exception, please report this : " + E);
-
+							MainConsole.ReciveExternalInput("Map Exception, please report this : "+E);
+							
 						}
 
 						MapConsole.ReDraw();
@@ -380,7 +390,6 @@ namespace HeartSignal
 							int[] innerindexes = GetOutermostBrackets(cutstring);
 							cutstring = cutstring.Remove(0, innerindexes[1] + 2).Replace(",", "").Trim();
 						}
-
 						InventoryConsole.tagline = returned[1];
 						InventoryConsole.inventoryInfo = info2;
 						InventoryConsole.ReDraw();
@@ -400,7 +409,6 @@ namespace HeartSignal
 							int[] innerindexes = GetOutermostBrackets(cutstring);
 							cutstring = cutstring.Remove(0, innerindexes[1] + 2).Replace(",", "").Trim();
 						}
-
 						ExamInventoryConsole.tagline = returned[1];
 						ExamInventoryConsole.inventoryInfo = info3;
 						ExamInventoryConsole.ReDraw();
@@ -418,7 +426,6 @@ namespace HeartSignal
 							int[] innerindexes = GetOutermostBrackets(cutstring);
 							cutstring = cutstring.Remove(0, innerindexes[1] + 2).Replace(",", "").Trim();
 						}
-
 						GrasperConsole.tagline = returned[1];
 						GrasperConsole.inventoryInfo = info;
 						GrasperConsole.ReDraw();
@@ -436,9 +443,7 @@ namespace HeartSignal
 						string[] settings = cutstring.Split("-");
 
 						bool keep = false;
-						AnimatedBorderComponent._borderCellStyle = new ColoredGlyph(
-							Color.White.FromParser(settings[0], out keep, out keep, out keep, out keep, out keep),
-							Color.Black);
+						AnimatedBorderComponent._borderCellStyle = new ColoredGlyph(Color.White.FromParser(settings[0], out keep, out keep, out keep, out keep, out keep), Color.Black);
 						AnimatedBorderComponent.speed = float.Parse(settings[1]);
 
 
@@ -492,12 +497,11 @@ namespace HeartSignal
 
 						if (loginConsole != null)
 						{
-							loginConsole.Tagline =
-								cutstring.Remove(0, cutstring.IndexOf(":", StringComparison.Ordinal) + 1);
+							loginConsole.Tagline = cutstring.Remove(0, cutstring.IndexOf(":", StringComparison.Ordinal)+1);
 							Settings.WindowTitle = loginConsole.Tagline;
 							loginConsole.MakeSurfaceImage();
 						}
-
+                        
 						break;
 
 					default:
@@ -505,7 +509,6 @@ namespace HeartSignal
 						{
 							System.Console.WriteLine("unkown parsing tag: " + sub);
 						}
-
 						//if we couldn't parse it - it's possibly not meant to be parsed - print it
 						if (loginConsole != null)
 						{
@@ -540,7 +543,6 @@ namespace HeartSignal
 
 
 		}
-
 		private static NestedInfo GetNestedBrackets(string text)
 		{
 
@@ -568,7 +570,6 @@ namespace HeartSignal
 
 			return info;
 		}
-
 		private static int[] GetOutermostBrackets(string text)
 		{
 
@@ -600,15 +601,12 @@ namespace HeartSignal
 					layers++;
 
 				}
-
 				counter++;
 
 			}
-
-			return new int[] {first, last};
+			return new int[] { first, last };
 
 		}
-
 		private static string[] RemoveParseTag(string s)
 		{
 
@@ -620,7 +618,7 @@ namespace HeartSignal
 
 
 			s = s.Remove(0, s.IndexOf('{') + 1);
-			return new string[] {s, name};
+			return new string[] { s, name };
 		}
 
 

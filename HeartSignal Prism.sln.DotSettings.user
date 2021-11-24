@@ -2,6 +2,9 @@
 	<s:String x:Key="/Default/CodeInspection/Highlighting/AnalysisEnabled/@EntryValue">VISIBLE_FILES</s:String>
 	
 	<s:String x:Key="/Default/CodeInspection/Highlighting/SweaWarningsMode/@EntryValue">DoNotShowAndRun</s:String>
+	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
+  &lt;Assembly Path="C:\Users\etet\.nuget\packages\sadconsole.host.monogame\9.1.1\lib\net5.0\SadConsole.Host.MonoGame.dll" /&gt;&#xD;
+&lt;/AssemblyExplorer&gt;</s:String>
 	
 	
 	
