@@ -29,7 +29,7 @@ namespace HeartSignal
 
 		public static bool verboseDebug;
 
-		public static Client TelnetClient;
+
 		[STAThread]
 		private static void Main()
 		{
@@ -70,8 +70,7 @@ namespace HeartSignal
 		private static void Init()
 		{
 			SadConsole.Host.Global.GraphicsDeviceManager.GraphicsProfile = GraphicsProfile.HiDef;
-			Game.Instance.MonoGameInstance.Components.Add(new CRTfx());
-			Game.Instance.MonoGameInstance.Components.Add(new CustomMouseFX());
+			Game.Instance.MonoGameInstance.Components.Add(new PostPorcessing());
 			ColoredString.CustomProcessor = Utility.CustomParseCommand;
 			root = new Console(1, 1);
 			MainConsole = new ClassicConsole(1, 1);
@@ -124,7 +123,8 @@ namespace HeartSignal
   
 			Settings.ResizeMode = Settings.WindowResizeOptions.None;
 			Game.Instance.MonoGameInstance.WindowResized += (s, a) => PositionConsoles();
-			ServerLoop();
+			
+			NetworkManager.ConnectToServer();
 
 
 
@@ -293,59 +293,8 @@ namespace HeartSignal
 			return strings;
 
 		}
-		private static void SplitInput(string input)
-		{
-			File.AppendAllText("debuglog.txt", "splitting:"+input+"\n");
 
-			int idx = 0;
-			//int idx = input.IndexOf(Environment.NewLine, StringComparison.Ordinal);
-			//          if (idx < 1) {
-
-
-			//       idx = input.IndexOf('\n');
-
-			//if (idx < 1)
-			//{
-
-
-			idx = input.IndexOf('\r');
-
-			
-
-			if (idx > 0)
-			{
-				string MSG = input.Substring(0, idx);
-				File.AppendAllText("debuglog.txt", "parsing:"+MSG+"\n");
-				ParseServerInput(MSG);
-				try
-				{
-					
-					input = input.Remove(0, idx + 2);
-				}
-				catch
-				{
-					File.AppendAllText("debuglog.txt", "returned due to index exception\n");
-					return;
-				}
-
-				if (input.Length > 1)
-				{
-
-					SplitInput(input);
-
-
-				}
-				//File.AppendAllText("debuglog.txt", "returned as expected\n");
-				return;
-			}
-
-			ParseServerInput(input);
-
-
-
-
-		}
-		private static void ParseServerInput(string input)
+		public static void ParseServerMessage(string input)
 		{
 
 
@@ -672,110 +621,6 @@ namespace HeartSignal
 			return new string[] { s, name };
 		}
 
-		private static async void ServerLoop()
-		{
-
-			MainConsole.Cursor.NewLine(); 
-	
-
-			
-#if DEBUG
-            MainConsole.ReciveExternalInput("This is a debug build of HeartSignal, report to developers if you see this message");
-            string ans = await MainConsole.AskForInput("Do you want verbose logging?(y/n)");
-            if (ans == "y")
-            {
-                verboseDebug = true;
-            }
-
-            //  SplitInput("[c:ga;f:200,0,0:128,0,0:64,0,0:128,0,0:9:b:0,0,0:9]FUCKED;UP[c:u]");
-            string login = await MainConsole.AskForInput("Enter Login");
-            string pass = await MainConsole.AskForInput("Enter Password");
-            MainConsole.ClearText();
-            MainConsole.Cursor.NewLine();
-            MainConsole.Cursor.Print("Attempting server connection....").NewLine();
-            
-#endif
-			try
-			{
-				using (Client client = new Client("deathcult.today", 6666, new CancellationToken()))
-				{
-					await client.TryLoginAsync("", "", 1000);
-#if DEBUG
-					await client.WriteLine("connect " + login + " " + pass);
-#endif
-
-					TelnetClient = client;
-					while (true)
-					{
-				
-						if (needToSendMessage)
-						{
-							foreach (string message in new List<string>(messageQueue))
-							{
-								await client.WriteLine(message);
-								messageQueue.Remove(message);
-							}
-
-							if (messageQueue.Count < 1)
-							{
-								needToSendMessage = false;
-							}
-						}
-
-						string response = "";
-						while (true)
-						{
-							string recived = await client.ReadAsync(TimeSpan.FromMilliseconds(100));
-							if (recived.Length > 1)
-							{
-								//if we recived something - try reciving again since the message might have been cut halfway
-								response += recived;
-								continue;
-							}
-							//if nothing was recived in last 100ms process it
-							break;
-
-						}
-
-						
-						if (response.Length > 1)
-						{
-							SplitInput(response);
-#if DEBUG
-
-                    if (verboseDebug)
-                    {
-                        System.Console.WriteLine(response);
-                    }
-
-
-#endif
-						}
-
-						if (!client.IsConnected)
-						{
-							break;
-						}
-						//await Task.Delay(50);
-					}
-				}
-			}
-			catch (InvalidOperationException)
-			{
-				
-				if (loginConsole != null)
-				{
-					loginConsole.miniDisplay.Cursor.Print("Could not connect to server").NewLine();
-				}
-				else
-				{
-
-					MainConsole.ReciveExternalInput("Could not connect to server");
-				}
-			}
-			MainConsole.Cursor.Print("Server Connection Ended").NewLine();
-
-		}
 
 	}
 }

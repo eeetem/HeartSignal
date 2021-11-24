@@ -111,8 +111,8 @@ namespace HeartSignal
                     }
                     else
                     {
-                        System.Console.WriteLine(Game.Instance.Mouse.ScreenPosition.X );
-                        //print below if mousing oversu
+                        
+                        //print below if mousing over
                         
                         
                         if (Game.Instance.Mouse.ScreenPosition.X >= afflictionStart*Font.GlyphWidth &&

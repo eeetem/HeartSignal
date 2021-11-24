@@ -45,10 +45,10 @@ struct VertexShaderOutput
 // #pragma parameter bloomAmount "bloom amt" 0.15 0.0 1.0 0.05
 // #pragma parameter shape "filter kernel shape" 2.0 0.0 10.0 0.05
 
-float hardScan = -8.0;
-float hardPix = -3.0;
-float warpX = 0.031;
-float warpY = 0.041;
+float hardScan;
+float hardPix;
+float warpX;
+float warpY;
 float maskDark = 0.5;
 float maskLight = 1.5;
 float scaleInLinearGamma = 1.0;
