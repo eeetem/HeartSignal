@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Color = SadRogue.Primitives.Color;
 using Console = SadConsole.Console;
+using Point = SadRogue.Primitives.Point;
 
 
 namespace HeartSignal
@@ -23,7 +24,9 @@ namespace HeartSignal
 
 			crtEffect = SadConsole.Game.Instance.MonoGameInstance.Content.Load<Effect>("CRT");
 			SadConsole.Game.Instance.MonoGameInstance.IsMouseVisible = false; //hide default mouse
-			cursorTexture2D = SadConsole.Game.Instance.MonoGameInstance.Content.Load<Texture2D>("cursor");
+			int countx;
+			int county;
+			cursorTextures = Utility.SplitTexture(SadConsole.Game.Instance.MonoGameInstance.Content.Load<Texture2D>("eye"),40,40, out countx, out county);
 
 			combineSpriteBatch = new SpriteBatch(Global.SharedSpriteBatch.GraphicsDevice);
 			
@@ -51,7 +54,7 @@ namespace HeartSignal
 
 		}
 
-		private Texture2D cursorTexture2D;
+		private Texture2D[] cursorTextures;
 
 		private SpriteBatch combineSpriteBatch;
 
@@ -81,6 +84,8 @@ namespace HeartSignal
 			}
 		}
 
+		private float mouseInactivtyCounter = 0;
+		private Point oldMousePos;
 		public override void Draw(GameTime gameTime)
 		{
 			try
@@ -115,13 +120,40 @@ namespace HeartSignal
 				crtEffect.Parameters["outputSize"].SetValue(new Vector2(SadConsole.Settings.Rendering.RenderRect.Width,
 					SadConsole.Settings.Rendering.RenderRect.Height));
 
+				if(oldMousePos ==SadConsole.Game.Instance.Mouse.ScreenPosition){
 				
+					mouseInactivtyCounter += gameTime.ElapsedGameTime.Milliseconds;
 				
+				}
+				else
+				{
+					mouseInactivtyCounter = 0;
+				}
+
+				oldMousePos = SadConsole.Game.Instance.Mouse.ScreenPosition;
+
+				Texture2D cursorTexture2D;
+				if (mouseInactivtyCounter > 2000)
+				{
+					cursorTexture2D = cursorTextures[2];
+				}else if (mouseInactivtyCounter > 1000)
+				{
+					cursorTexture2D = cursorTextures[1];
+				}
+				else
+				{
+				
+					cursorTexture2D = cursorTextures[0];
+		
+				}
+
+
+
 
 
 				combineSpriteBatch.GraphicsDevice.SetRenderTarget(combinedRender);
 
-				combineSpriteBatch.Begin();
+				combineSpriteBatch.Begin(blendState: BlendState.NonPremultiplied);
 
 				combineSpriteBatch.Draw(Global.RenderOutput, Global.RenderOutput.Bounds,
 					Microsoft.Xna.Framework.Color.White);
@@ -129,8 +161,8 @@ namespace HeartSignal
 				combineSpriteBatch.Draw(cursorTexture2D,
 					new Vector2(SadConsole.Game.Instance.Mouse.ScreenPosition.X - cursorTexture2D.Width / 2,
 						SadConsole.Game.Instance.Mouse.ScreenPosition.Y - cursorTexture2D.Height / 2),
-					Microsoft.Xna.Framework.Color.White);
-
+					new Microsoft.Xna.Framework.Color(Microsoft.Xna.Framework.Color.White, Math.Clamp((3000-mouseInactivtyCounter)/3000*255,0,255)));
+//)
 				combineSpriteBatch.End();
 				combineSpriteBatch.GraphicsDevice.SetRenderTarget(null);
 
