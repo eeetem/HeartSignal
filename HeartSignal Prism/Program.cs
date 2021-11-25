@@ -240,7 +240,7 @@ namespace HeartSignal
 			height = barConsoleHeight - 1;
 			BarConsole.Resize(width, height, width, height, true);
 
-			//BarConsole.
+			PostPorcessing.RemakeRenderTarget();
 
 
 

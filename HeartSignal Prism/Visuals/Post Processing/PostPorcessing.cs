@@ -26,7 +26,7 @@ namespace HeartSignal
 			cursorTexture2D = SadConsole.Game.Instance.MonoGameInstance.Content.Load<Texture2D>("cursor");
 
 			combineSpriteBatch = new SpriteBatch(Global.SharedSpriteBatch.GraphicsDevice);
-
+			
 
 			DrawOrder = 6;
 			//default effect parameters
@@ -47,6 +47,7 @@ namespace HeartSignal
 
 			crtParams["noise"] = 0.5f;
 
+			
 
 		}
 
@@ -60,6 +61,7 @@ namespace HeartSignal
 
 		private Random rnd = new Random();
 
+		private static RenderTarget2D combinedRender;
 		//When we need to draw to the screen, it's done here.
 
 
@@ -69,11 +71,21 @@ namespace HeartSignal
 			return noiseAmount;
 		}
 
+		public static void RemakeRenderTarget()
+		{
+			combinedRender?.Dispose();
+			combinedRender	= new RenderTarget2D(Global.SharedSpriteBatch.GraphicsDevice,
+				Global.RenderOutput.Width, Global.RenderOutput.Height);
+		}
+
 		public override void Draw(GameTime gameTime)
 		{
 			try
 			{
-
+				if (combinedRender == null)
+				{
+					RemakeRenderTarget();
+				}
 
 				//init effects
 				ProcessTweens(gameTime);
@@ -99,9 +111,8 @@ namespace HeartSignal
 				crtEffect.Parameters["outputSize"].SetValue(new Vector2(SadConsole.Settings.Rendering.RenderRect.Width,
 					SadConsole.Settings.Rendering.RenderRect.Height));
 
-
-				RenderTarget2D combinedRender = new RenderTarget2D(Global.SharedSpriteBatch.GraphicsDevice,
-					Global.RenderOutput.Width, Global.RenderOutput.Height);
+				
+				
 
 
 				combineSpriteBatch.GraphicsDevice.SetRenderTarget(combinedRender);
