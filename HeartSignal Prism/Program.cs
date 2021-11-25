@@ -151,6 +151,7 @@ namespace HeartSignal
 				
 				loginConsole.Resize(Program.Height*2, Program.Height, Height*2, Program.Height, false);
 				loginConsole.MakeControlls();
+				PostPorcessing.RemakeRenderTarget();
 				return;
 			}
 #endif

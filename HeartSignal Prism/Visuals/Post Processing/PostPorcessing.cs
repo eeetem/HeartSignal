@@ -73,9 +73,12 @@ namespace HeartSignal
 
 		public static void RemakeRenderTarget()
 		{
-			combinedRender?.Dispose();
-			combinedRender	= new RenderTarget2D(Global.SharedSpriteBatch.GraphicsDevice,
-				Global.RenderOutput.Width, Global.RenderOutput.Height);
+			if (Global.RenderOutput != null)
+			{
+				combinedRender?.Dispose();
+				combinedRender = new RenderTarget2D(Global.SharedSpriteBatch.GraphicsDevice,
+					Global.RenderOutput.Width, Global.RenderOutput.Height);
+			}
 		}
 
 		public override void Draw(GameTime gameTime)
@@ -85,6 +88,7 @@ namespace HeartSignal
 				if (combinedRender == null)
 				{
 					RemakeRenderTarget();
+					return;
 				}
 
 				//init effects
