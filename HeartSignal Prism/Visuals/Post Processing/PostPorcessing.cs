@@ -148,12 +148,11 @@ namespace HeartSignal
 				}
 
 
-
-
+				float fade = Math.Clamp((3000 - (mouseInactivtyCounter-2000)) / 3000 * 1, 0, 1);		
 
 				combineSpriteBatch.GraphicsDevice.SetRenderTarget(combinedRender);
 
-				combineSpriteBatch.Begin(blendState: BlendState.NonPremultiplied);
+				combineSpriteBatch.Begin(blendState: BlendState.AlphaBlend);
 
 				combineSpriteBatch.Draw(Global.RenderOutput, Global.RenderOutput.Bounds,
 					Microsoft.Xna.Framework.Color.White);
@@ -161,13 +160,12 @@ namespace HeartSignal
 				combineSpriteBatch.Draw(cursorTexture2D,
 					new Vector2(SadConsole.Game.Instance.Mouse.ScreenPosition.X - cursorTexture2D.Width / 2,
 						SadConsole.Game.Instance.Mouse.ScreenPosition.Y - cursorTexture2D.Height / 2),
-					new Microsoft.Xna.Framework.Color(Microsoft.Xna.Framework.Color.White, Math.Clamp((3000-mouseInactivtyCounter)/3000*255,0,255)));
+					new Microsoft.Xna.Framework.Color(fade,fade,fade,fade));
 //)
 				combineSpriteBatch.End();
 				combineSpriteBatch.GraphicsDevice.SetRenderTarget(null);
 
-				Global.SharedSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied,
-					SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+				Global.SharedSpriteBatch.Begin(SpriteSortMode.Immediate);
 
 				crtEffect.CurrentTechnique.Passes[0].Apply();
 
