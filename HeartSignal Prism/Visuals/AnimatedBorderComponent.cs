@@ -18,7 +18,7 @@ new int[] {177,177,177,177,177,177,177,177,177,177,177,177,177,},
 new int[] { 178, 178, 178, 178, 178, 178, 178, 178, 178, 178, 178, 178, 178, },
 new int[] {177,177,177,177,177,177,177,177,177,177,177,177,177,},
 };
-        public static float speed = 1f;
+        
 
         public bool IsUpdate => false;
 
@@ -78,7 +78,7 @@ new int[] {177,177,177,177,177,177,177,177,177,177,177,177,177,},
      
                 
             }
-            counter += (delta.TotalSeconds / 2) * speed;
+            counter += (delta.TotalSeconds / 2) * Utility.GlobalAnimationSpeed;
             if (counter > 4)
             {
                 counter = 0;

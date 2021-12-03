@@ -105,7 +105,9 @@ namespace HeartSignal
 	            Program.verboseDebug = true;
             }
 
-            //  SplitInput("[c:ga;f:200,0,0:128,0,0:64,0,0:128,0,0:9:b:0,0,0:9]FUCKED;UP[c:u]");
+           //double unixTimestamp = (double)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000;
+           // double end = unixTimestamp + 10;
+           // SplitServerMessage("[tag]delay:attack delay{\""+unixTimestamp+"\",\""+end+"\",\"red.green.red\"}");
             string login = await  Program.MainConsole.AskForInput("Enter Login");
             string pass = await  Program.MainConsole.AskForInput("Enter Password");
             Program.MainConsole.ClearText();

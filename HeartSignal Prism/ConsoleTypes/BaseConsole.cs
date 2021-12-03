@@ -66,6 +66,7 @@ namespace HeartSignal
                 this.Effects.RemoveAll();
                 DrawConsole();
                 needRedraw = false;
+                MaxScroll = Math.Max(Cursor.Position.Y, ViewHeight) - ViewHeight;
 
 
             }

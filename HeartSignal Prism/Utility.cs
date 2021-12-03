@@ -13,8 +13,9 @@ using Color = SadRogue.Primitives.Color;
 namespace HeartSignal
 {
 	static class Utility
-	{
+    {
 
+        public static float GlobalAnimationSpeed = 1f;
 
         public static double GetAngleOfLineBetweenTwoPoints(SadRogue.Primitives.Point p1, SadRogue.Primitives.Point p2)
         {

@@ -31,7 +31,7 @@ namespace HeartSignal
             //TODO ADD THIS BACK WHEN SADCONSOLE FIXED EFFECT CLEARING
             //Resize(ViewWidth,ViewHeight,Width,Math.Max(Cursor.Position.Y,ViewHeight),false);
             //temp fix
-            MaxScroll = Math.Max(Cursor.Position.Y, ViewHeight) - ViewHeight;
+            
         }
 
       

@@ -25,6 +25,7 @@ namespace HeartSignal
 		public static InventoryConsole InventoryConsole;
 		public static InventoryConsole ExamInventoryConsole;
 		public static InventoryConsole GrasperConsole;
+		public static DelayConsole delayConsole;
 		static BarConsole BarConsole;
 		private static Console root;
 		public static LoginConsole loginConsole;
@@ -96,6 +97,8 @@ namespace HeartSignal
 			root.Children.Add(GrasperConsole);
 			BarConsole = new BarConsole(1, 1);
 			root.Children.Add(BarConsole);
+			delayConsole = new DelayConsole(1, 1);
+			root.Children.Add(delayConsole);
             
 #if RELEASE
 
@@ -194,8 +197,14 @@ namespace HeartSignal
 			width = (inventoryWidth / 2) + 1;
 			height = MapConsoleHeight;
 			MapConsole.Resize(width, height, width, height, false);
-			MapConsole.Position = new Point((Program.Width / 2) - (inventoryWidth / 2) , (barConsoleHeight) / 2);//dunno why +1 is here, it works, dont care
+			MapConsole.Position = new Point((Program.Width / 2) - (inventoryWidth / 2) , (barConsoleHeight) / 2);
 			MapConsole.ReDraw();
+
+			width = inventoryWidth;
+			height = MapConsoleHeight/2;
+			delayConsole.Resize(width, height, width, 100, false);
+			delayConsole.Position = new Point(0 , barConsoleHeight);
+			delayConsole.ReDraw();
 
 			width = roomConsoleWidth - 1;
 			height = topConsoleRowHeight;
@@ -213,20 +222,21 @@ namespace HeartSignal
 			RoomConsole.ReDraw();
 
 
-			width = inventoryWidth;
-			height = Program.Height -barConsoleHeight;
-			InventoryConsole.Resize(width, height, width, 100, true);
-			InventoryConsole.Position = new Point(0, barConsoleHeight);
-			InventoryConsole.ActionOffset = new Point(10, 1);
-			InventoryConsole.ReDraw();
-
-
+			
 			width = inventoryWidth;
 			height = Program.Height - (MapConsoleHeight * 2) - barConsoleHeight-1;
 			ExamInventoryConsole.Resize(width, height, width, 100, true);
 			ExamInventoryConsole.Position = new Point(Program.Width - inventoryWidth, (MapConsoleHeight * 2) + 1 + barConsoleHeight);
 			ExamInventoryConsole.ActionOffset = new Point(-30, 1);
 			ExamInventoryConsole.ReDraw();
+
+			InventoryConsole.Resize(width, height, width, 100, true);
+			InventoryConsole.Position = new Point(0, (MapConsoleHeight * 2) + 1 + barConsoleHeight);
+			InventoryConsole.ActionOffset = new Point(10, 1);
+			InventoryConsole.ReDraw();
+
+
+
 
 
 			width = inventoryWidth;
@@ -336,6 +346,25 @@ namespace HeartSignal
  
 						BarConsole.AddBar(returned[1], ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));
 						break;
+					//[tag]delay:attack delay{"1235","1234","64:64:64}
+					case "delay":
+						returned = RemoveParseTag(cutstring);
+						cutstring = returned[0];
+
+						args = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+						bool keep1 = false;
+						string[] colors = args[2].Split(".");
+						Color[] Colors = new Color[colors.Length];
+						int index=0;
+						foreach (string color in colors) {
+
+							Colors[index] = Color.White.FromParser(color, out keep1, out keep1, out keep1, out keep1, out keep1);
+							index++;
+						}
+
+						;
+						delayConsole.DisplayDelay(returned[1],new Gradient(Colors) ,double.Parse(args[0]),double.Parse(args[1]));
+						break;
 					case "map":
 						
 
@@ -440,7 +469,7 @@ namespace HeartSignal
 
 						bool keep = false;
 						AnimatedBorderComponent._borderCellStyle = new ColoredGlyph(Color.White.FromParser(settings[0], out keep, out keep, out keep, out keep, out keep), Color.Black);
-						AnimatedBorderComponent.speed = float.Parse(settings[1]);
+						Utility.GlobalAnimationSpeed = float.Parse(settings[1]);
 
 
 						break;

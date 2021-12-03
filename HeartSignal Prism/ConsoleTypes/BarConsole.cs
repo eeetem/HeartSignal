@@ -72,7 +72,7 @@ namespace HeartSignal
             this.Clear();
             this.Effects.RemoveAll();
 
-            counter += (float)delta.TotalSeconds/4 * AnimatedBorderComponent.speed;
+            counter += (float)delta.TotalSeconds/4 * Utility.GlobalAnimationSpeed;
             if (counter > 1) {
                 counter = 0;
             

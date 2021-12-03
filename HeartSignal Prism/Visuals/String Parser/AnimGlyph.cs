@@ -45,7 +45,7 @@ namespace HeartSignal
         {
             
 
-            Counter += (float)timeElapsed * AnimatedBorderComponent.speed;
+            Counter += (float)timeElapsed *Utility.GlobalAnimationSpeed;
             if (Counter > glyphs.Count)
             {
 
