@@ -48,12 +48,12 @@ namespace HeartSignal
 
 	             Utility.PrintParseMessage(db.name,this.actionWindow,this,false);
 	             int barLenght = Width - (Cursor.Position.X + 2);
-	             Surface.DrawLine(Cursor.Position + new Point(1, 0),Cursor.Position + new Point(1+barLenght, 0),176,db.color.Lerp(counter),Color.Black);
+	             Surface.DrawLine(Cursor.Position + new Point(1, 0),Cursor.Position + new Point(barLenght, 0),176,db.color.Lerp(counter),Color.Black);
 	             double duration = db.endtime - db.startime;
-	             double timePassed = unixTimestamp - db.startime;
+	             double timePassed = Math.Max(unixTimestamp - db.startime,0);
 	             double timePerGlyph = duration/barLenght;
-	             int glyphsToFill = (int)Math.Round(timePassed / timePerGlyph);
-	             Surface.DrawLine(Cursor.Position + new Point(1, 0),Cursor.Position + new Point(1+glyphsToFill, 0),178,db.color.Lerp(counter),db.color.Lerp(counter));
+	             int glyphsToFill = (int)Math.Max(Math.Round(timePassed / timePerGlyph),1);
+	             Surface.DrawLine(Cursor.Position + new Point(1, 0),Cursor.Position + new Point(glyphsToFill, 0),178,db.color.Lerp(counter),db.color.Lerp(counter));
 
 	             if (duration < timePassed)
 	             {
