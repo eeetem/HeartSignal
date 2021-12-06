@@ -41,7 +41,7 @@ namespace HeartSignal
 
 	        this.Clear();
 
-	        double unixTimestamp = (double)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000;
+	        
 	        Cursor.Position = new Point(0, 1);
              foreach (DelayBar db in delays.ToList())
              {
@@ -50,6 +50,7 @@ namespace HeartSignal
 	             int barLenght = Width - (Cursor.Position.X + 2);
 	             Surface.DrawLine(Cursor.Position + new Point(1, 0),Cursor.Position + new Point(barLenght, 0),176,db.color.Lerp(counter),Color.Black);
 	             double duration = db.endtime - db.startime;
+	             double unixTimestamp = (double)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000;
 	             double timePassed = Math.Max(unixTimestamp - db.startime,0);
 	             double timePerGlyph = duration/barLenght;
 	             int glyphsToFill = (int)Math.Max(Math.Round(timePassed / timePerGlyph),1);
