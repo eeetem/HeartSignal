@@ -353,7 +353,7 @@ namespace HeartSignal
 
 						args = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
 						bool keep1 = false;
-						string[] colors = args[2].Split(".");
+						string[] colors = args[1].Split(".");
 						Color[] Colors = new Color[colors.Length];
 						int index=0;
 						foreach (string color in colors) {
@@ -363,7 +363,7 @@ namespace HeartSignal
 						}
 
 						;
-						delayConsole.DisplayDelay(returned[1],new Gradient(Colors) ,double.Parse(args[0]),double.Parse(args[1]));
+						delayConsole.DisplayDelay(returned[1],new Gradient(Colors) ,double.Parse(args[0]));
 						break;
 					case "map":
 						

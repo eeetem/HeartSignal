@@ -21,9 +21,10 @@ namespace HeartSignal
 
         }
 
-        public void DisplayDelay(string name, Gradient color, double starttime ,double endtime)
+        public void DisplayDelay(string name, Gradient color, double duartion)
         {
-	        delays.Add(new DelayBar(name, starttime, endtime, color));
+	        double unixTimestamp = (double)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000;
+	        delays.Add(new DelayBar(name, unixTimestamp, unixTimestamp +duartion, color));
 
         }
 
