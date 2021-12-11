@@ -1,17 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>HeartSignal</RootNamespace>
-    <ApplicationIcon>heartsignal.ico</ApplicationIcon>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
     <Win32Resource />
+    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="MouseHandler.cs" />
   </ItemGroup>
-
+<ItemGroup>
+<EmbeddedResource Include="Icon.ico">
+  <LogicalName>Icon.ico</LogicalName>
+</EmbeddedResource>
+   </ItemGroup>
+<ItemGroup>
+  <EmbeddedResource Include="Icon.bmp">
+  <LogicalName>Icon.bmp</LogicalName>
+</EmbeddedResource>
+   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ImageProcessor" Version="2.9.1" />
     <PackageReference Include="SadConsole.Host.MonoGame" Version="9.1.1" />
