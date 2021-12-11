@@ -21,14 +21,14 @@ namespace HeartSignal
 
         }
 
-        public void DisplayDelay(string name, Gradient color, double duartion)
+        public void DisplayDelay(string name, Gradient color, float duartion, float delay)
         {
 	        double unixTimestamp = (double)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000;
-	        delays.Add(new DelayBar(name, unixTimestamp, unixTimestamp +duartion, color));
+	        delays[name] = (new DelayBar(name, unixTimestamp+delay, unixTimestamp +duartion+delay, color));
 
         }
 
-        private List<DelayBar> delays = new List<DelayBar>();
+        private Dictionary<string,DelayBar> delays = new Dictionary<string,DelayBar>();
 
         private float counter = 0;
 
@@ -44,7 +44,7 @@ namespace HeartSignal
 
 	        
 	        Cursor.Position = new Point(0, 1);
-             foreach (DelayBar db in delays.ToList())
+             foreach (DelayBar db in delays.Values.ToList())
              {
 
 	             Utility.PrintParseMessage(db.name,this.actionWindow,this,false);
@@ -59,7 +59,7 @@ namespace HeartSignal
 
 	             if (duration < timePassed)
 	             {
-		             delays.Remove(db);
+		             delays.Remove(db.name);
 	             }
 
 
