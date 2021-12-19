@@ -76,6 +76,8 @@ namespace HeartSignal
 			Game.Instance.MonoGameInstance.Components.Add(new PostPorcessing());
 			ColoredString.CustomProcessor = Utility.CustomParseCommand;
 			root = new Console(1, 1);
+			root.SadComponents.Add(new KeyBinds());
+			
 			MainConsole = new ClassicConsole(1, 1);
 			root.Children.Add(MainConsole);
 			MapConsole = new MapConsole(1, 1);
@@ -346,7 +348,7 @@ namespace HeartSignal
  
 						BarConsole.AddBar(returned[1], ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));
 						break;
-					//[tag]delay:attack delay{"1235","1234","64:64:64}
+					//[tag]delay:attack{"1235","1234","64:64:64}
 					case "delay":
 						returned = RemoveParseTag(cutstring);
 						cutstring = returned[0];
