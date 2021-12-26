@@ -5,24 +5,14 @@ using SadConsole.Input;
 
 namespace HeartSignal
 {
-	public class KeyBinds : IComponent
+	public static class KeyBinds 
 	{
-		public KeyBinds()
+
+
+		
+		public static void Process(IScreenObject host, Keyboard keyboard, out bool handled)
 		{
-			SortOrder = 0;
-			IsUpdate = true;
-			IsRender = false;
-			IsMouse = false;
-			IsKeyboard = false;
-		}
-
-
-		public void Update(IScreenObject host, TimeSpan delta)
-		{
-
-			Keyboard keyboard = Game.Instance.Keyboard;
-
-
+			handled = true;
 			foreach (AsciiKey key in keyboard.KeysPressed)
 			{
 
@@ -30,64 +20,35 @@ namespace HeartSignal
 				{
 					case(Keys.NumPad8):
 						NetworkManager.SendNetworkMessage("north");
-						continue;
+						return;
 					case(Keys.NumPad7):
 						NetworkManager.SendNetworkMessage("northwest");
-						continue;
+						return;
 					case(Keys.NumPad9):
 						NetworkManager.SendNetworkMessage("northeast");
-						continue;
+						return;
 					case(Keys.NumPad4):
 						NetworkManager.SendNetworkMessage("west");
-						continue;
+						return;
 					case(Keys.NumPad6):
 						NetworkManager.SendNetworkMessage("east");
-						continue;
+						return;
 					case(Keys.NumPad2):
 						NetworkManager.SendNetworkMessage("south");
-						continue;
+						return;
 					case(Keys.NumPad1):
 						NetworkManager.SendNetworkMessage("southwest");
-						continue;
+						return;
 					case(Keys.NumPad3):
-						NetworkManager.SendNetworkMessage("southeast");
-						continue;
+						return;
 
 				}
 			
 			}
+
+			handled = false; //if none of the keybinds triggered - let other keyboard components handle stuff
 		}
 
-		
-		public void Render(IScreenObject host, TimeSpan delta)
-		{
-			throw new NotImplementedException();
-		}
 
-		public void ProcessMouse(IScreenObject host, MouseScreenObjectState state, out bool handled)
-		{
-			throw new NotImplementedException();
-		}
-
-		public void ProcessKeyboard(IScreenObject host, Keyboard keyboard, out bool handled)
-		{
-			throw new NotImplementedException();
-		}
-
-		public void OnAdded(IScreenObject host)
-		{
-			return;
-		}
-
-		public void OnRemoved(IScreenObject host)
-		{
-			return;
-		}
-
-		public uint SortOrder { get; }
-		public bool IsUpdate { get; }
-		public bool IsRender { get; }
-		public bool IsMouse { get; }
-		public bool IsKeyboard { get; }
 	}
 }

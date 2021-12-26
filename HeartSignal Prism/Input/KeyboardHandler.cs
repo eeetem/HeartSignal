@@ -28,6 +28,12 @@ namespace HeartSignal
         
         public override void ProcessKeyboard(IScreenObject consoleObject, Keyboard info, out bool handled)
         {
+            handled = false;
+            KeyBinds.Process(consoleObject,info, out handled);
+            
+            if(handled) return;
+
+
             // Upcast this because we know we're only using it with a Console type.
             Console console = (Console)consoleObject;
 
