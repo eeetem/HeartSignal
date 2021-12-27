@@ -333,7 +333,8 @@ namespace HeartSignal
 							ActionWindow.actionDatabase[args[0]] = new Dictionary<string, List<string>>();
 						}
 
-						ActionWindow.actionDatabase[args[0]][args[1]] = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+						ActionWindow.actionDatabase[args[0]][args[1]] =
+							ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
 						break;
 					//obsolete
 					case "argactions":
@@ -344,8 +345,9 @@ namespace HeartSignal
 						returned = RemoveParseTag(cutstring);
 						cutstring = returned[0];
 
- 
-						BarConsole.AddBar(returned[1], ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));
+
+						BarConsole.AddBar(returned[1],
+							ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));
 						break;
 					//[tag]delay:attack{"1235","1234","64:64:64}
 					case "delay":
@@ -353,6 +355,12 @@ namespace HeartSignal
 						cutstring = returned[0];
 
 						args = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+						if (args.Count != 3)
+						{
+							MainConsole.ReciveExternalInput("ERROR: incorrect arguments supplied to a delay");
+							return;
+						}
+
 						bool keep1 = false;
 						string[] colors = args[2].Split(".");
 						Color[] Colors = new Color[colors.Length];
