@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using ImageProcessor.Imaging.Helpers;
 using SadConsole;
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole.UI;
@@ -26,7 +24,7 @@ namespace HeartSignal
 		public static InventoryConsole ExamInventoryConsole;
 		public static InventoryConsole GrasperConsole;
 		public static DelayConsole delayConsole;
-		static BarConsole BarConsole;
+		static ButtonConsole buttonConsole;
 		private static Console root;
 		public static LoginConsole loginConsole;
 
@@ -41,8 +39,8 @@ namespace HeartSignal
 
 			var SCREEN_WIDTH = (96 * 2) + 30;
 			var SCREEN_HEIGHT = 54 + 5;
+			
 
-	
 			Settings.WindowTitle = File.ReadAllText("tagline.txt");
 			File.WriteAllText("debuglog.txt", "Beginning log for current session:\n");
 
@@ -96,8 +94,8 @@ namespace HeartSignal
 			GrasperConsole = new InventoryConsole(1, 1);
 			GrasperConsole.tagline = "I can hold with";
 			root.Children.Add(GrasperConsole);
-			BarConsole = new BarConsole(1, 1);
-			root.Children.Add(BarConsole);
+			buttonConsole = new ButtonConsole(1, 1);
+			root.Children.Add(buttonConsole);
 			delayConsole = new DelayConsole(1, 1);
 			root.Children.Add(delayConsole);
             
@@ -250,7 +248,7 @@ namespace HeartSignal
 
 			width = Program.Width;
 			height = barConsoleHeight - 1;
-			BarConsole.Resize(width, height, width, height, true);
+			buttonConsole.Resize(width, height, width, height, true);
 
 			PostPorcessing.RemakeRenderTarget();
 
@@ -312,7 +310,7 @@ namespace HeartSignal
 					case "desc":
 						returned = RemoveParseTag(cutstring);
 						cutstring = returned[0];
-
+						
 						ThingConsole.lines = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
 						ThingConsole.ReDraw();
 						break;
@@ -341,13 +339,21 @@ namespace HeartSignal
 						MainConsole.ReciveExternalInput("obsolete parsing tag recived:");
 						MainConsole.ReciveExternalInput(cutstring);
 						break;
-					case "bars":
+					case "buttons":
 						returned = RemoveParseTag(cutstring);
-						cutstring = returned[0];
+						args = ExtractQuotationStrings(returned[0]);
+						buttonConsole.MakeButtons(args);
+						break;
 
-
-						BarConsole.AddBar(returned[1],
-							ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));
+					case "bars":
+						MainConsole.ReciveExternalInput("obsolete parsing tag recived:");
+						MainConsole.ReciveExternalInput(cutstring);
+						/*	returned = RemoveParseTag(cutstring);
+							cutstring = returned[0];
+	
+	
+							BarConsole.AddBar(returned[1],
+								ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));*/
 						break;
 					//[tag]delay:attack{"1235","1234","64:64:64}
 					case "delay":
