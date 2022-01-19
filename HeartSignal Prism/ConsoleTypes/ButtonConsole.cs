@@ -41,6 +41,8 @@ namespace HeartSignal
 					
 				};
 				button.MouseButtonClicked += (s, a) => NetworkManager.SendNetworkMessage(verb);
+				button.MouseButtonClicked +=  (s, a) => AudioManager.ParseRequest(null, "play", "misc/buttonclick.ogg");
+				button.MouseEnter +=  (s, a) => AudioManager.ParseRequest(null, "play", "misc/buttonhover.ogg");
 				this.Controls.Add(button);
 				xpos = xpos + 1 + verb.Length;
 
