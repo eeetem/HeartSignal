@@ -35,50 +35,56 @@ namespace HeartSignal
                 System.Console.WriteLine(loc);
                 System.Console.WriteLine(angle);
             }
-            
+
+            string msg = "";
+            if (Game.Instance.Keyboard.IsKeyDown(Keys.LeftShift))
+            {
+                msg = "look ";
+            }
+
             if (angle == 0) {
-                NetworkManager.SendNetworkMessage("west");
+                msg += "west";
 
             }
             else if (angle==180)
             {
-                NetworkManager.SendNetworkMessage("east");
+                msg += "east";
 
             }
             else if (angle == 90)
             {
-                NetworkManager.SendNetworkMessage("north");
+                msg += "north";
 
             }
             else if (angle == -90)
             {
-                NetworkManager.SendNetworkMessage("south");
+                msg += "south";
 
             }
             else if (angle > 0 && angle < 90)
             {
-                NetworkManager.SendNetworkMessage("northwest");
+                msg += "northwest";
 
             }
             else if (angle > 90 && angle < 180)
             {
-                NetworkManager.SendNetworkMessage("northeast");
+                msg += "northeast";
 
             }
             else if (angle > -90 && angle < 0)
             {
-                NetworkManager.SendNetworkMessage("southwest");
+                msg += "southwest";
 
             }
             else if (angle > -180 && angle < -90)
             {
-                NetworkManager.SendNetworkMessage("southeast");
+                msg += "southeast";
 
             }
 
+            NetworkManager.SendNetworkMessage(msg);
 
-
-        }
+       }
 
        public void RightClicked(Point clickloc, MouseScreenObjectState state)
        {

@@ -31,6 +31,7 @@ namespace HeartSignal
         
         
         }
+        
 
         //a lot fo reapeating code in here, integrate this better at some point
         public void ShowTooltip(string text,ICellSurface surface, Point? newPosition = null) {
