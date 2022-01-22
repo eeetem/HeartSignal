@@ -314,6 +314,10 @@ namespace HeartSignal
 
         }
 
-
+        protected override void Dispose(bool disposing)
+        {
+            ImageDrawThread.Interrupt();
+            base.Dispose(disposing);
+        }
     }
 }

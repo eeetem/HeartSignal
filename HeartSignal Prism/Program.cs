@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using SadConsole;
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole.UI;
@@ -522,13 +523,15 @@ namespace HeartSignal
 						break;
 					case "accept":
 #if RELEASE
-						
+			
+						Game.Instance.Screen = root;
+						Thread.Sleep(100);//let all the renders and whatever finidh up before removing the login console 
 						if (loginConsole != null)
 						{
 							loginConsole.Dispose();
 							loginConsole = null;
 						}
-						Game.Instance.Screen = root;
+						
 						PositionConsoles();
 						
 #endif
