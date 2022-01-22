@@ -4,6 +4,8 @@
 	<s:String x:Key="/Default/CodeInspection/Highlighting/SweaWarningsMode/@EntryValue">DoNotShowAndRun</s:String>
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
   &lt;Assembly Path="C:\Users\etet\.nuget\packages\sadconsole.host.monogame\9.1.1\lib\net5.0\SadConsole.Host.MonoGame.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Users\etet\.nuget\packages\sadconsole\9.1.1\lib\netcoreapp3.1\SadConsole.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Users\etet\.nuget\packages\monogame.framework.desktopgl\3.8.0.1641\lib\netstandard2.0\MonoGame.Framework.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
 	
 	

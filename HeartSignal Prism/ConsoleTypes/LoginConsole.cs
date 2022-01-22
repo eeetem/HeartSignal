@@ -8,6 +8,7 @@ using ImageProcessor;
 using Color = SadRogue.Primitives.Color;
 using Point = SadRogue.Primitives.Point;
 using System.Threading;
+using Newtonsoft.Json.Serialization;
 
 namespace HeartSignal
 {
@@ -23,17 +24,17 @@ namespace HeartSignal
             Cursor.DisableWordBreak = true;
 
             Cursor.UseStringParser = true;
-           
-            miniDisplay = new Console(30,15);
-            
-           // miniDisplay.SadComponents.Add(new AnimatedBorderComponent());
+
+            miniDisplay = new Console(30, 15);
+
+            // miniDisplay.SadComponents.Add(new AnimatedBorderComponent());
             Children.Add(miniDisplay);
             baseImage = File.ReadAllBytes("lobby.png");
             //MakeSurfaceImage();
             Random rnd = new Random();
-           blurCounter = rnd.Next(0,18);
-           contrastCounter = rnd.Next(0, 40);
-            gammaCounter = rnd.Next(0,20);
+            blurCounter = rnd.Next(0, 18);
+            contrastCounter = rnd.Next(0, 40);
+            gammaCounter = rnd.Next(0, 20);
 
             using (MemoryStream stream = new MemoryStream(baseImage))
             {
@@ -47,17 +48,22 @@ namespace HeartSignal
         private int contrastCounter;
         private int gammaCounter;
 
-        
+
         private bool surfaceCreated = false;
-        private Color[] pixelCache;//since you cant load pixels on a non UI thread - surface generation works the following way: 1.Main thread calls for surface generation 2.Main thread loads Pixels of OLD texture 3. new texture is generated 4. OLD cached pixels are turned into a surface. so image gets generated and printed into surface in 1 go however the surface print is from previous cycle
+
+        private Color[]
+            pixelCache; //since you cant load pixels on a non UI thread - surface generation works the following way: 1.Main thread calls for surface generation 2.Main thread loads Pixels of OLD texture 3. new texture is generated 4. OLD cached pixels are turned into a surface. so image gets generated and printed into surface in 1 go however the surface print is from previous cycle
+
         ITexture texture;
+
         public void MakeSurfaceImage()
-        {   if (Tagline=="") return;
+        {
+            if (Tagline == "") return;
             var watch = System.Diagnostics.Stopwatch.StartNew();
-           //this.Clear();
-         
-           
-          
+            //this.Clear();
+
+
+
             //using ITexture sadImage = GameHost.Instance.OpenStream("lobby.png");
             Random rnd = new Random();
             using (MemoryStream inStream = new MemoryStream(baseImage))
@@ -65,87 +71,90 @@ namespace HeartSignal
                 using (MemoryStream outStream = new MemoryStream())
                 {
                     // Initialize the ImageFactory using the overload to preserve EXIF metadata.
-                    using (ImageFactory imageFactory = new ImageFactory(preserveExifData:true))
+                    using (ImageFactory imageFactory = new ImageFactory(preserveExifData: true))
                     {
                         blurCounter++;
                         contrastCounter++;
                         gammaCounter++;
-                    
+
                         if (blurCounter > 30) blurCounter = 0;
                         if (gammaCounter > 50) gammaCounter = 0;
                         if (contrastCounter > 20) contrastCounter = 0;
-                
+
                         // Load, resize, set the format and quality and save an image.
                         imageFactory.Load(inStream)
                             //  .Rotate(rnd.Next(-1,1))
-                            .Contrast(contrastCounter < 10 ? contrastCounter-10 : (20-contrastCounter)-10)
-                            .GaussianSharpen(rnd.Next(0,5))
-                            .GaussianBlur(blurCounter < 15 ? blurCounter : 30-blurCounter)
-                            .Gamma(gammaCounter < 25 ? gammaCounter : 50-gammaCounter)
-                            .Resize(new Size(Program.Height*2,Program.Height*2))//it's faster to do all effects on a lowres image and then upscale it
+                            .Contrast(contrastCounter < 10 ? contrastCounter - 10 : (20 - contrastCounter) - 10)
+                            .GaussianSharpen(rnd.Next(0, 5))
+                            .GaussianBlur(blurCounter < 15 ? blurCounter : 30 - blurCounter)
+                            .Gamma(gammaCounter < 25 ? gammaCounter : 50 - gammaCounter)
+                            .Resize(new Size(Program.Height * 2,
+                                Program.Height *
+                                2)) //it's faster to do all effects on a lowres image and then upscale it
                             .Save(outStream);
                     }
-                    
+
                     texture = GameHost.Instance.GetTexture(outStream);
-                  //  this.Resize(Program.Height * 2,Height,Program.Height * 2,Height,false);
-                  
-    
-                   
+                    //  this.Resize(Program.Height * 2,Height,Program.Height * 2,Height,false);
+
+
+
                 }
             }
-            
+
 
             var surfaceHeight = Program.Height;
             var surfaceWidth = Program.Height * 2;
-          // this chunk of code is taken straight out of ToSurface() in sadconsole - however since the GetPixel() can't be dont outside of main thread i had to reuse their fucntion but with getpixel done on main thread beforehand
-            if (surfaceWidth <= 0 || surfaceHeight <= 0 || surfaceWidth != texture.Width )
+            // this chunk of code is taken straight out of ToSurface() in sadconsole - however since the GetPixel() can't be dont outside of main thread i had to reuse their fucntion but with getpixel done on main thread beforehand
+            if (surfaceWidth <= 0 || surfaceHeight <= 0 || surfaceWidth != texture.Width)
                 return;
 
             this.Clear();
             ICellSurface surface = this.Surface;
 
-            
+
 
             int fontSizeX = texture.Width / surfaceWidth;
             int fontSizeY = texture.Height / surfaceHeight;
 
             global::System.Threading.Tasks.Parallel.For(0, texture.Height / fontSizeY, (h) =>
-            //for (int h = 0; h < imageHeight / fontSizeY; h++)
-            {
-                int startY = h * fontSizeY;
-                //System.Threading.Tasks.Parallel.For(0, imageWidth / fontSizeX, (w) =>
-                for (int w = 0; w < texture.Width / fontSizeX; w++)
+                    //for (int h = 0; h < imageHeight / fontSizeY; h++)
                 {
-                    int startX = w * fontSizeX;
-
-                    float allR = 0;
-                    float allG = 0;
-                    float allB = 0;
-
-                    for (int y = 0; y < fontSizeY; y++)
+                    int startY = h * fontSizeY;
+                    //System.Threading.Tasks.Parallel.For(0, imageWidth / fontSizeX, (w) =>
+                    for (int w = 0; w < texture.Width / fontSizeX; w++)
                     {
-                        for (int x = 0; x < fontSizeX; x++)
+                        int startX = w * fontSizeX;
+
+                        float allR = 0;
+                        float allG = 0;
+                        float allB = 0;
+
+                        for (int y = 0; y < fontSizeY; y++)
                         {
-                            int cY = y + startY;
-                            int cX = x + startX;
+                            for (int x = 0; x < fontSizeX; x++)
+                            {
+                                int cY = y + startY;
+                                int cX = x + startX;
 
-                            int index = cY * texture.Width + cX;
-                            if (pixelCache==null || pixelCache.Length <= index) return;//window got resized - texutre and size mismatch
-                            Color color = pixelCache[index];
-                           
-                          
-                           
-                            allR += color.R;
-                            allG += color.G;
-                            allB += color.B;
+                                int index = cY * texture.Width + cX;
+                                if (pixelCache == null || pixelCache.Length <= index)
+                                    return; //window got resized - texutre and size mismatch
+                                Color color = pixelCache[index];
+
+
+
+                                allR += color.R;
+                                allG += color.G;
+                                allB += color.B;
+                            }
                         }
-                    }
 
-                    byte sr = (byte)(allR / (fontSizeX * fontSizeY));
-                    byte sg = (byte)(allG / (fontSizeX * fontSizeY));
-                    byte sb = (byte)(allB / (fontSizeX * fontSizeY));
+                        byte sr = (byte) (allR / (fontSizeX * fontSizeY));
+                        byte sg = (byte) (allG / (fontSizeX * fontSizeY));
+                        byte sb = (byte) (allB / (fontSizeX * fontSizeY));
 
-                    var newColor = new SadRogue.Primitives.Color(sr, sg, sb);
+                        var newColor = new SadRogue.Primitives.Color(sr, sg, sb);
 
                         float sbri = newColor.GetBrightness() * 255;
 
@@ -169,31 +178,34 @@ namespace HeartSignal
                             surface.SetGlyph(w, h, ':', newColor);
                         else if (sbri > 23)
                             surface.SetGlyph(w, h, '.', newColor);
-                    
+
+                    }
                 }
-            }
             );
 
             Surface = surface;
 
-            Position = new Point((Program.Width/2) - Program.Height , 0);
-            miniDisplay.Position = new Point((Width / 2) - miniDisplay.Width/2, (Program.Height / 2) + 6);
-            this.Print(Width/2 - Tagline.Length/2, (Program.Height/2)-7,Tagline);
+            Position = new Point((Program.Width / 2) - Program.Height, 0);
+            miniDisplay.Position = new Point((Width / 2) - miniDisplay.Width / 2, (Program.Height / 2) + 6);
+            this.Print(Width / 2 - Tagline.Length / 2, (Program.Height / 2) - 7, Tagline);
             if (!surfaceCreated)
             {
                 surfaceCreated = true;
-                MakeControlls();
+                NeedToMakeControlls = true;
             }
+
             watch.Stop();
             surfaceGenerationTime = watch.ElapsedMilliseconds;
 
         }
+
         float surfaceGenerationTime = 100;
 
         public Console miniDisplay;
 
 
         private string tagline = "";
+
         public string Tagline
         {
             get => tagline;
@@ -201,27 +213,27 @@ namespace HeartSignal
 
             set
             {
-                File.WriteAllText("tagline.txt",value);
+                File.WriteAllText("tagline.txt", value);
                 tagline = value;
             }
         }
 
- 
+
         public void MakeControlls()
         {
-          //  this.Clear();
-          if(!surfaceCreated) return;
-          
-          this.Controls.Clear();
+            //  this.Clear();
+            if (!surfaceCreated) return;
+
+            this.Controls.Clear();
 
 
 
-            
+
             var input = new TextBox(26)
             {
                 Text = "login",
-                
-                Position = new Point(Width/2 -13 , (Program.Height/2)-4)
+
+                Position = new Point(Width / 2 - 13, (Program.Height / 2) - 4)
             };
 
             void Handler(object sender, ControlBase.ControlMouseState args)
@@ -231,14 +243,14 @@ namespace HeartSignal
             }
 
             input.MouseButtonClicked += Handler;
-            
+
             Controls.Add(input);
 
             var password = new TextBox(26)
             {
                 Text = "password",
                 Mask = '*',
-                Position = new Point(Width/2 -13 ,(Program.Height/2))
+                Position = new Point(Width / 2 - 13, (Program.Height / 2))
             };
 
             void Handler2(object sender, ControlBase.ControlMouseState args)
@@ -248,28 +260,38 @@ namespace HeartSignal
             }
 
             password.MouseButtonClicked += Handler2;
-            
+
             Controls.Add(password);
-            
-            
-           
+
+
+
             var button = new Button(11)
             {
                 Text = "Be Born",
-                Position = new Point(Width/2 -5 ,(Program.Height/2)+2),
+                Position = new Point(Width / 2 - 5, (Program.Height / 2) + 2),
             };
             button.MouseButtonClicked += (s, a) => input.FocusLost();
             button.MouseButtonClicked += (s, a) => password.FocusLost();
-            button.MouseButtonClicked += (s,a) => NetworkManager.SendNetworkMessage("connect " + input.Text + " " + password.Text);
+            button.MouseButtonClicked += (s, a) =>
+                NetworkManager.SendNetworkMessage("connect " + input.Text + " " + password.Text);
+            button.MouseButtonClicked +=
+                (s, a) => System.Console.WriteLine("connect " + input.Text + " " + password.Text);
+
             Controls.Add(button);
         }
 
         delegate void VoidDelegate();
+
         private float counter = 0;
         public static Thread ImageDrawThread;
+        private bool NeedToMakeControlls = true;
+
         public override void Update(TimeSpan delta)
         {
-            
+
+
+
+
             counter -= delta.Milliseconds;
             if (counter < 0)
             {
@@ -277,18 +299,21 @@ namespace HeartSignal
                 pixelCache = texture.GetPixels();
                 ImageDrawThread = new Thread(MakeSurfaceImage);
                 ImageDrawThread.Start();
-                counter = Math.Max(surfaceGenerationTime*2,400);//dynamic animation speed to not melt bad CPUs
+                counter = Math.Max(surfaceGenerationTime * 2, 400); //dynamic animation speed to not melt bad CPUs
                 IsDirty = true;
             }
+
+            if (NeedToMakeControlls)
+            {
+                MakeControlls();
+                NeedToMakeControlls = false;
+            }
+
             //DrawImage();
             base.Update(delta);
 
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            ImageDrawThread.Interrupt();
-            base.Dispose(disposing);
-        }
+
     }
 }

@@ -522,14 +522,15 @@ namespace HeartSignal
 						break;
 					case "accept":
 #if RELEASE
-						Game.Instance.Screen = root;
+						
 						if (loginConsole != null)
 						{
 							loginConsole.Dispose();
 							loginConsole = null;
 						}
-
+						Game.Instance.Screen = root;
 						PositionConsoles();
+						
 #endif
 						break;
 					case "tagline":

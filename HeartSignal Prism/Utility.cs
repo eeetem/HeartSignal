@@ -27,8 +27,12 @@ namespace HeartSignal
 
         public static string[] SplitThingId(string thingid) {
 
+            if (thingid.IndexOf("(") <= 0)
+            {
+                Program.MainConsole.ReciveExternalInput("ERROR: attempted to get id from an item without id: "+thingid);
+                return new string[]{thingid,"0"};
+            }
 
-            
             string idstring = thingid.Substring(thingid.IndexOf("("), thingid.Length - thingid.IndexOf("("));
             idstring = idstring.Replace("(", "").Replace(")", "").Replace(".", "").Trim();
             string[] ids = idstring.Split(',');
