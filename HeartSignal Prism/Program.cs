@@ -526,7 +526,6 @@ namespace HeartSignal
 						if (loginConsole != null)
 						{
 							loginConsole.Dispose();
-							loginConsole.IsEnabled = false;
 							loginConsole = null;
 						}
 

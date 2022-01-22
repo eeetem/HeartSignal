@@ -206,9 +206,7 @@ namespace HeartSignal
             }
         }
 
-        
-        //idealy this should be part of the multithreaded MakeSurface image - however you cannot run ToSurface on a non Main thread due to monogame quirk that will hopefully be fixed at some point;
-
+ 
         public void MakeControlls()
         {
           //  this.Clear();
@@ -285,6 +283,12 @@ namespace HeartSignal
             //DrawImage();
             base.Update(delta);
 
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            ImageDrawThread.Interrupt();
+            base.Dispose(disposing);
         }
     }
 }
