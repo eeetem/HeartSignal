@@ -65,6 +65,8 @@ namespace HeartSignal
 
 
             //using ITexture sadImage = GameHost.Instance.OpenStream("lobby.png");
+            
+            File.AppendAllText("debuglog.txt", "LOGIN DEBUG: begining memory streams\n");
             Random rnd = new Random();
             using (MemoryStream inStream = new MemoryStream(baseImage))
             {
@@ -102,7 +104,7 @@ namespace HeartSignal
                 }
             }
 
-
+            File.AppendAllText("debuglog.txt", "LOGIN DEBUG: memory streams finished\n");
             var surfaceHeight = Program.Height;
             var surfaceWidth = Program.Height * 2;
             // this chunk of code is taken straight out of ToSurface() in sadconsole - however since the GetPixel() can't be dont outside of main thread i had to reuse their fucntion but with getpixel done on main thread beforehand
@@ -111,11 +113,13 @@ namespace HeartSignal
 
             this.Clear();
             ICellSurface surface = this.Surface;
-
+            File.AppendAllText("debuglog.txt", "LOGIN DEBUG: surface cleared\n");
 
 
             int fontSizeX = texture.Width / surfaceWidth;
             int fontSizeY = texture.Height / surfaceHeight;
+            
+            
 
             global::System.Threading.Tasks.Parallel.For(0, texture.Height / fontSizeY, (h) =>
                     //for (int h = 0; h < imageHeight / fontSizeY; h++)
@@ -182,6 +186,7 @@ namespace HeartSignal
                     }
                 }
             );
+            File.AppendAllText("debuglog.txt", "LOGIN DEBUG: for loop done\n");
 
             Surface = surface;
 
@@ -297,8 +302,8 @@ namespace HeartSignal
             {
                 
                 pixelCache = texture.GetPixels();
-                //ImageDrawThread = new Thread(MakeSurfaceImage);
-                //ImageDrawThread.Start();
+                ImageDrawThread = new Thread(MakeSurfaceImage);
+                ImageDrawThread.Start();
                 counter = Math.Max(surfaceGenerationTime * 2, 400); //dynamic animation speed to not melt bad CPUs
                 IsDirty = true;
             }
@@ -316,7 +321,7 @@ namespace HeartSignal
 
         protected override void Dispose(bool disposing)
         {
-           // ImageDrawThread?.Interrupt();
+            ImageDrawThread?.Interrupt();
             base.Dispose(disposing);
         }
     }
