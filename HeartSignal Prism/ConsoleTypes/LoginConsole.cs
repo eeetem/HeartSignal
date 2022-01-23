@@ -295,10 +295,10 @@ namespace HeartSignal
             counter -= delta.Milliseconds;
             if (counter < 0)
             {
-
+                
                 pixelCache = texture.GetPixels();
-                ImageDrawThread = new Thread(MakeSurfaceImage);
-                ImageDrawThread.Start();
+                //ImageDrawThread = new Thread(MakeSurfaceImage);
+                //ImageDrawThread.Start();
                 counter = Math.Max(surfaceGenerationTime * 2, 400); //dynamic animation speed to not melt bad CPUs
                 IsDirty = true;
             }
@@ -316,7 +316,7 @@ namespace HeartSignal
 
         protected override void Dispose(bool disposing)
         {
-            ImageDrawThread.Interrupt();
+           // ImageDrawThread?.Interrupt();
             base.Dispose(disposing);
         }
     }
