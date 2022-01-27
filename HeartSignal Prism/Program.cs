@@ -108,7 +108,7 @@ namespace HeartSignal
             
             
 
-			PromptWindow = new PromptWindow(40, 10, new Point(Width / 2 - 15, Height / 2 - 5));
+			PromptWindow = new PromptWindow(76, 10, new Point(Width / 2 - 38, Height / 2 - 5));
 
 			root.Children.Add(PromptWindow);
 
@@ -213,7 +213,7 @@ namespace HeartSignal
 			ThingConsole.ReDraw();
 
 
-			PromptWindow.Position = new Point(Program.Width / 2 - 15, Program.Height / 2 - 5);
+			PromptWindow.Position = new Point(Program.Width / 2 - PromptWindow.Width/2, Program.Height / 2 - 5);
 
 			width = roomConsoleWidth - 3;
 			height = topConsoleRowHeight;
