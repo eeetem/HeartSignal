@@ -66,7 +66,7 @@ namespace HeartSignal
 
             //using ITexture sadImage = GameHost.Instance.OpenStream("lobby.png");
             
-            File.AppendAllText("debuglog.txt", "LOGIN DEBUG: begining memory streams\n");
+            File.AppendAllText("logindebug.txt", "LOGIN DEBUG: begining memory streams\n");
             Random rnd = new Random();
             using (MemoryStream inStream = new MemoryStream(baseImage))
             {
@@ -104,7 +104,7 @@ namespace HeartSignal
                 }
             }
 
-            File.AppendAllText("debuglog.txt", "LOGIN DEBUG: memory streams finished\n");
+            File.AppendAllText("logindebug.txt", "LOGIN DEBUG: memory streams finished\n");
             var surfaceHeight = Program.Height;
             var surfaceWidth = Program.Height * 2;
             // this chunk of code is taken straight out of ToSurface() in sadconsole - however since the GetPixel() can't be dont outside of main thread i had to reuse their fucntion but with getpixel done on main thread beforehand
@@ -113,7 +113,7 @@ namespace HeartSignal
 
             this.Clear();
             ICellSurface surface = this.Surface;
-            File.AppendAllText("debuglog.txt", "LOGIN DEBUG: surface cleared\n");
+            File.AppendAllText("logindebug.txt", "LOGIN DEBUG: surface cleared\n");
 
 
             int fontSizeX = texture.Width / surfaceWidth;
@@ -186,9 +186,9 @@ namespace HeartSignal
                     }
                 }
             );
-            File.AppendAllText("debuglog.txt", "LOGIN DEBUG: for loop done\n");
+            File.AppendAllText("logindebug.txt", "LOGIN DEBUG: for loop done\n");
 
-            Surface = surface;
+            cachedSurface = surface;
 
             Position = new Point((Program.Width / 2) - Program.Height, 0);
             miniDisplay.Position = new Point((Width / 2) - miniDisplay.Width / 2, (Program.Height / 2) + 6);
@@ -200,14 +200,15 @@ namespace HeartSignal
             }
 
             watch.Stop();
-            surfaceGenerationTime = watch.ElapsedMilliseconds;
+           counter = Math.Max(watch.ElapsedMilliseconds * 2, 400);
 
         }
 
-        float surfaceGenerationTime = 100;
+        float surfaceGenerationTime = 1000;
 
         public Console miniDisplay;
 
+        private ICellSurface cachedSurface;
 
         private string tagline = "";
 
@@ -302,9 +303,12 @@ namespace HeartSignal
             {
                 
                 pixelCache = texture.GetPixels();
+                ImageDrawThread?.Interrupt();
+                
+
                 ImageDrawThread = new Thread(MakeSurfaceImage);
                 ImageDrawThread.Start();
-                counter = Math.Max(surfaceGenerationTime * 2, 400); //dynamic animation speed to not melt bad CPUs
+                counter = 1000000000; //might be best to make this into a bool
                 IsDirty = true;
             }
 
@@ -317,6 +321,16 @@ namespace HeartSignal
             //DrawImage();
             base.Update(delta);
 
+        }
+
+        public override void Render(TimeSpan delta)
+        {
+            if (cachedSurface != null)
+            {
+                Surface = cachedSurface;
+            }
+            
+            base.Render(delta);
         }
 
         protected override void Dispose(bool disposing)

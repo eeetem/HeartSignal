@@ -65,26 +65,35 @@ namespace HeartSignal
                     Cursor.NewLine().Right(1);
                     
                 
-                    int argLenght = 2;//start accounting for borders
+                    int argLenght = 4;//start accounting for borders and a little more just to be safe
                     List<string> argsToPrint = new List<string>();
                     foreach (var arg in fullArgList)
                     {
-                        if (argLenght + arg.Length + 2 > Width)
+                        if (argLenght + arg.Length + 4 > Width)
                         {
                             break;
                         }
                     
                         argsToPrint.Add(arg);
-                        argLenght += arg.Length+2;
+                        argLenght += arg.Length+4;
                     }
 
-                    float glyphsPerArg = Width / argsToPrint.Count;
+                    int glyphsPerArg = (int)Math.Floor((float)Width / argsToPrint.Count);
 
                     foreach (string arg in argsToPrint)
                     {
-                        int padding = (int)Math.Round(glyphsPerArg) - (arg.Length+2);
-                        Cursor.Right(padding / 2);
+                        int padding = (int) Math.Floor((double) (glyphsPerArg - (arg.Length + 2)) / 2);
+                       
+                        if (padding < 1)
+                        {
+                            Cursor.Right(1);//ensure atleast 1 space
+                            padding = 0;//prevent negative values
+                        }
 
+                        Cursor.Right(padding );
+                        
+
+                        
                         var button = new Button(arg.Length+2, 1)
                         {
                             Text = arg,
@@ -92,7 +101,9 @@ namespace HeartSignal
                             // Theme = new but
                         };
                         Cursor.Right(arg.Length + 2);
-                        Cursor.Right(padding / 2);
+                        
+                        Cursor.Right(padding); 
+
                         button.Click += (s, a) => NetworkManager.SendNetworkMessage(arg);
                         button.Click += (s, a) => this.IsVisible = false;
                         this.Controls.Add(button);
