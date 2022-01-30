@@ -40,6 +40,10 @@ namespace HeartSignal
 						NetworkManager.SendNetworkMessage("southwest");
 						return;
 					case(Keys.NumPad3):
+						NetworkManager.SendNetworkMessage("southeast");
+						return;
+					case(Keys.Enter):
+						Program.MainConsole.GetInputSource().IsFocused = true;
 						return;
 
 				}
