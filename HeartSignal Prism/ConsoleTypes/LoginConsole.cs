@@ -303,7 +303,7 @@ namespace HeartSignal
             {
                 
                 pixelCache = texture.GetPixels();
-                ImageDrawThread?.Interrupt();
+                ImageDrawThread?.Join();
                 
 
                 ImageDrawThread = new Thread(MakeSurfaceImage);
@@ -335,7 +335,7 @@ namespace HeartSignal
 
         protected override void Dispose(bool disposing)
         {
-            ImageDrawThread?.Interrupt();
+            ImageDrawThread.Join();
             base.Dispose(disposing);
         }
     }

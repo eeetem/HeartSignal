@@ -1,19 +1,22 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
 using SadConsole;
 using SadConsole.Components;
 using SadConsole.Input;
 
 namespace HeartSignal
 {
-	public static class KeyBinds 
+	public class KeyBinds : LogicComponent
 	{
 
-
-		
-		public static void Process(IScreenObject host, Keyboard keyboard, out bool handled)
+		public override void Render(IScreenObject host, TimeSpan delta)
 		{
-			handled = true;
-			foreach (AsciiKey key in keyboard.KeysPressed)
+
+		}
+
+		public override void Update(IScreenObject host, TimeSpan delta)
+		{
+			foreach (AsciiKey key in SadConsole.Game.Instance.Keyboard.KeysPressed)
 			{
 
 				switch (key.Key)
@@ -49,10 +52,6 @@ namespace HeartSignal
 				}
 			
 			}
-
-			handled = false; //if none of the keybinds triggered - let other keyboard components handle stuff
 		}
-
-
 	}
 }

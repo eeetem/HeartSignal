@@ -29,7 +29,7 @@ namespace HeartSignal
         public override void ProcessKeyboard(IScreenObject consoleObject, Keyboard info, out bool handled)
         {
             handled = false;
-            KeyBinds.Process(consoleObject,info, out handled);
+           
             
             if(handled) return;
 

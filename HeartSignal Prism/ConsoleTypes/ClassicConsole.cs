@@ -4,6 +4,7 @@ using Console = SadConsole.Console;
 using SadRogue.Primitives;
 using SadConsole.UI.Controls;
 using System.Threading.Tasks;
+using SadConsole.Input;
 
 
 namespace HeartSignal
@@ -131,5 +132,7 @@ namespace HeartSignal
             NetworkManager.SendNetworkMessage(value);
 
         }
+
+
     }
 }

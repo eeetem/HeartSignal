@@ -75,6 +75,7 @@ namespace HeartSignal
 			Game.Instance.MonoGameInstance.Components.Add(new PostPorcessing());
 			ColoredString.CustomProcessor = Utility.CustomParseCommand;
 			root = new Console(1, 1);
+			root.SadComponents.Add(new KeyBinds());
 
 			MainConsole = new ClassicConsole(1, 1);
 			root.Children.Add(MainConsole);
