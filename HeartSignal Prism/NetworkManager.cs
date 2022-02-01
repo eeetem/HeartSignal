@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using PrimS.Telnet;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace HeartSignal
 {
@@ -37,20 +38,19 @@ namespace HeartSignal
 
 
 		    idx = input.IndexOf('\r');
-
-			
+		    
 
 		    if (idx > 0)
 		    {
 			    string MSG = input.Substring(0, idx);
 			    File.AppendAllText("debuglog.txt", "parsing:"+MSG+"\n");
-			    Program.ParseServerMessage(MSG);
-			    try
-			    {
+				new Thread(()=>Program.ParseServerMessage(MSG)).Start();
+			   
+				if(idx +2 > 0){
 					
 				    input = input.Remove(0, idx + 2);
 			    }
-			    catch
+			    else
 			    {
 				    File.AppendAllText("debuglog.txt", "returned due to index exception\n");
 				    return;
@@ -67,7 +67,7 @@ namespace HeartSignal
 			    return;
 		    }
 
-		    Program.ParseServerMessage(input);
+		    new Thread(()=>Program.ParseServerMessage(input)).Start();
 
 
 

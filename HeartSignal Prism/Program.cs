@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using SadConsole;
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole.UI;
@@ -294,8 +296,7 @@ namespace HeartSignal
 
 		public static void ParseServerMessage(string input)
 		{
-
-
+			
 			int idx = input.IndexOf(':');
 			if (idx > 0 && input.Contains("[tag]"))
 			{
@@ -366,7 +367,7 @@ namespace HeartSignal
 						if (args.Count != 3)
 						{
 							MainConsole.ReciveExternalInput("ERROR: incorrect arguments supplied to a delay");
-							return;
+							break;
 						}
 
 						bool keep1 = false;
@@ -582,7 +583,6 @@ namespace HeartSignal
 					MainConsole.ReciveExternalInput(input);
 				}
 			}
-
 
 
 

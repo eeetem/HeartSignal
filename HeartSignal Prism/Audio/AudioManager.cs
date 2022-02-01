@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Net;
 using System.IO;
 using System.Media;
@@ -24,7 +24,11 @@ namespace HeartSignal
 
 			 ID = 	new Random().Next(0, 1000).ToString();//this isnt gonna happend often so i dont want to store a random in memory
 			}
-
+			object Lock = new object();
+			lock(Lock)
+			{
+			
+			
 			switch (request)
 			{
 				case "preload":
@@ -117,7 +121,7 @@ namespace HeartSignal
 					break;
 
 
-
+			}
 			}
 
 
@@ -216,7 +220,6 @@ namespace HeartSignal
 			try
 			{
 				path = "sfx/" + path;
-				//TODO IMPLEMENT OTHER PLATFORMS ALSO TURN THIS INTO COMPILE TIME IF RATHER THAN RUNTIME
 
 			
 					SoundEffectInstance player;

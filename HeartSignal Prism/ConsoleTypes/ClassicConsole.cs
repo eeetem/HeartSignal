@@ -112,13 +112,14 @@ namespace HeartSignal
             value = value.Replace(Environment.NewLine, "");
             value = value.Replace("\n", "");
             value = value.Replace("\r", "");
+            value = value.Replace(">", "");
+            value = value.Replace("<", "");
 #endif
 
 
 
             ReciveExternalInput("[c:r_f:darkgray]" + value);
 
-            value = value.Replace(">", "");
             if (awaitingInput) {
                 inputToReturn = value;
                 awaitingInput = false;
