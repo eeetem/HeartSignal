@@ -9,7 +9,7 @@ using SadConsole.Input;
 
 namespace HeartSignal
 {
-    public class ClassicConsole : SadConsole.UI.ControlsConsole, ITextInputReciver
+    public class ClassicConsole : SadConsole.UI.ControlsConsole
     {
         public string Prompt { get; set; }
 
@@ -31,7 +31,7 @@ namespace HeartSignal
             Cursor.UseStringParser = true;
            // UseKeyboard = true;
 
-            input = new InputConsole(width, 2, this);
+            input = new InputConsole(width, 2);
 
             input.Position = new Point(0, 0);
             Children.Add(input);
@@ -63,20 +63,8 @@ namespace HeartSignal
         }
 
 
-        bool awaitingInput = true;
-        string inputToReturn = "";
-        public async Task<string> AskForInput(string prompt)
-        {
-            ReciveExternalInput(prompt+":");
-            awaitingInput = true;
-            
-            while (awaitingInput)
-            {
-                await Task.Delay(10);
-            }
-            return inputToReturn;
-        }
-        
+
+
         //probably should be renamed to something better
         public void ReciveExternalInput(string value) {
 
@@ -98,42 +86,7 @@ namespace HeartSignal
         }
 
     
-
-        public void ReciveInput(string value)
-        {
-            //sanitize stuff if not in dev mode
-#if RELEASE
-
-
-            value = value.Replace("[", "");
-            value = value.Replace("]", "");
-            value = value.Replace("{", "");
-            value = value.Replace("}", "");
-            value = value.Replace(Environment.NewLine, "");
-            value = value.Replace("\n", "");
-            value = value.Replace("\r", "");
-            value = value.Replace(">", "");
-            value = value.Replace("<", "");
-#endif
-
-
-
-            ReciveExternalInput("[c:r_f:darkgray]" + value);
-
-            if (awaitingInput) {
-                inputToReturn = value;
-                awaitingInput = false;
-                
-                return;
-            
-            
-            }
-
-
-            NetworkManager.SendNetworkMessage(value);
-
-        }
-
+        
 
     }
 }
