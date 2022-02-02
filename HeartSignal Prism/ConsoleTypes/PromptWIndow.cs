@@ -41,7 +41,7 @@ namespace HeartSignal
 
         public void DisplayPrompt()
         {
-      
+            NetworkManager.lockMessages = true;
                needsDraw = false;
             this.Resize(Width, 128, Width, 128, true);
             Controls.Clear();
@@ -104,8 +104,9 @@ namespace HeartSignal
                         
                         Cursor.Right(padding); 
 
-                        button.Click += (s, a) => NetworkManager.SendNetworkMessage(arg);
+                        button.Click += (s, a) => NetworkManager.SendNetworkMessage(arg,true);
                         button.Click += (s, a) => this.IsVisible = false;
+                        button.Click += (s, a) => NetworkManager.lockMessages = false;
                         this.Controls.Add(button);
                     
                     
@@ -132,8 +133,9 @@ namespace HeartSignal
                     Text = "OK",
                     Position = new Point(Width / 2 - 4/2, Cursor.Position.Y)
                 };
-                button.Click += (s, a) => NetworkManager.SendNetworkMessage(text.Text);
+                button.Click += (s, a) => NetworkManager.SendNetworkMessage(text.Text,true);
                 button.Click += (s, a) => this.IsVisible = false;
+                button.Click += (s, a)  => NetworkManager.lockMessages = false;
                 Controls.Add(button);
 
 

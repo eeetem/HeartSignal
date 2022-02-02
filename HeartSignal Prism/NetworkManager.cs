@@ -76,8 +76,14 @@ namespace HeartSignal
 
 
 	    static List<string> messageQueue = new List<string>();
-	    public static bool SendNetworkMessage(string message)
+	    public static bool lockMessages = false;
+	    public static bool SendNetworkMessage(string message, bool bypassLock = false)
 	    {
+
+		    if (lockMessages && !bypassLock)
+		    {
+			    return false;
+		    }
 
 		    messageQueue.Add(message);
 		    needToSendMessage = true;
