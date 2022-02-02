@@ -310,7 +310,7 @@ namespace HeartSignal
                     //"!/!click_me(output,theme)!/!"
                    else if (word.Contains("!/!"))
                     {
-                        string spaced = word.Replace("_", " ");
+                        string spaced = word.Replace("-", " ");
                         string title = spaced.Substring(spaced.IndexOf("!/!")+3, spaced.IndexOf('(') - (spaced.IndexOf("!/!")+3));
                         string output = spaced.Substring(spaced.IndexOf("(")+1, spaced.IndexOf(',') - (spaced.IndexOf("(")+1));
                         string theme = spaced.Substring(spaced.IndexOf(",") + 1,   spaced.IndexOf(')') - (spaced.IndexOf(",")+1));
