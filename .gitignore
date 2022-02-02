@@ -4,3 +4,5 @@ HeartSignal Prism/obj/
 *.xnb
 *.mgcontent
 HeartSignal Prism/Content/obj/DesktopGL/content/.mgstats
+buildem.bat
+HeartSignal Prism/HeartSignal.csproj
