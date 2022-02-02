@@ -20,7 +20,7 @@ namespace HeartSignal
 
 
 
-            ClearText();
+            
             
             // Disable the cursor since our keyboard handler will do the work.
             Cursor.IsEnabled = false;
@@ -41,6 +41,7 @@ namespace HeartSignal
 
             actionWindow.IsVisible = false;
             actionWindow.IsEnabled = false;
+            ClearText();
 
         }
         ActionWindow actionWindow;
@@ -73,12 +74,15 @@ namespace HeartSignal
                 return;
             }
 
-            Utility.PrintParseMessage(value, actionWindow, this, false);
-            if (!Program.verboseDebug) //if verbose debug is not set then all other prints would be disbaled so do a debug print here
+            if (Height < Cursor.Position.Y + 10)
             {
+                Resize(ViewWidth,ViewHeight,Width,Height+50,false);
+            }
+
+            Utility.PrintParseMessage(value, actionWindow, this, false);
 
                 System.Console.WriteLine(value);
-            }
+            
 
             Surface.ViewPosition = new Point(0, Math.Max(0,Cursor.Position.Y-ViewHeight));
 

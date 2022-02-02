@@ -81,10 +81,7 @@ namespace HeartSignal
 
 		    messageQueue.Add(message);
 		    needToSendMessage = true;
-		    if (Program.verboseDebug)
-		    {
-			    System.Console.WriteLine("Sending Message: " + message);
-		    }
+
 		    return true;
 
 	    }
@@ -96,33 +93,11 @@ namespace HeartSignal
 			Program.MainConsole.Cursor.NewLine(); 
 	
 
-			
-#if DEBUG
-            Program.MainConsole.ReciveExternalInput("This is a debug build of HeartSignal, report to developers if you see this message");
-            string ans = await  Program.MainConsole.AskForInput("Do you want verbose logging?(y/n)");
-            if (ans == "y")
-            {
-	            Program.verboseDebug = true;
-            }
-
-           //double unixTimestamp = (double)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000;
-           // double end = unixTimestamp + 10;
-           // SplitServerMessage("[tag]delay:attack delay{\""+unixTimestamp+"\",\""+end+"\",\"red.green.red\"}");
-            string login = await  Program.MainConsole.AskForInput("Enter Login");
-            string pass = await  Program.MainConsole.AskForInput("Enter Password");
-            Program.MainConsole.ClearText();
-            Program.MainConsole.Cursor.NewLine();
-            Program.MainConsole.Cursor.Print("Attempting server connection....").NewLine();
-            
-            
-#endif
 		
 				using (Client client = new Client("deathcult.today", 6666, new CancellationToken()))
 				{
 					await client.TryLoginAsync("", "", 1000);
-#if DEBUG
-					await client.WriteLine("connect " + login + " " + pass);
-#endif
+
 
 					TelnetClient = client;
 

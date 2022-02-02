@@ -30,11 +30,6 @@ namespace HeartSignal
             loc = new Point((int)Math.Floor((double)loc.X / 2), loc.Y); //cells are 2 coordinates wide
 
             double angle = Utility.GetAngleOfLineBetweenTwoPoints(loc, middle);
-            if (Program.verboseDebug)
-            {
-                System.Console.WriteLine(loc);
-                System.Console.WriteLine(angle);
-            }
 
             string msg = "";
             if (Game.Instance.Keyboard.IsKeyDown(Keys.LeftShift))
@@ -150,12 +145,7 @@ namespace HeartSignal
             Cursor.Position = new Point(2, 1);
             foreach (string line in mapdata)
             {
-				if (Program.verboseDebug)
-				{
-                    System.Console.WriteLine(line);
 
-                }
-                
                 Cursor.Print(line).NewLine().Right(2);
 
 

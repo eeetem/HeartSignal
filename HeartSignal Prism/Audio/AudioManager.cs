@@ -17,16 +17,22 @@ namespace HeartSignal
 	{
 
 
-		
+		public static bool ProcessingSound = false;
 		public static void ParseRequest(string ID, string request, string param)
 		{
 			if (ID == null) {
 
 			 ID = 	new Random().Next(0, 1000).ToString();//this isnt gonna happend often so i dont want to store a random in memory
 			}
-			object Lock = new object();
-			lock(Lock)
+			while (ProcessingSound)
 			{
+
+				System.Threading.Thread.Sleep(100);
+
+			}
+
+			ProcessingSound = true; 
+
 			
 			
 			switch (request)
@@ -120,9 +126,9 @@ namespace HeartSignal
 					}
 					break;
 
-
+					
 			}
-			}
+			ProcessingSound = false; 
 
 
 		}

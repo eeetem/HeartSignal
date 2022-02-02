@@ -1,6 +1,10 @@
-﻿using SadConsole.Components;
+﻿using System;
+using System.Drawing;
+using System.Linq;
+using SadConsole.Components;
 using SadConsole.Input;
 using SadConsole;
+using Color = SadRogue.Primitives.Color;
 using Console = SadConsole.Console;
 using Keys = SadConsole.Input.Keys;
 //using System.Windows.Forms;
@@ -43,7 +47,31 @@ namespace HeartSignal
                 // If the character associated with the key pressed is a printable character, print it
                 if (key.Character != '\0')
                 {
+                   
+                    ColoredGlyph[] SurfaceArray = (ColoredGlyph[]) console.Surface.ToArray();
+                    Array.Reverse(SurfaceArray);
+                    for(int i = 1; i < SurfaceArray.Length; i++)
+                    {
+                        if (i == SurfaceArray.Length - (console.Cursor.Position.ToIndex(console.Surface.Width)))
+                        {
+                          //  SurfaceArray[i].Glyph = 32;
+                            break;
+                        }
+
+                        SurfaceArray[i].CopyAppearanceTo(SurfaceArray[i - 1]);
+                        //if (SurfaceArray[i + 1].Glyph != 0)
+                        //{
+                            
+                       //}
+
+                    }
+
+                    Array.Reverse(SurfaceArray);
+                    
+
+                    console.Surface = new CellSurface(console.Surface.Width,console.Surface.Height,SurfaceArray );
                     console.Cursor.Print(key.Character.ToString());
+
                 }
 
                 // Special character - BACKSPACE
@@ -56,6 +84,24 @@ namespace HeartSignal
                     {
                         console.Cursor.LeftWrap(1).Print(" ").LeftWrap(1);
                     }
+                    
+                    ColoredGlyph[] SurfaceArray = (ColoredGlyph[]) console.Surface.ToArray();
+                   // Array.Reverse(SurfaceArray);
+                    for(int i = console.Cursor.Position.ToIndex(console.Surface.Width)+1; i < SurfaceArray.Length; i++)
+                    {
+
+                        SurfaceArray[i].CopyAppearanceTo(SurfaceArray[i - 1]);
+                        //if (SurfaceArray[i + 1].Glyph != 0)
+                        //{
+                            
+                        //}
+
+                    }
+
+                  //  Array.Reverse(SurfaceArray);
+                    
+
+                    console.Surface = new CellSurface(console.Surface.Width,console.Surface.Height,SurfaceArray );
                 }
                 else if (key.Key == Keys.Left)
                 {

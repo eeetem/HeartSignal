@@ -31,7 +31,7 @@ namespace HeartSignal
 		private static Console root;
 		public static LoginConsole loginConsole;
 
-		public static bool verboseDebug;
+		//public static bool verboseDebug;
 
 
 		[STAThread]
@@ -102,13 +102,10 @@ namespace HeartSignal
 			root.Children.Add(buttonConsole);
 			delayConsole = new DelayConsole(1, 1);
 			root.Children.Add(delayConsole);
-            
-#if RELEASE
 
 			loginConsole = new LoginConsole(1, 1);
 			
-#endif
-            
+   
             
 
 			PromptWindow = new PromptWindow(76, 10, new Point(Width / 2 - 38, Height / 2 - 5));
@@ -193,7 +190,7 @@ namespace HeartSignal
 				MainConsole.FontSize = MainConsole.Font.GetFontSize(IFont.Sizes.One);
 			}
 
-			MainConsole.Resize(width , height , width , 256, false);
+			MainConsole.Resize(width , height , width , 20, false);
 			MainConsole.Position = new Point((inventoryWidth + 2) / 2, (topConsoleRowHeight + barConsoleHeight) / 2);
 
 
@@ -535,6 +532,7 @@ namespace HeartSignal
 						}
 						
 						PositionConsoles();
+						MainConsole.ClearText();
 						
 #endif
 						break;
@@ -551,10 +549,9 @@ namespace HeartSignal
 						break;
 
 					default:
-						if (verboseDebug)
-						{
-							System.Console.WriteLine("unkown parsing tag: " + sub);
-						}
+
+						System.Console.WriteLine("unkown parsing tag: " + sub);
+						
 						//if we couldn't parse it - it's possibly not meant to be parsed - print it
 						if (loginConsole != null)
 						{
