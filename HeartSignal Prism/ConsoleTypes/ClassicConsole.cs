@@ -54,13 +54,26 @@ namespace HeartSignal
         
         
         }
+
+        private bool needsClear = false;
+        public override void Update(TimeSpan delta)
+        {
+            if (needsClear)
+            {
+                this.Clear();
+                this.Effects.RemoveAll();
+                Surface.ViewPosition = new Point(0, 0);
+                Cursor.Position = new Point(0, 0);
+                Cursor.NewLine();
+                needsClear = false;
+            }
+
+            base.Update(delta);
+        }
+
         public void ClearText()
         {
-            this.Clear();
-            this.Effects.RemoveAll();
-            Surface.ViewPosition = new Point(0, 0);
-            Cursor.Position = new Point(0, 0);
-            Cursor.NewLine();
+            needsClear = true;
         }
 
 
