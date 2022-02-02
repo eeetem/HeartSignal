@@ -1,12 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>HeartSignal</RootNamespace>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
     <Win32Resource />
     <StartupObject />
+    <LangVersion>9</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
