@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using SadRogue.Primitives;
 using SadConsole.StringParser;
 using SadConsole;
@@ -248,6 +249,11 @@ namespace HeartSignal
 
                         Utility.CreateToolTip(text, tip, con, ac);
                     }
+                    //!/!clickme!/!
+              //      else if ()
+              //      {
+                        
+               //     }
                     else if (word.Contains("<"))
                     {
                         string text2 = word;
@@ -264,6 +270,7 @@ namespace HeartSignal
                             null, true);
                         con.Cursor.Print(leftover).Right(1);
                     }
+                    
                     else
                     {
                         if (con.Cursor.Position.X + word.Length > con.Width && !word.Contains("["))
@@ -279,6 +286,8 @@ namespace HeartSignal
             }
             catch(Exception)
             {
+                File.AppendAllText("debuglog.txt",
+                    "Error print parsing: " + message + " report this and make sure it does not have any odd symbols");
                 con.Cursor.Print("Error print parsing: " + message +
                                  " report this and make sure it does not have any odd symbols");
             }

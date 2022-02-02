@@ -56,6 +56,8 @@ namespace HeartSignal
             data = data.Replace("\t", "");
             data = data.Replace(">", "");
             data = data.Replace("<", "");
+            data = data.Replace("+", "");
+            data = data.Replace("-", "");
 #endif
             
             

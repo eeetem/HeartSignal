@@ -24,6 +24,7 @@ namespace HeartSignal
 
 	    private static void SplitServerMessage(string input)
 	    {
+		    
 		    File.AppendAllText("debuglog.txt", "splitting:"+input+"\n");
 
 		    int idx = 0;
@@ -85,6 +86,7 @@ namespace HeartSignal
 			    return false;
 		    }
 
+		    System.Console.WriteLine(message);
 		    messageQueue.Add(message);
 		    needToSendMessage = true;
 

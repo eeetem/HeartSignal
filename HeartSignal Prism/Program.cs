@@ -300,7 +300,7 @@ namespace HeartSignal
 			int idx = input.IndexOf(':');
 			if (idx > 0 && input.Contains("[tag]"))
 			{
-				
+				System.Console.WriteLine(input);
 				string sub = input.Substring(0, idx).Replace("[tag]","");
 				string cutstring = input;
 				string[] returned;

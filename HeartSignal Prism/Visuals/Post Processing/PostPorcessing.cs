@@ -34,18 +34,18 @@ namespace HeartSignal
 			DrawOrder = 6;
 			//default effect parameters
 
-			crtParams["hardScan"] = -1.0f;
-			crtParams["hardPix"] = -3.0f;
-			crtParams["warpX"] = 0.031f;
-			crtParams["warpY"] = 0.041f;
-			crtParams["maskDark"] = 0.5f;
+			crtParams["hardScan"] = -8.0f;
+			crtParams["hardPix"] = -1f;
+			crtParams["warpX"] = 0.039f;
+			crtParams["warpY"] = 0.049f;
+			crtParams["maskDark"] = 1.5f;
 			crtParams["maskLight"] = 1.5f;
 			crtParams["scaleInLinearGamma"] = 1.0f;
 			crtParams["shadowMask"] = 3.0f;
-			crtParams["brightboost"] = 1.0f;
-			crtParams["hardBloomScan"] = -1.5f;
-			crtParams["hardBloomPix"] = -2.0f;
-			crtParams["bloomAmount"] = 0.15f;
+			crtParams["brightboost"] = 1f;
+			crtParams["hardBloomScan"] = -2.0f;
+			crtParams["hardBloomPix"] = -4.0f;
+			crtParams["bloomAmount"] = 1.0f;
 			crtParams["shape"] = 1.0f;
 
 			crtParams["noise"] = 0.5f;
