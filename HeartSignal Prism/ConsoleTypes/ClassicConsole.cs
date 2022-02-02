@@ -61,6 +61,7 @@ namespace HeartSignal
             Surface.ViewPosition = new Point(0, 0);
             Cursor.Position = new Point(0, 0);
             Cursor.NewLine();
+            ReciveExternalInput("<asd");
         }
 
 

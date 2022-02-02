@@ -38,7 +38,10 @@ namespace HeartSignal
 		private static void Main()
 		{
 	
-
+			AppDomain currentDomain = default(AppDomain);
+			currentDomain = AppDomain.CurrentDomain;
+			// Handler for unhandled exceptions.
+			currentDomain.UnhandledException += GlobalUnhandledExceptionHandler;
 
 			var SCREEN_WIDTH = (96 * 2) + 30;
 			var SCREEN_HEIGHT = 54 + 5;
@@ -661,6 +664,16 @@ namespace HeartSignal
 
 			s = s.Remove(0, s.IndexOf('{') + 1);
 			return new string[] { s, name };
+		}
+
+		
+
+
+		private static void GlobalUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e){
+	
+			
+		File.WriteAllText("CrashDump.txt", e.ExceptionObject.ToString());
+
 		}
 
 

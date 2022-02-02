@@ -7,6 +7,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
     <Win32Resource />
     <StartupObject />
+    <LangVersion>9</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

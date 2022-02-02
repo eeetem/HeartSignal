@@ -299,11 +299,11 @@ namespace HeartSignal
         }
 
         public static bool awaitingItemClick = false;
-        static string PendingArgMessage = "";
+        static string pendingArgMessage = "";
         private static void DoArgAction(string id, string action,string name)
         {
             // index++;//arrays starting at 1 momment
-            PendingArgMessage = action.Replace("[this]", id);
+            pendingArgMessage = action.Replace("[this]", id);
             awaitingItemClick = true;
             Program.PromptWindow.toptext = "Click a thing to complete";
             Program.PromptWindow.middletext = action.Replace("[this]", name).Replace("[whatever]", "...?");
@@ -321,7 +321,7 @@ namespace HeartSignal
             if (awaitingItemClick)
             {
                 Program.PromptWindow.IsVisible = false;
-                NetworkManager.SendNetworkMessage(PendingArgMessage.Replace("[whatever]",item));
+                NetworkManager.SendNetworkMessage(pendingArgMessage.Replace("[whatever]",item));
                 awaitingItemClick = false;
              
                 return;
