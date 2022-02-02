@@ -58,6 +58,8 @@ namespace HeartSignal
             data = data.Replace("<", "");
             data = data.Replace("+", "");
             data = data.Replace("-", "");
+            data = data.Replace("\\", "");
+            data = data.Replace("/", "");
 #endif
             
             

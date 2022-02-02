@@ -7,6 +7,8 @@ using SadConsole;
 using SadConsole.UI.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SadConsole.UI;
+using SadConsole.UI.Themes;
 using Console = SadConsole.Console;
 using Point = SadRogue.Primitives.Point;
 using Color = SadRogue.Primitives.Color;
@@ -84,7 +86,7 @@ namespace HeartSignal
             name = name.Replace("_", " ");
             string realtext = RemoveParserTags(name);
 
-            bool forceAppearance = realtext == name;
+            bool forceAppearance = realtext == name;//if there's parsing tags fo some apearance boogaloo
 
 
             if (realtext.Length + console.Cursor.Position.X > console.Width)
@@ -113,6 +115,62 @@ namespace HeartSignal
 
 
         }
+
+        public static void CreateButton(string title, string output, string theme, SadConsole.UI.ControlsConsole console)
+        {
+            
+            if (title.Length +2 + console.Cursor.Position.X > console.Width)
+            {
+                console.Cursor.NewLine().Right(1);
+            }
+
+            
+
+           bool offset3d = false;
+            ButtonTheme TbuttonTheme;
+            switch (theme)
+            {
+                case "3d":
+                    TbuttonTheme = new Button3dTheme();
+                    offset3d = true;
+                    break;
+                case "line":
+                    TbuttonTheme = new ButtonLinesTheme();
+                    break;
+                case "bracket":
+                    TbuttonTheme = new ButtonTheme();
+                    title = " " + title + " ";
+                    break;
+                default:
+                    TbuttonTheme = new ThingButtonTheme(new Gradient(Color.Blue, Color.Cyan, Color.Blue));
+                    break;
+
+            }
+
+            if (offset3d)
+            {
+                console.Cursor.Position = console.Cursor.Position.WithY(console.Cursor.Position.Y - 1);
+            }
+
+
+            var button = new Button(title.Length, 1)
+            {
+                Text = title,
+                Position = console.Cursor.Position,
+                Theme = TbuttonTheme
+            };
+            if (offset3d)
+            {
+                console.Cursor.Position = console.Cursor.Position.WithY(console.Cursor.Position.Y +1);
+            }
+
+
+            button.MouseButtonClicked += (s, a) => NetworkManager.SendNetworkMessage(output);
+
+            console.Controls.Add(button);
+            console.Cursor.Right(title.Length + 1);
+        }
+
         public static void CreateButtonThingId(string[] thingid, SadConsole.UI.ControlsConsole console, ActionWindow ac,bool explicitlook = false, Point? offset = null,bool clampactionwindow = false) {
 
             //if there is other things with same name process them at the same time
@@ -249,11 +307,15 @@ namespace HeartSignal
 
                         Utility.CreateToolTip(text, tip, con, ac);
                     }
-                    //!/!clickme!/!
-              //      else if ()
-              //      {
-                        
-               //     }
+                    //"!/!click_me(output,theme)!/!"
+                   else if (word.Contains("!/!"))
+                    {
+                        string spaced = word.Replace("_", " ");
+                        string title = spaced.Substring(spaced.IndexOf("!/!")+3, spaced.IndexOf('(') - (spaced.IndexOf("!/!")+3));
+                        string output = spaced.Substring(spaced.IndexOf("(")+1, spaced.IndexOf(',') - (spaced.IndexOf("(")+1));
+                        string theme = spaced.Substring(spaced.IndexOf(",") + 1,   spaced.IndexOf(')') - (spaced.IndexOf(",")+1));
+                        Utility.CreateButton(title, output, theme, con);
+                    }
                     else if (word.Contains("<"))
                     {
                         string text2 = word;
