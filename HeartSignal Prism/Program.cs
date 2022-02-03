@@ -680,10 +680,13 @@ namespace HeartSignal
 		
 
 
-		private static void GlobalUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e){
-	
-			
-		File.WriteAllText("CrashDump.txt", e.ExceptionObject.ToString());
+		private static void GlobalUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
+		{
+
+			DateTime date = DateTime.Now;
+			File.WriteAllText("CrashDump"+date+".txt", e.ExceptionObject.ToString());
+			string debug = File.ReadAllText("debuglog.txt");
+			File.WriteAllText("debuglog"+date+".txt", debug);
 
 		}
 
