@@ -10,6 +10,7 @@ using System.ComponentModel;
 using csvorbis;
 using csogg;
 using Microsoft.Xna.Framework.Audio;
+using Console = SadConsole.Console;
 
 namespace HeartSignal
 {
@@ -33,17 +34,18 @@ namespace HeartSignal
 				{
 					System.Threading.Thread.Sleep(1000);
 				}
-			}
+			
 				while (ProcessingSound)
 				{
 
 					System.Threading.Thread.Sleep(100);
 
 				}
+			}
 			
 
 			ProcessingSound = true; 
-
+			System.Console.WriteLine("audi locked by "+ request);
 			
 			
 			switch (request)
@@ -140,6 +142,7 @@ namespace HeartSignal
 
 					
 			}
+			System.Console.WriteLine("audi unlocked by "+ request);
 			ProcessingSound = false; 
 
 
@@ -229,7 +232,7 @@ namespace HeartSignal
 
 			foreach (KeyValuePair<string, SoundEffectInstance> sound in Sounds) {
 
-				ParseRequest(sound.Key, "stop",null);
+				ParseRequest(sound.Key, "stop",null,true);
 			
 			}
 		
