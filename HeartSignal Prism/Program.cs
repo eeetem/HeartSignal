@@ -486,8 +486,19 @@ namespace HeartSignal
 						string[] settings = cutstring.Split("-");
 
 						bool keep = false;
-						AnimatedBorderComponent._borderCellStyle = new ColoredGlyph(Color.White.FromParser(settings[0], out keep, out keep, out keep, out keep, out keep), Color.Black);
-						Utility.GlobalAnimationSpeed = float.Parse(settings[1]);
+						try
+						{
+							AnimatedBorderComponent._borderCellStyle = new ColoredGlyph(
+								Color.White.FromParser(settings[0], out keep, out keep, out keep, out keep, out keep),
+								Color.Black);
+
+							Utility.GlobalAnimationSpeed = float.Parse(settings[1]);
+						}
+						catch(Exception e)
+						{
+							MainConsole.ReciveExternalInput("Border Syntax Error: ["+settings[0]+"] ["+settings[1]+"]" + "Exception: "+e);
+							
+						}
 
 
 						break;
@@ -669,10 +680,13 @@ namespace HeartSignal
 		
 
 
-		private static void GlobalUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e){
-	
-			
-		File.WriteAllText("CrashDump.txt", e.ExceptionObject.ToString());
+		private static void GlobalUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
+		{
+
+			DateTime date = DateTime.Now;
+			File.WriteAllText("CrashDump"+date+".txt", e.ExceptionObject.ToString());
+			string debug = File.ReadAllText("debuglog.txt");
+			File.WriteAllText("debuglog"+date+".txt", debug);
 
 		}
 

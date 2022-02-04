@@ -307,6 +307,7 @@ namespace HeartSignal
                 
 
                 ImageDrawThread = new Thread(MakeSurfaceImage);
+                ImageDrawThread.IsBackground = true;
                 ImageDrawThread.Start();
                 counter = 1000000000; //might be best to make this into a bool
                 IsDirty = true;
