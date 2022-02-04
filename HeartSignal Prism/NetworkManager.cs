@@ -70,9 +70,9 @@ namespace HeartSignal
 			    return;
 		    }
 
-		    Thread t = new Thread(() => Program.ParseServerMessage(input));
-		    t.IsBackground = true;
-		    t.Start();
+		    Thread t2 = new Thread(() => Program.ParseServerMessage(input));
+		    t2.IsBackground = true;
+		    t2.Start();
 
 
 
