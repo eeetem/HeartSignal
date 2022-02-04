@@ -6,3 +6,4 @@ HeartSignal Prism/obj/
 HeartSignal Prism/Content/obj/DesktopGL/content/.mgstats
 buildem.bat
 HeartSignal Prism/HeartSignal.csproj
+*.zip
