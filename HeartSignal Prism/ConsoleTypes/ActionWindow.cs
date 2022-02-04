@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using SadConsole;
 using Console = SadConsole.Console;
 using SadRogue.Primitives;
@@ -320,7 +321,7 @@ namespace HeartSignal
 
             if (awaitingItemClick)
             {
-                Program.PromptWindow.IsVisible = false;
+                Program.PromptWindow.Close();
                 NetworkManager.SendNetworkMessage(pendingArgMessage.Replace("[whatever]",item));
                 awaitingItemClick = false;
              

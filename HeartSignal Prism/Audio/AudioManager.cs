@@ -45,7 +45,7 @@ namespace HeartSignal
 			
 
 			ProcessingSound = true; 
-			System.Console.WriteLine("audi locked by "+ request);
+		//	System.Console.WriteLine("audi locked by "+ request);
 			
 			
 			switch (request)
@@ -142,7 +142,7 @@ namespace HeartSignal
 
 					
 			}
-			System.Console.WriteLine("audi unlocked by "+ request);
+			//System.Console.WriteLine("audi unlocked by "+ request);
 			ProcessingSound = false; 
 
 

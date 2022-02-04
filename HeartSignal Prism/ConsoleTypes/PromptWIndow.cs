@@ -105,8 +105,7 @@ namespace HeartSignal
                         Cursor.Right(padding); 
 
                         button.Click += (s, a) => NetworkManager.SendNetworkMessage(arg,true);
-                        button.Click += (s, a) => this.IsVisible = false;
-                        button.Click += (s, a) => NetworkManager.lockMessages = false;
+                        button.Click += (s, a) => Close();
                         this.Controls.Add(button);
                     
                     
@@ -134,8 +133,7 @@ namespace HeartSignal
                     Position = new Point(Width / 2 - 4/2, Cursor.Position.Y)
                 };
                 button.Click += (s, a) => NetworkManager.SendNetworkMessage(text.Text,true);
-                button.Click += (s, a) => this.IsVisible = false;
-                button.Click += (s, a)  => NetworkManager.lockMessages = false;
+                button.Click += (s, a) => Close()
                 Controls.Add(button);
 
 
@@ -157,6 +155,7 @@ namespace HeartSignal
             this.DrawBox(new Rectangle(0, 0, Width, Height), boxShape);
             this.Print(Width/2-toptext.Length/2, 0, toptext);
             this.IsVisible = true;
+            IsEnabled = true;
 
 
 
@@ -184,6 +183,12 @@ namespace HeartSignal
 
         }
 
+        public void Close()
+        {
+            IsEnabled = false;
+            this.IsVisible = false;
+            NetworkManager.lockMessages = false;
+        }
 
         public void Clicked(Point clickloc, MouseScreenObjectState state)
         {
@@ -194,7 +199,7 @@ namespace HeartSignal
         {
             if (Type == PopupType.Permanent)
             {
-                Program.PromptWindow.IsVisible = false;
+                 Close();
                 ActionWindow.awaitingItemClick = false;
                 
             }
