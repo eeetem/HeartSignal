@@ -133,7 +133,7 @@ namespace HeartSignal
                     Position = new Point(Width / 2 - 4/2, Cursor.Position.Y)
                 };
                 button.Click += (s, a) => NetworkManager.SendNetworkMessage(text.Text,true);
-                button.Click += (s, a) => Close()
+                button.Click += (s, a) => Close();
                 Controls.Add(button);
 
 
