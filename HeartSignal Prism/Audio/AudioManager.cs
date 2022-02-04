@@ -18,18 +18,29 @@ namespace HeartSignal
 
 
 		public static bool ProcessingSound = false;
-		public static void ParseRequest(string ID, string request, string param)
+		public static void ParseRequest(string ID, string request, string param, bool bypass = false)
 		{
 			if (ID == null) {
 
 			 ID = 	new Random().Next(0, 1000).ToString();//this isnt gonna happend often so i dont want to store a random in memory
 			}
-			while (ProcessingSound)
+
+			if (!bypass)
 			{
-
-				System.Threading.Thread.Sleep(100);
-
+				while (
+					DownloadQueue.FindIndex(x => x.ID == ID) >=
+					0) //if the soundeffect with this id is downloading - wait
+				{
+					System.Threading.Thread.Sleep(1000);
+				}
 			}
+				while (ProcessingSound)
+				{
+
+					System.Threading.Thread.Sleep(100);
+
+				}
+			
 
 			ProcessingSound = true; 
 
@@ -90,6 +101,7 @@ namespace HeartSignal
 				case "stop":
 					if (Sounds.ContainsKey(ID))
 					{
+						
 						Sounds[ID].Stop();
 						Sounds[ID].Dispose();
 						Sounds.Remove(ID);
@@ -132,7 +144,7 @@ namespace HeartSignal
 
 
 		}
-		static List<string[]> DownloadQueue= new List<string[]>();
+		static List<DownloadStruct> DownloadQueue= new List<DownloadStruct>();
 		static bool DownloadInProgress = false;
 
 		/// <summary>
@@ -140,16 +152,15 @@ namespace HeartSignal
 		/// </summary>
 		public static bool InitiateDownload(string file, string afteraction, string ID) {
 			if (File.Exists("sfx/" + file)) { return true; }
-			foreach (string[] param in DownloadQueue) {
-				if (param[0] == file) {
+			foreach (DownloadStruct param in DownloadQueue) {
+				if (param.file == file) {
 
 					return false;//return since the same file is already in queue, however dont return true as then the yet to be downloaded sound will attempt to be played
 				}
-			
-			
+				
 			
 			}
-			DownloadQueue.Add(new string[] { file, afteraction, ID });
+			DownloadQueue.Add(new DownloadStruct( file, afteraction, ID ));
 			//if nothing is downloading - start the download otherwise the other download will check the download queue after it's finished
 			if (!DownloadInProgress) {
 
@@ -163,7 +174,7 @@ namespace HeartSignal
 		public static void Download()
 		{
 			DownloadInProgress = true;
-			string file = DownloadQueue[0][0];
+			string file = DownloadQueue[0].file;
 			string dir = "";
 			string filename ="";
 			if (file.Contains("/"))
@@ -192,13 +203,16 @@ namespace HeartSignal
 
 		private static void DownloadCompleted (object sender, AsyncCompletedEventArgs e)
 		{
-			string[] finishedDownload = DownloadQueue[0];
-			File.Move("sfx" + finishedDownload[0].Substring(finishedDownload[0].LastIndexOf("/")), "sfx/"+ finishedDownload[0]);//move the downloaded file from temp location to proper one
-			if (finishedDownload[1].Length >1)//if an after action was supplied now that the sound is downloaded perform that actions
+			DownloadStruct finishedDownload = DownloadQueue[0];
+			File.Move("sfx" + finishedDownload.file.Substring(finishedDownload.file.LastIndexOf("/")), "sfx/"+ finishedDownload.file);//move the downloaded file from temp location to proper one
+
+			if (finishedDownload.afteraction.Length >1)//if an after action was supplied now that the sound is downloaded perform that actions
 			{
-				ParseRequest(finishedDownload[2], finishedDownload[1], finishedDownload[0]);
+				ParseRequest(finishedDownload.ID, finishedDownload.afteraction, finishedDownload.file,true);
 			}
 			DownloadQueue.Remove(DownloadQueue[0]);
+			
+			
 			if (DownloadQueue.Count() > 0)
 			{
 				Download();
@@ -271,7 +285,22 @@ namespace HeartSignal
 		}
 		
 
+		public struct DownloadStruct
+		{
+			public DownloadStruct(string file, string afteraction, string id)
+			{
+				ID = id;
+				this.afteraction = afteraction;
+				this.file = file;
+			}
 
+			public string file;
+			public string afteraction;
+			public string ID;
+
+
+
+		}
 
 	}
 }
