@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using SadConsole;
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole.UI;
@@ -13,6 +14,7 @@ using SadConsole.UI.Themes;
 using SadRogue.Primitives;
 using Console = SadConsole.Console;
 using Color = SadRogue.Primitives.Color;
+using Game = SadConsole.Game;
 using Point = SadRogue.Primitives.Point;
 
 namespace HeartSignal
@@ -57,6 +59,7 @@ namespace HeartSignal
 			
 			Settings.DoFinalDraw = false;
 
+		
 			
 			Library.Default.Colors.Lines = new AdjustableColor(Color.Red, "red");
 
@@ -80,9 +83,13 @@ namespace HeartSignal
 
 		private static void Init()
 		{
-			SadConsole.Host.Global.GraphicsDeviceManager.GraphicsProfile = GraphicsProfile.HiDef;
+			
+		//	SadConsole.Host.Global.GraphicsDeviceManager.GraphicsProfile = GraphicsProfile.HiDef;
 			Game.Instance.MonoGameInstance.Components.Add(new PostPorcessing());
 			ColoredString.CustomProcessor = Utility.CustomParseCommand;
+			
+			SadConsole.Host.Global.GraphicsDeviceManager.ApplyChanges();
+			
 			root = new Console(1, 1);
 			root.SadComponents.Add(new KeyBinds());
 
@@ -120,7 +127,7 @@ namespace HeartSignal
 			root.Children.Add(PromptWindow);
 
 
-
+			
 			PositionConsoles();
 #if RELEASE
 			Game.Instance.Screen = loginConsole;
@@ -216,19 +223,49 @@ namespace HeartSignal
 
 			width = roomConsoleWidth - 1;
 			height = topConsoleRowHeight;
-			
+			int posx = inventoryWidth + 1;
+			int posy = barConsoleHeight;
+			if (width > 80)
+			{
+				ThingConsole.FontSize = ThingConsole.Font.GetFontSize(IFont.Sizes.Two);
+				ThingConsole.actionWindow.FontSize = ThingConsole.actionWindow.Font.GetFontSize(IFont.Sizes.Two);
+				width = width / 2;
+				height = height / 2;
+				posx = posx / 2;
+				posy = posy / 2;
+			}
+			else
+			{
+				ThingConsole.FontSize = ThingConsole.Font.GetFontSize(IFont.Sizes.One);
+				ThingConsole.actionWindow.FontSize = ThingConsole.actionWindow.Font.GetFontSize(IFont.Sizes.One);
+			}
 
 			ThingConsole.Resize(width, height, width, 100, true);
-			ThingConsole.Position = new Point(inventoryWidth + 1, barConsoleHeight);
+			ThingConsole.Position = new Point(posx, posy);
 			ThingConsole.ReDraw();
 
 
 			width = roomConsoleWidth - 3;
 			height = topConsoleRowHeight;
-
+			posx = inventoryWidth * 2 + roomConsoleWidth + 2;
+			posy = barConsoleHeight;
+			if (width > 80)
+			{
+				RoomConsole.FontSize = RoomConsole.Font.GetFontSize(IFont.Sizes.Two);
+				RoomConsole.actionWindow.FontSize = RoomConsole.actionWindow.Font.GetFontSize(IFont.Sizes.Two);
+				width = width / 2;
+				height = height / 2;
+				posx = posx / 2;
+				posy = posy / 2;
+			}
+			else
+			{
+				RoomConsole.FontSize = RoomConsole.Font.GetFontSize(IFont.Sizes.One);
+				RoomConsole.actionWindow.FontSize = RoomConsole.actionWindow.Font.GetFontSize(IFont.Sizes.One);
+			}
 
 			RoomConsole.Resize(width, height, width, 100, true);
-			RoomConsole.Position = new Point(inventoryWidth * 2 + roomConsoleWidth + 2, barConsoleHeight);
+			RoomConsole.Position = new Point(posx, posy);
 			RoomConsole.ReDraw();
 			
 			PromptWindow.Position = new Point(Program.Width / 2 - PromptWindow.Width/2, Program.Height / 2 - 5);

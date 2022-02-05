@@ -47,6 +47,11 @@ namespace HeartSignal
 						return;
 					case(Keys.Enter):
 						Program.MainConsole.GetInputSource().IsFocused = true;
+						if (SadConsole.Game.Instance.Keyboard.IsKeyDown(Keys.LeftAlt))
+						{
+							SadConsole.Host.Global.GraphicsDeviceManager.ToggleFullScreen();
+						}
+						break;
 						return;
 
 				}

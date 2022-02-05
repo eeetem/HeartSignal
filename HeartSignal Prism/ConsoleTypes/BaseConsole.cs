@@ -36,7 +36,7 @@ namespace HeartSignal
         }
 
         public int MaxScroll { get; protected set; } = 0;
-        protected ActionWindow actionWindow;
+        public ActionWindow actionWindow { get; protected set; }
 
         private bool needRedraw = false;
 

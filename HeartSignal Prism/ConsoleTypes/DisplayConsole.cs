@@ -15,6 +15,7 @@ namespace HeartSignal
 
             // Disable the cursor since our keyboard handler will do the work.
             SadComponents.Add(new MouseHandler());
+            
          
         }
         public bool ExplicitLook = false;

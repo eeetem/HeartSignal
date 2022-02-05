@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Drawing;
 using SadConsole;
 using SadConsole.Components;
 using SadConsole.Input;
-using SadRogue.Primitives;
+using Color = SadRogue.Primitives.Color;
 using Console = SadConsole.Console;
+using Point = SadRogue.Primitives.Point;
+using Rectangle = SadRogue.Primitives.Rectangle;
 
 namespace HeartSignal
 {
@@ -70,9 +73,24 @@ new int[] {177,177,177,177,177,177,177,177,177,177,177,177,177,},
         double counter = 0;
         public override void Update(IScreenObject console, TimeSpan delta) {
             Console con = (Console)console;
-            if (_borderConsole.Width != con.ViewWidth+2 || _borderConsole.Height != con.ViewHeight+2)
+
+
+            int targetWidth =con.ViewWidth+2 ;
+            int targetHeight = con.ViewHeight+2 ;
+  
+            if (con.FontSize.X >= con.Font.GetFontSize(IFont.Sizes.Two).X)
             {
-                _borderConsole.Resize(con.ViewWidth + 2, con.ViewHeight + 2, con.ViewWidth + 2, con.ViewHeight + 2,
+                targetHeight = targetHeight * 2-1;
+                
+                targetWidth = targetWidth * 2-1;
+            }
+
+            
+            
+            if (_borderConsole.Width != targetWidth || _borderConsole.Height != targetHeight)
+            {
+                
+                _borderConsole.Resize(targetWidth, targetHeight, targetWidth, targetHeight,
                     true); //this might cause performance issues
              
      

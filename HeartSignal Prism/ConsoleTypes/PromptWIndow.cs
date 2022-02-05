@@ -23,6 +23,7 @@ namespace HeartSignal
             UsePrintProcessor = true;
             Cursor.UseStringParser = true;
             SadComponents.Add( new MouseHandler());
+           
         }
 
         public List<string> args = new List<string>();

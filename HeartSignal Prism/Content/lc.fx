@@ -101,7 +101,7 @@ float nn(float2 p, float framecount){
 float3 distort(sampler2D DecalSampler, float2 uv, float size, float framecount){
 	float mag = size * 0.0001;
 
-	float3 offset_x = (uv.x,uv.x,uv.x);
+	float3 offset_x = float3(uv.x,uv.x,uv.x);
 	offset_x.x = /*rand(float2(fmod(framecount, 9847.0) * 0.03, uv.y * 0.42)) * 0.001*/  rand(float2(sin(framecount) * 0.001, uv.y)) * mag;
 	offset_x.y = /* rand(float2(fmod(framecount, 5583.0) * 0.004, uv.y * 0.002)) * 0.004*/ +rand(float2(cos(-framecount+100) *   0.004, uv.y)) * mag;
 	offset_x.z = rand(float2(sin(-framecount+1000) *  0.002, uv.y)) * mag;
