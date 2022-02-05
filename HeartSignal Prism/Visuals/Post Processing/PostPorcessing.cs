@@ -133,7 +133,7 @@ namespace HeartSignal
 				connectionEffect.Parameters["videoSize"]
 					.SetValue(new Vector2(Global.RenderOutput.Width, Global.RenderOutput.Height));
 				connectionEffect.Parameters["fps"].SetValue(counter);
-				connectionEffect.Parameters["magnitude"].SetValue(effectParams["clmagnitued"]);
+				connectionEffect.Parameters["magnitude"].SetValue(effectParams["clmagnitude"]);
 
 				if(oldMousePos ==SadConsole.Game.Instance.Mouse.ScreenPosition){
 				

@@ -12,7 +12,7 @@
 //#pragma parameter magnitude "Distortion Magnitude" 0.9 0.0 25.0 0.1
 //#pragma parameter always_on "OSD Always On" 0.0 0.0 1.0 1.0
 
-#define magnitude 5
+float1 magnitude = 5;
 #define always_on 0.0
 
 
