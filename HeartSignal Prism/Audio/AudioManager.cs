@@ -7,6 +7,7 @@ using System.Net;
 using System.IO;
 using System.Media;
 using System.ComponentModel;
+using System.Globalization;
 using csvorbis;
 using csogg;
 using Microsoft.Xna.Framework.Audio;
@@ -120,7 +121,7 @@ namespace HeartSignal
 				case "pan":
 					if (Sounds.ContainsKey(ID))
 					{
-						float setting =  Math.Clamp(float.Parse(param), -1, 1);
+						float setting =  Math.Clamp(float.Parse(param,CultureInfo.InvariantCulture), -1, 1);
 						Sounds[ID].Pan = setting;
 					}
 					break;
@@ -128,14 +129,14 @@ namespace HeartSignal
 				case "pitch":
 					if (Sounds.ContainsKey(ID))
 					{
-						float setting =  Math.Clamp(float.Parse(param), -1, 1);
+						float setting =  Math.Clamp(float.Parse(param,CultureInfo.InvariantCulture), -1, 1);
 						Sounds[ID].Pitch =setting;
 					}
 					break;
 				case "volume":
 					if (Sounds.ContainsKey(ID))
 					{
-						float setting =  Math.Clamp(float.Parse(param), -1, 1);
+						float setting =  Math.Clamp(float.Parse(param,CultureInfo.InvariantCulture), -1, 1);
 						Sounds[ID].Volume = setting;
 					}
 					break;

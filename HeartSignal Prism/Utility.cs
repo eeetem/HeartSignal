@@ -350,8 +350,7 @@ namespace HeartSignal
             {
                 File.AppendAllText("debuglog.txt",
                     "Error print parsing: " + message + " report this and make sure it does not have any odd symbols");
-                con.Cursor.Print("Error print parsing: " + message +
-                                 " report this and make sure it does not have any odd symbols");
+                con.Cursor.Print("Error print parsing: " + message);
             }
         }
 

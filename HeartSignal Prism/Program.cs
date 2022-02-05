@@ -385,7 +385,7 @@ namespace HeartSignal
 						}
 
 						;
-						delayConsole.DisplayDelay(returned[1],new Gradient(Colors) ,float.Parse(args[0]),float.Parse(args[1]));
+						delayConsole.DisplayDelay(returned[1],new Gradient(Colors) ,float.Parse(args[0],CultureInfo.InvariantCulture),float.Parse(args[1],CultureInfo.InvariantCulture));
 						break;
 					case "map":
 						
@@ -481,7 +481,7 @@ namespace HeartSignal
 						cutstring = returned[0];
 						string effectToAdjust = returned[1];//for when we get more effects
 						args = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-						PostPorcessing.AddTween(args[0],float.Parse(args[1]),float.Parse(args[2]));
+						PostPorcessing.AddTween(args[0],float.Parse(args[1],CultureInfo.InvariantCulture),float.Parse(args[2],CultureInfo.InvariantCulture));
 					
 						break;
 

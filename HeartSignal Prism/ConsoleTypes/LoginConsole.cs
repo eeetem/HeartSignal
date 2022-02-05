@@ -188,11 +188,13 @@ namespace HeartSignal
             );
             File.AppendAllText("logindebug.txt", "LOGIN DEBUG: for loop done\n");
 
-            cachedSurface = surface;
+            
 
             Position = new Point((Program.Width / 2) - Program.Height, 0);
             miniDisplay.Position = new Point((Width / 2) - miniDisplay.Width / 2, (Program.Height / 2) + 6);
-            this.Print(Width / 2 - Tagline.Length / 2, (Program.Height / 2) - 7, Tagline);
+            surface.Print(Width / 2 - Tagline.Length / 2, (Program.Height / 2) - 7, Tagline);
+            
+            cachedSurface = surface;
             if (!surfaceCreated)
             {
                 surfaceCreated = true;
