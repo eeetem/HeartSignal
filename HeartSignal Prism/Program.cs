@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -63,6 +64,9 @@ namespace HeartSignal
 
 			Game.Create(SCREEN_WIDTH, SCREEN_HEIGHT);
 			//Game.Instance.DefaultFont = new fon
+
+			throw new Exception();
+			
 			
 			Game.Instance.OnStart = Init;
 			Game.Instance.Run();
@@ -486,19 +490,14 @@ namespace HeartSignal
 						string[] settings = cutstring.Split("-");
 
 						bool keep = false;
-						try
-						{
+					
 							AnimatedBorderComponent._borderCellStyle = new ColoredGlyph(
 								Color.White.FromParser(settings[0], out keep, out keep, out keep, out keep, out keep),
 								Color.Black);
 
-							Utility.GlobalAnimationSpeed = float.Parse(settings[1]);
-						}
-						catch(Exception e)
-						{
-							MainConsole.ReciveExternalInput("Border Syntax Error: ["+settings[0]+"] ["+settings[1]+"]" + "Exception: "+e);
-							
-						}
+							Utility.GlobalAnimationSpeed = float.Parse(settings[1],CultureInfo.InvariantCulture);
+						
+				
 
 
 						break;
@@ -684,9 +683,10 @@ namespace HeartSignal
 		{
 
 			DateTime date = DateTime.Now;
-			File.WriteAllText("CrashDump"+date+".txt", e.ExceptionObject.ToString());
+			
+			File.WriteAllText("CrashDump"+date.ToFileTime()+".txt", e.ExceptionObject.ToString());
 			string debug = File.ReadAllText("debuglog.txt");
-			File.WriteAllText("debuglog"+date+".txt", debug);
+			File.WriteAllText("debuglog"+date.ToFileTime()+".txt", debug);
 
 		}
 

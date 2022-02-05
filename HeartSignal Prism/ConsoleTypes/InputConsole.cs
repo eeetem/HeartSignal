@@ -15,7 +15,7 @@ namespace HeartSignal
         public InputConsole(int width, int height) : base(width, height)
         {
             DefaultBackground = Color.Gray;
-            DefaultForeground = Color.White;
+            DefaultForeground = Color.Black;
             keyboard = new KeyboardHandler();
             Cursor.IsVisible = true;
             keyboard.CursorLastY = Cursor.Position.Y;
@@ -23,7 +23,7 @@ namespace HeartSignal
             UseKeyboard = true;
             keyboard.EnterPressed += SendCommand;
             Cursor.PrintAppearanceMatchesHost = false;
-            Cursor.PrintAppearance = new ColoredGlyph(Color.White, Color.Gray);
+            Cursor.PrintAppearance = new ColoredGlyph(Color.Black, Color.Gray);
 
      
             SadComponents.Add(keyboard);
