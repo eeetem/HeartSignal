@@ -29,7 +29,7 @@ namespace HeartSignal
 		public static InventoryConsole GrasperConsole;
 		public static DelayConsole delayConsole;
 		static ButtonConsole buttonConsole;
-		private static Console root;
+		public static Console root;
 		public static LoginConsole loginConsole;
 
 		//public static bool verboseDebug;
@@ -148,7 +148,7 @@ namespace HeartSignal
 		public static int Height;
 
 
-		static void PositionConsoles()
+		public static void PositionConsoles()
 		{
             
 
@@ -534,20 +534,11 @@ namespace HeartSignal
 						//todo
 						break;
 					case "accept":
-#if RELEASE
-			
-						Game.Instance.Screen = root;
-						Thread.Sleep(100);//let all the renders and whatever finidh up before removing the login console 
-						if (loginConsole != null)
-						{
-							loginConsole.Dispose();
-							loginConsole = null;
-						}
-						
-						PositionConsoles();
-						MainConsole.ClearText();
-						
-#endif
+
+
+
+						loginConsole.Delete();
+
 						break;
 					case "tagline":
 

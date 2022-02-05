@@ -293,10 +293,31 @@ namespace HeartSignal
         private float counter = 0;
         public static Thread ImageDrawThread;
         private bool NeedToMakeControlls = true;
+        private bool DeleteMe = false;
+
+        public void Delete()
+        {
+            DeleteMe = true;
+        }
 
         public override void Update(TimeSpan delta)
         {
-
+            if (DeleteMe)
+            {
+    
+                    
+                Program.loginConsole = null;
+            
+						
+                Program.PositionConsoles();
+                Program.MainConsole.ClearText();
+						
+                Game.Instance.Screen =  Program.root;
+                
+                
+                this.Dispose();
+                return;
+            }
 
 
 
@@ -321,7 +342,7 @@ namespace HeartSignal
                 NeedToMakeControlls = false;
             }
 
-            //DrawImage();
+
             base.Update(delta);
 
         }
