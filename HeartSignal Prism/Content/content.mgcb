@@ -31,3 +31,9 @@
 /processorParam:TextureFormat=Color
 /build:eye.png
 
+#begin lc.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:lc.fx
+

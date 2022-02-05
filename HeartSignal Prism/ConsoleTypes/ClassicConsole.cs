@@ -96,11 +96,16 @@ namespace HeartSignal
             Utility.PrintParseMessage(value, actionWindow, this, false);
 
                 System.Console.WriteLine(value);
-            
+            System.Console.WriteLine(Cursor.Position);
 
+                SetRelevantViewPos();
+
+        }
+
+        public void SetRelevantViewPos()
+        {
             Surface.ViewPosition = new Point(0, Math.Max(0,Cursor.Position.Y-ViewHeight));
-
-
+            
         }
 
     

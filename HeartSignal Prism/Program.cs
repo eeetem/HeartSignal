@@ -132,7 +132,7 @@ namespace HeartSignal
 			// This is needed because we replaced the initial screen object with our own.
 			Game.Instance.DestroyDefaultStartingConsole();
 
-  
+
 			Settings.ResizeMode = Settings.WindowResizeOptions.None;
 			Game.Instance.MonoGameInstance.WindowResized += (s, a) => PositionConsoles();
 			
@@ -175,7 +175,7 @@ namespace HeartSignal
 			int inventoryWidth = 29;
 			int roomConsoleWidth = (Program.Width - (inventoryWidth * 3)) / 2;
 			int barConsoleHeight = 6;//ONLY EVEN due to map console size increase
-			int topConsoleRowHeight = 20;
+			int topConsoleRowHeight = 18 + (int)(Program.Height* 0.05);
 
 
 			int width = Program.Width - (inventoryWidth * 2) - 2;
@@ -197,8 +197,9 @@ namespace HeartSignal
 				MainConsole.FontSize = MainConsole.Font.GetFontSize(IFont.Sizes.One);
 			}
 
-			MainConsole.Resize(width , height , width , 20, false);
+			MainConsole.Resize(width , height , width , Math.Max(20,MainConsole.Height), false);
 			MainConsole.Position = new Point((inventoryWidth + 2) / 2, (topConsoleRowHeight + barConsoleHeight) / 2);
+			MainConsole.SetRelevantViewPos();
 
 
 			width = (inventoryWidth / 2) + 1;
@@ -215,18 +216,22 @@ namespace HeartSignal
 
 			width = roomConsoleWidth - 1;
 			height = topConsoleRowHeight;
+			
+
 			ThingConsole.Resize(width, height, width, 100, true);
 			ThingConsole.Position = new Point(inventoryWidth + 1, barConsoleHeight);
 			ThingConsole.ReDraw();
 
 
-			PromptWindow.Position = new Point(Program.Width / 2 - PromptWindow.Width/2, Program.Height / 2 - 5);
-
 			width = roomConsoleWidth - 3;
 			height = topConsoleRowHeight;
+
+
 			RoomConsole.Resize(width, height, width, 100, true);
 			RoomConsole.Position = new Point(inventoryWidth * 2 + roomConsoleWidth + 2, barConsoleHeight);
 			RoomConsole.ReDraw();
+			
+			PromptWindow.Position = new Point(Program.Width / 2 - PromptWindow.Width/2, Program.Height / 2 - 5);
 
 
 			

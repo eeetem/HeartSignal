@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SourceFile>E:/my games/HeartSignal/HeartSignal Prism/Content/CRT.fx</SourceFile>
-  <SourceTime>2021-11-21T00:38:15.8109947+00:00</SourceTime>
+  <SourceTime>2021-11-24T18:43:21.1513691+00:00</SourceTime>
   <DestFile>E:/my games/HeartSignal/HeartSignal Prism/Content/bin/CRT.xnb</DestFile>
-  <DestTime>2021-11-21T19:37:17.9256295+00:00</DestTime>
+  <DestTime>2022-02-05T13:37:53.8558684+00:00</DestTime>
   <Importer>EffectImporter</Importer>
   <ImporterTime>2020-08-10T17:17:54+01:00</ImporterTime>
   <Processor>EffectProcessor</Processor>

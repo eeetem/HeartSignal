@@ -5,7 +5,7 @@
   <Config />
   <SourceFiles>
     <File>E:/my games/HeartSignal/HeartSignal Prism/Content/CRT.fx</File>
-    <File>E:/my games/HeartSignal/HeartSignal Prism/Content/cursor.png</File>
+    <File>E:/my games/HeartSignal/HeartSignal Prism/Content/eye.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

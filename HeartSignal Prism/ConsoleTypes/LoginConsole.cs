@@ -332,7 +332,7 @@ namespace HeartSignal
                 ImageDrawThread = new Thread(MakeSurfaceImage);
                 ImageDrawThread.IsBackground = true;
                 ImageDrawThread.Start();
-                counter = 1000000000; //might be best to make this into a bool
+                counter = 10000; //might be best to make this into a bool
                 IsDirty = true;
             }
 
@@ -359,7 +359,7 @@ namespace HeartSignal
 
         protected override void Dispose(bool disposing)
         {
-            ImageDrawThread.Join();
+           // ImageDrawThread.Join((int)counter+1000);
             base.Dispose(disposing);
         }
     }
