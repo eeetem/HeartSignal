@@ -65,7 +65,7 @@ namespace HeartSignal
 			Game.Create(SCREEN_WIDTH, SCREEN_HEIGHT);
 			//Game.Instance.DefaultFont = new fon
 
-			throw new Exception();
+
 			
 			
 			Game.Instance.OnStart = Init;
