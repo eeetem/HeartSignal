@@ -69,7 +69,7 @@ namespace HeartSignal
                     List<string> argsToPrint = new List<string>();
                     foreach (var arg in fullArgList)
                     {
-                        if (argLenght + arg.Length + 4 > Width)
+                        if (argLenght + arg.Length + 4 > Width && argsToPrint.Count > 0)
                         {
                             break;
                         }
