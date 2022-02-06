@@ -586,8 +586,8 @@ namespace HeartSignal
 					case "accept":
 
 
-
-						loginConsole.Delete();
+						
+						loginConsole?.Delete();
 
 						break;
 					case "tagline":

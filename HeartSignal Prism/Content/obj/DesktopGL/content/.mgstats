@@ -1,5 +1,4 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"E:/my games/HeartSignal/HeartSignal Prism/Content/chungus.png","E:/my games/HeartSignal/HeartSignal Prism/Content/bin/DesktopGL/content/chungus.xnb","TextureProcessor","Texture2DContent",1008161,11759413,0.4362877
 "E:/my games/HeartSignal/HeartSignal Prism/Content/CRT.fx","E:/my games/HeartSignal/HeartSignal Prism/Content/bin/DesktopGL/content/CRT.xnb","EffectProcessor","CompiledEffectContent",9777,44366,2.1654112
 "E:/my games/HeartSignal/HeartSignal Prism/Content/eye.png","E:/my games/HeartSignal/HeartSignal Prism/Content/bin/DesktopGL/content/eye.xnb","TextureProcessor","Texture2DContent",413,25685,0.1891643
 "E:/my games/HeartSignal/HeartSignal Prism/Content/lc.fx","E:/my games/HeartSignal/HeartSignal Prism/Content/bin/DesktopGL/content/lc.xnb","EffectProcessor","CompiledEffectContent",4894,9392,0.5466051
