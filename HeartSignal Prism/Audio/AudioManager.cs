@@ -251,6 +251,7 @@ namespace HeartSignal
 					{
 						using (var file = new FileStream(path, FileMode.Open, FileAccess.Read))
 						{
+							//todo caches loaded sound effects instead of loading them every time
 							player = SoundEffect.FromStream((new OggDecoder.OggDecodeStream(file))).CreateInstance();
 
 						}

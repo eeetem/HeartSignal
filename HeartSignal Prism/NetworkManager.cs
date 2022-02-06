@@ -102,11 +102,9 @@ namespace HeartSignal
 	    private static async void ServerLoop()
 		{
 
-			Program.MainConsole.Cursor.NewLine(); 
-	
+			Program.MainConsole.Cursor.NewLine();
 
-		
-				using (Client client = new Client("deathcult.today", 6666, new CancellationToken()))
+			using (Client client = new Client("deathcult.today", 6666, new CancellationToken()))
 				{
 					await client.TryLoginAsync("", "", 1000);
 

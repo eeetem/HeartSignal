@@ -142,7 +142,7 @@ namespace HeartSignal
 
 			Settings.ResizeMode = Settings.WindowResizeOptions.None;
 			Game.Instance.MonoGameInstance.WindowResized += (s, a) => PositionConsoles();
-			
+		
 			NetworkManager.ConnectToServer();
 
 
@@ -521,10 +521,18 @@ namespace HeartSignal
 					case "effect":
 						returned = RemoveParseTag(cutstring);
 						cutstring = returned[0];
-						string effectToAdjust = returned[1];//for when we get more effects
+						//string effectToAdjust = returned[1];//for when we get more effects
 						args = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
 						PostPorcessing.AddTween(args[0],float.Parse(args[1],CultureInfo.InvariantCulture),float.Parse(args[2],CultureInfo.InvariantCulture));
 					
+						break;
+					
+					case "overlay":
+						returned = RemoveParseTag(cutstring);
+						cutstring = returned[0];
+						//string effectToAdjust = returned[1];//for when we get more effects
+						string base64 = cutstring.Substring(0, cutstring.IndexOf('}'));
+						PostPorcessing.SetOverlay(base64);
 						break;
 
 					case "border":

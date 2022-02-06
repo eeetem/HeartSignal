@@ -13,7 +13,6 @@
 //#pragma parameter always_on "OSD Always On" 0.0 0.0 1.0 1.0
 
 float1 magnitude = 5;
-#define always_on 0.0
 
 
 uniform float4x4 modelViewProj;
@@ -128,37 +127,45 @@ float2 jumpy(float2 uv, float framecount)
 	return look;
 }
 
-float4 loose_connection(float2 texture_size, float2 video_size, float frame_count, float2 texCoord, sampler2D decal)
-{
-	//float2 LUTeffectiveCoord = float2(frac(texCoord.xy * texture_size.xy / video_size.xy));
-	float timer = frame_count;
-	float3 res = distort(decal, jumpy(texCoord, timer), magnitude, timer);
-	float col = nn(-texCoord * video_size.y * 4.0, timer);
-	//float3 play = distort(overlay, jumpy(LUTeffectiveCoord, timer), magnitude, timer);
-//	float overlay_alpha = tex2D(overlay, jumpy(LUTeffectiveCoord, timer)).a;
-//	float show_overlay = (fmod(timer, 100.0) < 50.0) && (timer < 500.0) ? tex2D(overlay, jumpy(LUTeffectiveCoord, timer)).a : 0.0;
-	//show_overlay = clamp(show_overlay + always_on * overlay_alpha, 0.0, 1.0);
-	//res = lerp(res, play, show_overlay);
- 
-	float4 final = float4(res + clamp(float3(col, col, col), 0.0, 0.5), 1.0);
-	return final;
-}
-
 
 float2 textureSize;
 float2 videoSize;
 float1 fps;
+float1 staticAlpha = 0.05;
+
+float4 loose_connection(float2 texture_size, float2 video_size, float frame_count, float2 texCoord, sampler2D decal,sampler2D overlay)
+{
+	float2 LUTeffectiveCoord = float2(frac(texCoord.xy * texture_size.xy / video_size.xy));
+	float timer = frame_count;
+	float3 res = distort(decal, jumpy(texCoord, timer), magnitude, timer);
+	float col = nn(-texCoord * video_size.y * 4.0, timer);
+	float3 play = distort(overlay, jumpy(LUTeffectiveCoord, timer), magnitude, timer);
+	float overlay_alpha = tex2D(overlay, jumpy(LUTeffectiveCoord, timer)).a;
+	float show_overlay = clamp(overlay_alpha, 0.0, 0.8);
+	res = lerp(res, play, show_overlay);
+ 
+	float4 final = float4(res + clamp(float3(col, col, col), 0.0,staticAlpha), 1.0);
+	return final;
+}
+
+
+
 
 Texture2D decal;
 sampler2D DecalSampler = sampler_state
 {
 	Texture = <decal>;
 };
+Texture2D overlay;
+sampler2D overlaySampler = sampler_state
+{
+	Texture = <overlay>;
+};
 
 
 float4 main_fragment(out_vertex VOUT) : COLOR0
 {
-	return loose_connection(textureSize,videoSize , fps, VOUT.texCoord, DecalSampler);
+	return loose_connection(textureSize,videoSize , fps, VOUT.texCoord, DecalSampler,overlaySampler);
 }
 
 technique
