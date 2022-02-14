@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using PrimS.Telnet;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace HeartSignal
 {
@@ -109,8 +108,8 @@ namespace HeartSignal
 
 
 					TelnetClient = client;
-
 					
+	
 					while (TelnetClient.IsConnected)
 					{
 				

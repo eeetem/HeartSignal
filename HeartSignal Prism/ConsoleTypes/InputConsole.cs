@@ -2,8 +2,6 @@
 using SadConsole;
 using Console = SadConsole.Console;
 using SadRogue.Primitives;
-using System.Collections.Generic;
-using ImageProcessor.Processors;
 using SadConsole.Input;
 
 namespace HeartSignal

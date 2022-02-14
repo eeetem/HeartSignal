@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using SadConsole;
 using SadRogue.Primitives;
-using SadConsole;
 using SadConsole.UI.Controls;
-using Console = SadConsole.Console;
-using System.IO;
 using SadConsole.UI;
 using SadConsole.UI.Themes;
 

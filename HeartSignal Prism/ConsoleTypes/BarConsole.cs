@@ -4,9 +4,6 @@ using System.Linq;
 using SadConsole;
 using Console = SadConsole.Console;
 using SadRogue.Primitives;
-using SadConsole.Effects;
-using SadConsole.StringParser;
-using System.Collections;
 
 namespace HeartSignal
 {

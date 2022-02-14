@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using SadConsole;
 using SadRogue.Primitives;
 using SadConsole.StringParser;
-using System.Globalization;
+
 namespace HeartSignal
 {
 	class ParseCommandAnimGlyph : ParseCommandBase

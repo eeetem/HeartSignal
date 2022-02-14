@@ -8,7 +8,6 @@ using ImageProcessor;
 using Color = SadRogue.Primitives.Color;
 using Point = SadRogue.Primitives.Point;
 using System.Threading;
-using Newtonsoft.Json.Serialization;
 
 namespace HeartSignal
 {
@@ -206,7 +205,6 @@ namespace HeartSignal
 
         }
 
-        float surfaceGenerationTime = 1000;
 
         public Console miniDisplay;
 

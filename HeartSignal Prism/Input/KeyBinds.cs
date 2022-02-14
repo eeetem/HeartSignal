@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Xna.Framework;
 using SadConsole;
 using SadConsole.Components;
 using SadConsole.Input;
@@ -51,8 +50,7 @@ namespace HeartSignal
 						{
 							SadConsole.Host.Global.GraphicsDeviceManager.ToggleFullScreen();
 						}
-						break;
-						return;
+						break; 
 
 				}
 			

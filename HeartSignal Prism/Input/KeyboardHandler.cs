@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Drawing;
 using System.Linq;
 using SadConsole.Components;
 using SadConsole.Input;
 using SadConsole;
-using Color = SadRogue.Primitives.Color;
 using Console = SadConsole.Console;
 using Keys = SadConsole.Input.Keys;
 //using System.Windows.Forms;

@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SadConsole;
-using Console = SadConsole.Console;
 using SadRogue.Primitives;
-using SadConsole.UI.Controls;
-using SadConsole.UI.Themes;
-using SadConsole.Input;
 
 namespace HeartSignal
 {

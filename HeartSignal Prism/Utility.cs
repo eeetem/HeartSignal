@@ -6,12 +6,9 @@ using SadRogue.Primitives;
 using SadConsole.StringParser;
 using SadConsole;
 using SadConsole.UI.Controls;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole.Host;
-using SadConsole.UI;
 using SadConsole.UI.Themes;
-using Console = SadConsole.Console;
 using Point = SadRogue.Primitives.Point;
 using Color = SadRogue.Primitives.Color;
 

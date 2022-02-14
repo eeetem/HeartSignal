@@ -1,14 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
 using SadConsole;
-using Microsoft.Xna.Framework.Graphics;
 using SadConsole.UI;
 using SadConsole.UI.Themes;
 using SadRogue.Primitives;

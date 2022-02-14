@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using SadConsole;
 using SadConsole.Components;
 using SadConsole.Input;

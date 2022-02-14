@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.IO;
 using System.Linq;
 using SadConsole.Host;
-using SadRogue.Primitives;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Color = SadRogue.Primitives.Color;
-using Console = SadConsole.Console;
 using Point = SadRogue.Primitives.Point;
 
 
@@ -82,8 +77,19 @@ namespace HeartSignal
 
 		private static RenderTarget2D combinedRender;
 		//When we need to draw to the screen, it's done here.
+
+
+		public static bool OverlayChangeInProgress = false;
 		public static void SetOverlay(string link)
 		{
+			while (OverlayChangeInProgress)
+			{
+
+				System.Threading.Thread.Sleep(100);
+
+			}
+
+			OverlayChangeInProgress = true;
 			if (link.Length < 1)
 			{
 				overlayTexture = null;
@@ -91,7 +97,7 @@ namespace HeartSignal
 			}
 
 			overlayTexture = Utility.GetImageOrDownload(link);
-
+			OverlayChangeInProgress = false;
 
 		}
 

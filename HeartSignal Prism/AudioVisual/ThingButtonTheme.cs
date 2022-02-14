@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using SadConsole;
-using System.Text;
-using Console = SadConsole.Console;
 using SadRogue.Primitives;
 using SadConsole.UI.Controls;
 using SadConsole.UI.Themes;
