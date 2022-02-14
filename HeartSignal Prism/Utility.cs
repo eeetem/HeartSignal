@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using SadRogue.Primitives;
 using SadConsole.StringParser;
 using SadConsole;
 using SadConsole.UI.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SadConsole.Host;
 using SadConsole.UI;
 using SadConsole.UI.Themes;
 using Console = SadConsole.Console;
@@ -289,6 +291,39 @@ namespace HeartSignal
             NetworkManager.SendNetworkMessage("ex " + id);
 
 
+        }
+        public static Texture2D GetImageOrDownload(string file)
+        {
+            if (File.Exists("img/" + file))
+            {
+                return Texture2D.FromFile(Global.GraphicsDevice, "img/" + file);
+            }
+
+            string dir = "";
+            string filename ="";
+            if (file.Contains("/"))
+            {
+                dir = Directory.GetCurrentDirectory() + "/img/" + file.Remove(file.LastIndexOf("/"), file.Length - file.LastIndexOf("/"));
+                filename = file.Substring(file.LastIndexOf("/")+1);
+            }
+            else {
+                //base sfx folder is used for temp files
+                Program.MainConsole.ReciveExternalInput("warning inaproporiate download path for a image file was specified: " + file);
+                return null;
+
+            }
+
+            Directory.CreateDirectory(dir);
+            using (var client = new WebClient())
+            {
+
+                client.DownloadFile(new Uri("http://deathcult.today/snufftv/" + file), "img/" + filename);
+            }
+
+            File.Move("img" + file.Substring(file.LastIndexOf("/")), "img/"+ file);//move the downloaded file from temp location to proper one
+
+
+            return Texture2D.FromFile(Global.GraphicsDevice, "img/" + file);
         }
         public static void PrintParseMessage(string message,ActionWindow ac,SadConsole.UI.ControlsConsole  con, bool explicitLook)
         {

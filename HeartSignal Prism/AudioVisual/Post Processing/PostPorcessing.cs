@@ -82,21 +82,17 @@ namespace HeartSignal
 
 		private static RenderTarget2D combinedRender;
 		//When we need to draw to the screen, it's done here.
-		public static void SetOverlay(string base64)
+		public static void SetOverlay(string link)
 		{
-			if (base64.Length < 1)
+			if (link.Length < 1)
 			{
 				overlayTexture = null;
 				return;
 			}
 
-			byte[] imageBytes = Convert.FromBase64String(base64);
-			using (MemoryStream ms = new MemoryStream(imageBytes))
-			{
-				overlayTexture = Texture2D.FromStream(Global.SharedSpriteBatch.GraphicsDevice,ms);
-			}
-			
-			
+			overlayTexture = Utility.GetImageOrDownload(link);
+
+
 		}
 
 		float GetNoise()

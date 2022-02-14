@@ -29,9 +29,7 @@ namespace HeartSignal
 
 			if (!bypass)
 			{
-				while (
-					DownloadQueue.FindIndex(x => x.ID == ID) >=
-					0) //if the soundeffect with this id is downloading - wait
+				while (DownloadQueue.FindIndex(x => x.ID == ID) >= 0) //if the soundeffect with this id is downloading - wait
 				{
 					System.Threading.Thread.Sleep(1000);
 				}
@@ -196,11 +194,10 @@ namespace HeartSignal
 			Directory.CreateDirectory(dir);
 			using (var client = new WebClient())
 			{
-				client.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadCompleted);
+				client.DownloadFileCompleted += DownloadCompleted;
 				
 				client.DownloadFileAsync(new Uri("http://deathcult.today/soundhell/" + file), "sfx/" + filename);
 			}
-			return;
 
 		}
 
