@@ -109,7 +109,8 @@ namespace HeartSignal
 
 					TelnetClient = client;
 					
-	
+
+
 					while (TelnetClient.IsConnected)
 					{
 				

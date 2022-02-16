@@ -4,7 +4,7 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>E:/my games/HeartSignal/HeartSignal Prism/Content/chungus.png</File>
+    <File>E:/my games/HeartSignal/HeartSignal Prism/Content/colorshader.fx</File>
     <File>E:/my games/HeartSignal/HeartSignal Prism/Content/CRT.fx</File>
     <File>E:/my games/HeartSignal/HeartSignal Prism/Content/eye.png</File>
     <File>E:/my games/HeartSignal/HeartSignal Prism/Content/lc.fx</File>

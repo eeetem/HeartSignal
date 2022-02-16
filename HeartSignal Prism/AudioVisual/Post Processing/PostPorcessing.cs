@@ -21,6 +21,7 @@ namespace HeartSignal
 
 			crtEffect = SadConsole.Game.Instance.MonoGameInstance.Content.Load<Effect>("CRT");
 			connectionEffect = SadConsole.Game.Instance.MonoGameInstance.Content.Load<Effect>("lc");
+			colorEffect = SadConsole.Game.Instance.MonoGameInstance.Content.Load<Effect>("colorshader");
 			SadConsole.Game.Instance.MonoGameInstance.IsMouseVisible = false; //hide default mouse
 			int countx;
 			int county;
@@ -57,6 +58,19 @@ namespace HeartSignal
 			EffectParams["clmagnitude"] = 9f;
 			EffectParams["clalpha"] = 0.01f;
 			EffectParams["clspeed"] = 2;
+			
+			
+			
+			//colorshader
+			EffectParams["minR"] = 0f;
+			EffectParams["minG"] = 0f;
+			EffectParams["minB"] = 0f;
+			EffectParams["maxR"] = 1f;
+			EffectParams["maxG"] = 1f;
+			EffectParams["maxB"] = 1f;
+			EffectParams["tintR"] = 1f;
+			EffectParams["tintG"] = 1f;
+			EffectParams["tintB"] = 1f;
 
 
 		}
@@ -69,6 +83,7 @@ namespace HeartSignal
 
 		private readonly Effect crtEffect;
 		private readonly Effect connectionEffect;
+		private readonly Effect colorEffect;
 
 		private static readonly Dictionary<string, float> EffectParams = new Dictionary<string, float>();
 
@@ -170,6 +185,9 @@ namespace HeartSignal
 				connectionEffect.Parameters["overlay"].SetValue(emptyTexture);
 			}
 
+			colorEffect.Parameters["max"].SetValue(new Vector4(EffectParams["maxR"],EffectParams["maxG"],EffectParams["maxB"],1));
+			colorEffect.Parameters["min"].SetValue(new Vector4(EffectParams["minR"],EffectParams["minG"],EffectParams["minB"],1));
+			colorEffect.Parameters["tint"].SetValue(new Vector4(EffectParams["tintR"],EffectParams["tintG"],EffectParams["tintB"],1));
 			
 
 
@@ -224,10 +242,27 @@ namespace HeartSignal
 			combineSpriteBatch.Begin(SpriteSortMode.Immediate);
 
 				
+			colorEffect.CurrentTechnique.Passes[0].Apply();
+			combineSpriteBatch.Draw(combinedRender, combinedRender.Bounds,
+				Microsoft.Xna.Framework.Color.White);
+			combineSpriteBatch.End();
+			
+			
+			
+			
+			combineSpriteBatch.Begin(SpriteSortMode.Immediate);
+
+				
 			connectionEffect.CurrentTechnique.Passes[0].Apply();
 			combineSpriteBatch.Draw(combinedRender, combinedRender.Bounds,
 				Microsoft.Xna.Framework.Color.White);
 			combineSpriteBatch.End();
+			
+			
+			
+			
+			
+			
 			combineSpriteBatch.GraphicsDevice.SetRenderTarget(null);
 
 
