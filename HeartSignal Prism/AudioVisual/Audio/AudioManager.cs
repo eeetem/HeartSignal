@@ -4,14 +4,16 @@ using System.Linq;
 using System.Net;
 using System.IO;
 using System.ComponentModel;
+using System.Drawing;
 using System.Globalization;
+using System.Threading;
 using Microsoft.Xna.Framework.Audio;
 
 namespace HeartSignal
 {
 	static class AudioManager
 	{
-
+		private static List<EventWaitHandle> threadQueue = new List<EventWaitHandle>();
 
 		public static bool ProcessingSound = false;
 		public static void ParseRequest(string ID, string request, string param, bool bypass = false)
@@ -25,18 +27,24 @@ namespace HeartSignal
 			{
 				while (DownloadQueue.FindIndex(x => x.ID == ID) >= 0) //if the soundeffect with this id is downloading - wait
 				{
-					System.Threading.Thread.Sleep(1000);
-				}
+					var eventWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
+					
+					threadQueue.Add(eventWaitHandle);
 			
-				while (ProcessingSound)
+					eventWaitHandle.WaitOne();
+					//after this even is called the sound might still be in the queue so this is a while loop to double check
+				}
+				if (ProcessingSound)
 				{
-
-					System.Threading.Thread.Sleep(100);
-
+					var eventWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
+					
+					threadQueue.Add(eventWaitHandle);
+					
+					eventWaitHandle.WaitOne();
 				}
 			}
 			
-
+		
 			ProcessingSound = true; 
 		//	System.Console.WriteLine("audi locked by "+ request);
 			
@@ -135,8 +143,18 @@ namespace HeartSignal
 
 					
 			}
-			//System.Console.WriteLine("audi unlocked by "+ request);
-			ProcessingSound = false; 
+			ProcessingSound = false;
+	
+			if (threadQueue.Count > 0)
+			{
+				EventWaitHandle nextThread = threadQueue[0];
+
+				nextThread.Set();
+				nextThread.Dispose();
+				threadQueue.RemoveAt(0);
+
+			}
+
 
 
 		}

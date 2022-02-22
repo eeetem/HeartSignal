@@ -124,12 +124,9 @@ namespace HeartSignal
 
 			
 			PositionConsoles();
-#if RELEASE
-			Game.Instance.Screen = loginConsole;
-#else
 
-            Game.Instance.Screen = root;
-#endif
+			Game.Instance.Screen = loginConsole;
+
             
 			// This is needed because we replaced the initial screen object with our own.
 			Game.Instance.DestroyDefaultStartingConsole();
@@ -156,7 +153,7 @@ namespace HeartSignal
 
 			Program.Width = Game.Instance.MonoGameInstance.WindowWidth / root.FontSize.X;
 			Program.Height = Game.Instance.MonoGameInstance.WindowHeight / root.FontSize.Y;
-#if  RELEASE
+
 			if (loginConsole != null)
 			{
 				//LoginConsole.ImageDrawThread?.Interrupt();//bad things happen if we dont due to texture size and surface size mismatch
@@ -166,7 +163,6 @@ namespace HeartSignal
 				PostPorcessing.RemakeRenderTarget();
 				return;
 			}
-#endif
 
             
             
@@ -341,7 +337,9 @@ namespace HeartSignal
 			int idx = input.IndexOf(':');
 			if (idx > 0 && input.Contains("[tag]"))
 			{
+#if Debug
 				System.Console.WriteLine(input);
+#endif
 				string sub = input.Substring(0, idx).Replace("[tag]","");
 				string cutstring = input;
 				string[] returned;

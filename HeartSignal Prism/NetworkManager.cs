@@ -149,10 +149,9 @@ namespace HeartSignal
 							SplitServerMessage(response);
 #if DEBUG
 
-                    if (Program.verboseDebug)
-                    {
+   
                         System.Console.WriteLine(response);
-                    }
+                    
 
 
 #endif
