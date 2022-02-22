@@ -288,7 +288,7 @@ namespace HeartSignal
 		public static void AddTween(string parameter,float target, float speed)
 		{
 
-			while (tweens.FindIndex(x => x.parameter == parameter) !=0) //queue up if parameter is being currently tweened
+			while (tweens.FindIndex(x => x.parameter == parameter) != -1) //queue up if parameter is being currently tweened
 			{
 				Thread.Sleep(500);
 			}
