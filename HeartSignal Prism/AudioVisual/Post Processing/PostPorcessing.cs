@@ -287,18 +287,24 @@ namespace HeartSignal
 
 		
 		private static List<EventWaitHandle> threadQueue = new List<EventWaitHandle>();
-		private static EventWaitHandle ThreadsAwaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
 
 		public static void AddTween(string parameter,float target, float speed)
 		{
 
+			EventWaitHandle eventWaitHandle = null;
 			while (tweens.FindIndex(x => x.parameter == parameter) != -1) //queue up if parameter is being currently tweened
 			{
-				ThreadsAwaitHandle.WaitOne();
+				eventWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
+					
+				threadQueue.Add(eventWaitHandle);
+				//System.Console.WriteLine("stopped by lock"+request+param);
+
+				eventWaitHandle.WaitOne();
+				eventWaitHandle.Close();
 			}
 
-			EventWaitHandle eventWaitHandle = null;
-			while (lockTween)
+			
+			if (lockTween)
 			{
 				eventWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
 					
@@ -316,8 +322,6 @@ namespace HeartSignal
 			tweens.Add(t);
 
 
-			ThreadsAwaitHandle.Set();
-			ThreadsAwaitHandle.Reset();
 			lockTween = false;
 			
 			if (threadQueue.Count > 0)
