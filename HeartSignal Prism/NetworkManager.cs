@@ -88,8 +88,10 @@ namespace HeartSignal
 		    {
 			    return false;
 		    }
-
-		    System.Console.WriteLine(message);
+#if DEBUG
+		     System.Console.WriteLine(message);
+#endif
+		   
 		    messageQueue.Add(message);
 		    needToSendMessage = true;
 

@@ -280,8 +280,6 @@ namespace HeartSignal
             button.MouseButtonClicked += (s, a) => password.FocusLost();
             button.MouseButtonClicked += (s, a) =>
                 NetworkManager.SendNetworkMessage("connect " + input.Text + " " + password.Text);
-            button.MouseButtonClicked +=
-                (s, a) => System.Console.WriteLine("connect " + input.Text + " " + password.Text);
 
             Controls.Add(button);
         }

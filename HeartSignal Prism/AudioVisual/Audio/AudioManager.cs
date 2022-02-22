@@ -8,16 +8,20 @@ using System.Drawing;
 using System.Globalization;
 using System.Threading;
 using Microsoft.Xna.Framework.Audio;
+using Console = SadConsole.Console;
 
 namespace HeartSignal
 {
 	static class AudioManager
 	{
 		private static List<EventWaitHandle> threadQueue = new List<EventWaitHandle>();
+		private static EventWaitHandle downloadThreadsWairWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
 
 		public static bool ProcessingSound = false;
 		public static void ParseRequest(string ID, string request, string param, bool bypass = false)
 		{
+			
+			//System.Console.WriteLine("recived " +request+param);
 			if (ID == null) {
 
 			 ID = 	new Random().Next(0, 1000).ToString();//this isnt gonna happend often so i dont want to store a random in memory
@@ -27,27 +31,31 @@ namespace HeartSignal
 			{
 				while (DownloadQueue.FindIndex(x => x.ID == ID) >= 0) //if the soundeffect with this id is downloading - wait
 				{
-					var eventWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
+				//	System.Console.WriteLine("stopped by download"+request+param);
 					
-					threadQueue.Add(eventWaitHandle);
-			
-					eventWaitHandle.WaitOne();
+					downloadThreadsWairWaitHandle.WaitOne();
 					//after this even is called the sound might still be in the queue so this is a while loop to double check
 				}
+
+				EventWaitHandle eventWaitHandle = null;
 				if (ProcessingSound)
 				{
-					var eventWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
+					eventWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
 					
 					threadQueue.Add(eventWaitHandle);
-					
-					eventWaitHandle.WaitOne();
+					//System.Console.WriteLine("stopped by lock"+request+param);
+
+						eventWaitHandle.WaitOne();
+
 				}
+
+				if (eventWaitHandle != null) eventWaitHandle.Close();
 			}
 			
 		
 			ProcessingSound = true; 
-		//	System.Console.WriteLine("audi locked by "+ request);
-			
+
+	//	System.Console.WriteLine("passed checks by " +request+param);
 			
 			switch (request)
 			{
@@ -143,15 +151,18 @@ namespace HeartSignal
 
 					
 			}
+
+			downloadThreadsWairWaitHandle.Set();//make all the download queue threads check is they should proceed and get caught by thread lock
+			downloadThreadsWairWaitHandle.Reset();//reset the event so nothing gets through when we set processing to false
 			ProcessingSound = false;
-	
+			
+			//now activate most recent thread
 			if (threadQueue.Count > 0)
 			{
-				EventWaitHandle nextThread = threadQueue[0];
+				EventWaitHandle nextThread = threadQueue[^1];
 
 				nextThread.Set();
-				nextThread.Dispose();
-				threadQueue.RemoveAt(0);
+				threadQueue.RemoveAt(threadQueue.Count -1);
 
 			}
 
@@ -219,11 +230,13 @@ namespace HeartSignal
 			DownloadStruct finishedDownload = DownloadQueue[0];
 			File.Move("sfx" + finishedDownload.file.Substring(finishedDownload.file.LastIndexOf("/")), "sfx/"+ finishedDownload.file);//move the downloaded file from temp location to proper one
 
+			
+			DownloadQueue.Remove(DownloadQueue[0]);
 			if (finishedDownload.afteraction.Length >1)//if an after action was supplied now that the sound is downloaded perform that actions
 			{
 				ParseRequest(finishedDownload.ID, finishedDownload.afteraction, finishedDownload.file,true);
 			}
-			DownloadQueue.Remove(DownloadQueue[0]);
+			
 			
 			
 			if (DownloadQueue.Count() > 0)

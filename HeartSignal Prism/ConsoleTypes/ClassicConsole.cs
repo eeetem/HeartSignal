@@ -90,10 +90,13 @@ namespace HeartSignal
             }
 
             Utility.PrintParseMessage(value, actionWindow, this, false);
+#if  DEBUG
+            System.Console.WriteLine(value);
 
-                System.Console.WriteLine(value);
+                
             System.Console.WriteLine(Cursor.Position);
-
+#endif
+            
                 SetRelevantViewPos();
 
         }
