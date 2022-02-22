@@ -52,15 +52,15 @@ namespace HeartSignal
             data = data.Replace("\n", "");
             data = data.Replace("\r", "");
             data = data.Replace("\t", "");
-            data = data.Replace(">", "");
+           
             data = data.Replace("<", "");
             data = data.Replace("+", "");
             data = data.Replace("-", "");
             data = data.Replace("\\", "");
-            data = data.Replace("/", "");
+            data = data.Replace("!/", "");
 #endif
             
-            
+            data = data.Replace(">", "");
             
             
             
