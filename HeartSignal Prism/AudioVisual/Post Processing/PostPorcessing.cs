@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using SadConsole.Host;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -282,11 +283,24 @@ namespace HeartSignal
 
 		}
 
+		private static bool lockTween = false;
+
 		public static void AddTween(string parameter,float target, float speed)
 		{
+
+			while (tweens.FindIndex(x => x.parameter == parameter) !=0) //queue up if parameter is being currently tweened
+			{
+				Thread.Sleep(500);
+			}
+			while (lockTween)
+			{
+				Thread.Sleep(50);
+			}
+			lockTween = true;
 			Tween t = new Tween(parameter,EffectParams[parameter],speed,target);
 			tweens.Add(t);
-			
+			lockTween = false;
+
 
 		}
 
