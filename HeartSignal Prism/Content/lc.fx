@@ -135,7 +135,7 @@ float1 staticAlpha = 0.05;
 
 float4 loose_connection(float2 texture_size, float2 video_size, float frame_count, float2 texCoord, sampler2D decal,sampler2D overlay)
 {
-	float2 LUTeffectiveCoord = float2(frac(texCoord.xy * texture_size.xy / video_size.xy));
+	float2 LUTeffectiveCoord = float2(texCoord.xy * texture_size.xy / video_size.xy);
 	float timer = frame_count;
 	float3 res = distort(decal, jumpy(texCoord, timer), magnitude, timer);
 	float col = nn(-texCoord * video_size.y * 4.0, timer);

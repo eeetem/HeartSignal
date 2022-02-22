@@ -56,9 +56,9 @@ namespace HeartSignal
 			
 			
 			//loose conection
-			EffectParams["clmagnitude"] = 9f;
+			EffectParams["clmagnitude"] = 3f;
 			EffectParams["clalpha"] = 0.01f;
-			EffectParams["clspeed"] = 2;
+			EffectParams["clspeed"] = 0.1f;
 			
 			
 			
@@ -254,7 +254,7 @@ namespace HeartSignal
 			combineSpriteBatch.Begin(SpriteSortMode.Immediate);
 
 				
-			connectionEffect.CurrentTechnique.Passes[0].Apply();
+			crtEffect.CurrentTechnique.Passes[0].Apply();
 			combineSpriteBatch.Draw(combinedRender, combinedRender.Bounds,
 				Microsoft.Xna.Framework.Color.White);
 			combineSpriteBatch.End();
@@ -272,7 +272,7 @@ namespace HeartSignal
 				
 			Global.SharedSpriteBatch.Begin(SpriteSortMode.Immediate);
 
-			crtEffect.CurrentTechnique.Passes[0].Apply();
+			connectionEffect.CurrentTechnique.Passes[0].Apply();
 				
 
 			Global.SharedSpriteBatch.Draw(combinedRender, combinedRender.Bounds,
@@ -290,7 +290,7 @@ namespace HeartSignal
 
 		public static void AddTween(string parameter,float target, float speed)
 		{
-
+		//return;
 			EventWaitHandle eventWaitHandle = null;
 			while (tweens.FindIndex(x => x.parameter == parameter) != -1) //queue up if parameter is being currently tweened
 			{
