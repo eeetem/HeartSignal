@@ -216,10 +216,10 @@ namespace HeartSignal
 
 			distortEffect.Parameters["xfps"].SetValue(dxcounter);
 			distortEffect.Parameters["yfps"].SetValue(dycounter);
-			distortEffect.Parameters["xamplitude"].SetValue(EffectParams["xamplitude"]);
-			distortEffect.Parameters["yamplitude"].SetValue(EffectParams["yamplitude"]);
-			distortEffect.Parameters["xfrequency"].SetValue(EffectParams["xfrequency"]);
-			distortEffect.Parameters["yfrequency"].SetValue(EffectParams["yfrequency"]);
+			distortEffect.Parameters["xamplitude"].SetValue(EffectParams["dxamplitude"]);
+			distortEffect.Parameters["yamplitude"].SetValue(EffectParams["dyamplitude"]);
+			distortEffect.Parameters["xfrequency"].SetValue(EffectParams["dxfrequency"]);
+			distortEffect.Parameters["yfrequency"].SetValue(EffectParams["dyfrequency"]);
 			
 
 			if(oldMousePos ==SadConsole.Game.Instance.Mouse.ScreenPosition){
