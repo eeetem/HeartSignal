@@ -78,7 +78,16 @@ namespace HeartSignal
 			EffectParams["tintR"] = 1f;
 			EffectParams["tintG"] = 1f;
 			EffectParams["tintB"] = 1f;
-
+			
+			
+			//distort
+			EffectParams["dxspeed"] = 0f;
+			EffectParams["dxamplitude"] = 0f;
+			EffectParams["dxfrequency"] = 0f;
+			
+			EffectParams["dyspeed"] = 0f;
+			EffectParams["dyamplitude"] = 0f;
+			EffectParams["dyfrequency"] = 0f;
 
 		}
 
@@ -95,7 +104,9 @@ namespace HeartSignal
 
 		private static readonly Dictionary<string, float> EffectParams = new Dictionary<string, float>();
 
-		private static float counter = 0;
+		private static float clcounter = 0;
+		private static float dxcounter = 0;
+		private static float dycounter = 0;
 		private Random rnd = new Random();
 
 		private static RenderTarget2D combinedRender;
@@ -147,7 +158,10 @@ namespace HeartSignal
 		public override void Draw(GameTime gameTime)
 		{
 
-			counter += 1f * EffectParams["clspeed"];
+			clcounter += (float)gameTime.ElapsedGameTime.Seconds/1000 * EffectParams["clspeed"];
+			dxcounter += (float)gameTime.ElapsedGameTime.Seconds/1000 * EffectParams["dxspeed"];
+			dycounter += (float)gameTime.ElapsedGameTime.Seconds/1000 * EffectParams["dyspeed"];
+			
 			if (combinedRender == null || combinedRender2 == null)//shitcode
 			{ 
 				RemakeRenderTarget(); 
@@ -183,7 +197,7 @@ namespace HeartSignal
 			
 			connectionEffect.Parameters["textureSize"].SetValue(new Vector2(Global.RenderOutput.Width, Global.RenderOutput.Height));
 			connectionEffect.Parameters["videoSize"].SetValue(new Vector2(Global.RenderOutput.Width, Global.RenderOutput.Height));
-			connectionEffect.Parameters["fps"].SetValue(counter);
+			connectionEffect.Parameters["fps"].SetValue(clcounter);
 			connectionEffect.Parameters["staticAlpha"].SetValue(EffectParams["clalpha"] + GetNoise() * 0.05f);
 			connectionEffect.Parameters["magnitude"].SetValue(EffectParams["clmagnitude"] + GetNoise() * 1f);
 			if (overlayTexture != null)
@@ -200,7 +214,12 @@ namespace HeartSignal
 			colorEffect.Parameters["tint"].SetValue(new Vector4(EffectParams["tintR"],EffectParams["tintG"],EffectParams["tintB"],1));
 			
 
-			distortEffect.Parameters["fps"].SetValue(counter);
+			distortEffect.Parameters["xfps"].SetValue(dxcounter);
+			distortEffect.Parameters["yfps"].SetValue(dycounter);
+			distortEffect.Parameters["xamplitude"].SetValue(EffectParams["xamplitude"]);
+			distortEffect.Parameters["yamplitude"].SetValue(EffectParams["yamplitude"]);
+			distortEffect.Parameters["xfrequency"].SetValue(EffectParams["xfrequency"]);
+			distortEffect.Parameters["yfrequency"].SetValue(EffectParams["yfrequency"]);
 			
 
 			if(oldMousePos ==SadConsole.Game.Instance.Mouse.ScreenPosition){
@@ -251,19 +270,24 @@ namespace HeartSignal
 
 
 	combinedSpriteBatch.GraphicsDevice.SetRenderTarget(combinedRender2);
-	combinedSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone,colorEffect);
+	combinedSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone,distortEffect);
 	combinedSpriteBatch.Draw(combinedRender, combinedRender.Bounds, Color.White);
 	combinedSpriteBatch.End();
-		
+	
 	combinedSpriteBatch.GraphicsDevice.SetRenderTarget(combinedRender);
-	combinedSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone,connectionEffect);
+	combinedSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone,colorEffect);
 	combinedSpriteBatch.Draw(combinedRender2, combinedRender2.Bounds, Color.White);
+	combinedSpriteBatch.End();
+		
+	combinedSpriteBatch.GraphicsDevice.SetRenderTarget(combinedRender2);
+	combinedSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone,connectionEffect);
+	combinedSpriteBatch.Draw(combinedRender, combinedRender.Bounds, Color.White);
 	combinedSpriteBatch.End();	
 		
 	
-	combinedSpriteBatch.GraphicsDevice.SetRenderTarget(combinedRender2);
+	combinedSpriteBatch.GraphicsDevice.SetRenderTarget(combinedRender);
 	combinedSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone,crtEffect);
-	combinedSpriteBatch.Draw(combinedRender, combinedRender.Bounds, Color.White);
+	combinedSpriteBatch.Draw(combinedRender2, combinedRender2.Bounds, Color.White);
 	combinedSpriteBatch.End();
 		
 
@@ -273,7 +297,7 @@ namespace HeartSignal
 
 		
 		Global.SharedSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
-		Global.SharedSpriteBatch.Draw(combinedRender2, combinedRender2.Bounds, Color.White);
+		Global.SharedSpriteBatch.Draw(combinedRender, combinedRender.Bounds, Color.White);
 		Global.SharedSpriteBatch.End();
 			
 	
@@ -289,7 +313,7 @@ namespace HeartSignal
 
 		public static void AddTween(string parameter,float target, float speed)
 		{
-		return;
+			
 			EventWaitHandle eventWaitHandle = null;
 			while (tweens.FindIndex(x => x.parameter == parameter) != -1) //queue up if parameter is being currently tweened
 			{

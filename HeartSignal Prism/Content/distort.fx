@@ -18,8 +18,13 @@ struct out_vertex
 };
 
 
+float yfps;
+float xfps;
+float xamplitude = 1;
+float xfrequency = 1;
+float yamplitude = 1;
+float yfrequency = 1;
 
-float fps;
 
 sampler2D Sampler = sampler_state{
     AddressU = Wrap;
@@ -29,20 +34,30 @@ sampler2D Sampler = sampler_state{
 
 float4 main_fragment(out_vertex VOUT) : COLOR0
 {
+    float yt = 0.01*(-yfps/1000*130.0);
+    float xt = 0.02*(-xfps/1000*130.0);
+
+
 
     
-    float x = VOUT.texCoord.x;
-	float amplitude = 1.;
-    float frequency = 1.;
-    float y = sin(x * frequency);
-    float t = 0.01*(-fps/50*130.0);
-    y += sin(x*frequency*2.1 + t)*4.5;
-    y += sin(x*frequency*1.72 + t*1.121)*4.0;
-    y += sin(x*frequency*2.221 + t*0.437)*5.0;
-    y += sin(x*frequency*3.1122+ t*4.269)*2.5;
-    y *= amplitude*0.06;
     
-    float4 final = tex2D(Sampler,VOUT.texCoord+ float2(0,y));
+    float y = sin(VOUT.texCoord.x * yfrequency);
+    
+    y += sin(VOUT.texCoord.x*yfrequency*2.1 + yt)*4.5;
+    y += sin(VOUT.texCoord.x*yfrequency*1.72 + yt*1.121)*4.0;
+    y += sin(VOUT.texCoord.x*yfrequency*2.221 + yt*0.437)*5.0;
+    y += sin(VOUT.texCoord.x*yfrequency*3.1122+ yt*4.269)*2.5;
+    y *= yamplitude*0.06;
+    
+    float x = sin(VOUT.texCoord.y * xfrequency);
+    x += sin(VOUT.texCoord.y*xfrequency*2.1 + xt)*4.5;
+    x += sin(VOUT.texCoord.y*xfrequency*1.72 + xt*1.121)*4.0;
+    x += sin(VOUT.texCoord.y*xfrequency*2.221 + xt*0.437)*5.0;
+    x += sin(VOUT.texCoord.y*xfrequency*3.1122+ xt*4.269)*2.5;
+    x *= xamplitude*0.06;
+    
+    
+    float4 final = tex2D(Sampler,VOUT.texCoord+ float2(x,y));
 
 	return final;
 }
