@@ -345,6 +345,7 @@ namespace HeartSignal
 
         public override void Render(TimeSpan delta)
         {
+    
             if (cachedSurface != null)
             {
                 Surface = cachedSurface;

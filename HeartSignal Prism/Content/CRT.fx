@@ -292,10 +292,9 @@ float4 crt_lottes(float2 texture_size, float2 video_size, float2 output_size, fl
   float2 pos=Warp(tex.xy*(texture_size.xy/video_size.xy))*(video_size.xy/texture_size.xy);
   float3 outColor = Tri(pos, texture_size);
 
-#ifdef DO_BLOOM
-  //Add Bloom
+
   outColor.rgb+=Bloom(pos, texture_size)*bloomAmount;
-#endif
+
 
   if(shadowMask)
     outColor.rgb*=Mask(floor(tex.xy*(texture_size.xy/video_size.xy)*output_size.xy)+float2(0.5,0.5));

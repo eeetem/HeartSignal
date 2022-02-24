@@ -25,6 +25,12 @@
 /processorParam:DebugMode=Auto
 /build:CRT.fx
 
+#begin distort.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:distort.fx
+
 #begin eye.png
 /importer:TextureImporter
 /processor:TextureProcessor

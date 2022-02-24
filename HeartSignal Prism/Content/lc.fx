@@ -53,6 +53,8 @@ float rand(float2 co)
 float rand(float2 co) {
 	return(frac(sin(dot(co.xy, float2(12.9898, 78.233))) * 43758.5453)) * 1;
 }
+
+
 //random hash
 float4 hash42(float2 p){
     
@@ -77,10 +79,8 @@ float n( in float3 x ){
                         lerp( hash(n+170.0), hash(n+171.0),f.x),f.y),f.z);
     return res;
 }
-
 //tape noise
 float nn(float2 p, float framecount){
-
 
     float y = p.y;
     float s = fmod(framecount * 0.15, 4837.0);
@@ -98,17 +98,17 @@ float nn(float2 p, float framecount){
 }
 
 float3 distort(sampler2D DecalSampler, float2 uv, float size, float framecount){
-	float mag = size * 0.0001;
+	 float mag = size * 0.0001;
 
-	float3 offset_x = float3(uv.x,uv.x,uv.x);
-	offset_x.x = /*rand(float2(fmod(framecount, 9847.0) * 0.03, uv.y * 0.42)) * 0.001*/  rand(float2(sin(framecount) * 0.001, uv.y)) * mag;
-	offset_x.y = /* rand(float2(fmod(framecount, 5583.0) * 0.004, uv.y * 0.002)) * 0.004*/ +rand(float2(cos(-framecount+100) *   0.004, uv.y)) * mag;
-	offset_x.z = rand(float2(sin(-framecount+1000) *  0.002, uv.y)) * mag;
+	float3 offset = float3(0,0,0);
+	offset.x = /*rand(float2(fmod(framecount, 9847.0) * 0.03, uv.y * 0.42)) * 0.001*/  rand(float2(sin(framecount) * 0.001, uv.y)) * mag;
+	offset.y = /* rand(float2(fmod(framecount, 5583.0) * 0.004, uv.y * 0.002)) * 0.004*/ +rand(float2(cos(-framecount+100) *   0.004, uv.y)) * mag;
+	offset.z = rand(float2(sin(-framecount+1000) *  0.002, uv.y)) * mag;
 	
 	
-	return float3(tex2D(DecalSampler, float2(uv.x+offset_x.x, uv.y-(offset_x.x)/2)).r,
-				tex2D(DecalSampler, float2(uv.x+offset_x.y, uv.y-(offset_x.y)/2)).g,
-				tex2D(DecalSampler, float2(uv.x+offset_x.z, uv.y-(offset_x.z)/2)).b);
+	return float3(tex2D(DecalSampler, float2(uv + float2(offset.x,offset.y))).r,
+				tex2D(DecalSampler, float2(uv + float2(offset.y,offset.z))).g,
+				tex2D(DecalSampler, float2(uv + float2(offset.z,offset.x))).b);
 }
 
 float onOff(float a, float b, float c, float framecount)
@@ -121,8 +121,7 @@ float2 jumpy(float2 uv, float framecount)
 	float2 look = uv;
 	float window = 1./(1.+80.*(look.y-fmod(framecount/4.,1.))*(look.y-fmod(framecount/4.,1.)));
 	look.x += 0.05 * sin(look.y*10. + framecount)/20.*onOff(4.,4.,.3, framecount)*(0.5+cos(framecount*20.))*window;
-	float vShift = 0.4*onOff(2.,3.,.9, framecount)*(sin(framecount)*sin(framecount*20.) + 
-										 (0.5 + 0.1*sin(framecount*200.)*cos(framecount)));
+	float vShift = 0.4*onOff(2.,3.,.9, framecount)*(sin(framecount)*sin(framecount*20.));
 	look.y = fmod(look.y - 0.01 * vShift, 1.);
 	return look;
 }
@@ -145,6 +144,7 @@ float4 loose_connection(float2 texture_size, float2 video_size, float frame_coun
 	res = lerp(res, play, show_overlay);
  
 	float4 final = float4(res + clamp(float3(col, col, col), 0.0,staticAlpha), 1.0);
+
 	return final;
 }
 

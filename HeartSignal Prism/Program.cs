@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Microsoft.Xna.Framework.Graphics;
 using SadConsole;
 using SadConsole.UI;
 using SadConsole.UI.Themes;
@@ -54,7 +55,7 @@ namespace HeartSignal
 			
 			Settings.DoFinalDraw = false;
 
-		
+			
 			
 			Library.Default.Colors.Lines = new AdjustableColor(Color.Red, "red");
 
@@ -65,10 +66,11 @@ namespace HeartSignal
 
 
 			
-			
+			SadConsole.Host.Global.GraphicsDeviceManager.GraphicsProfile = GraphicsProfile.HiDef;
+			SadConsole.Host.Global.GraphicsDeviceManager.ApplyChanges();
 			Game.Instance.OnStart = Init;
 			Game.Instance.Run();
-
+			
 			
 			Game.Instance.Dispose();
 
@@ -79,11 +81,11 @@ namespace HeartSignal
 		private static void Init()
 		{
 			
-		//	SadConsole.Host.Global.GraphicsDeviceManager.GraphicsProfile = GraphicsProfile.HiDef;
+			
 			Game.Instance.MonoGameInstance.Components.Add(new PostPorcessing());
 			ColoredString.CustomProcessor = Utility.CustomParseCommand;
 			
-			SadConsole.Host.Global.GraphicsDeviceManager.ApplyChanges();
+			
 			
 			root = new Console(1, 1);
 			root.SadComponents.Add(new KeyBinds());

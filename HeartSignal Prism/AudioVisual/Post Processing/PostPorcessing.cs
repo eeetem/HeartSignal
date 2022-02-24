@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading;
+using ImageProcessor.Imaging.Formats;
 using SadConsole.Host;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Color = Microsoft.Xna.Framework.Color;
 using Point = SadRogue.Primitives.Point;
 
 
@@ -23,13 +28,14 @@ namespace HeartSignal
 			crtEffect = SadConsole.Game.Instance.MonoGameInstance.Content.Load<Effect>("CRT");
 			connectionEffect = SadConsole.Game.Instance.MonoGameInstance.Content.Load<Effect>("lc");
 			colorEffect = SadConsole.Game.Instance.MonoGameInstance.Content.Load<Effect>("colorshader");
+			distortEffect = SadConsole.Game.Instance.MonoGameInstance.Content.Load<Effect>("distort");
 			SadConsole.Game.Instance.MonoGameInstance.IsMouseVisible = false; //hide default mouse
 			int countx;
 			int county;
 			cursorTextures = Utility.SplitTexture(SadConsole.Game.Instance.MonoGameInstance.Content.Load<Texture2D>("eye"),40,40, out countx, out county);
 
 			
-			combineSpriteBatch = new SpriteBatch(Global.SharedSpriteBatch.GraphicsDevice);
+			combinedSpriteBatch = new SpriteBatch(Global.SharedSpriteBatch.GraphicsDevice);
 
 			
 			emptyTexture = new Texture2D(Global.SharedSpriteBatch.GraphicsDevice, 1, 1);
@@ -56,9 +62,9 @@ namespace HeartSignal
 			
 			
 			//loose conection
-			EffectParams["clmagnitude"] = 3f;
+			EffectParams["clmagnitude"] = 5f;
 			EffectParams["clalpha"] = 0.01f;
-			EffectParams["clspeed"] = 0.1f;
+			EffectParams["clspeed"] = 1f;
 			
 			
 			
@@ -80,11 +86,12 @@ namespace HeartSignal
 		private readonly Texture2D emptyTexture;
 		private static Texture2D overlayTexture;
 
-		private readonly SpriteBatch combineSpriteBatch;
+		private readonly SpriteBatch combinedSpriteBatch;
 
 		private readonly Effect crtEffect;
 		private readonly Effect connectionEffect;
 		private readonly Effect colorEffect;
+		private readonly Effect distortEffect;
 
 		private static readonly Dictionary<string, float> EffectParams = new Dictionary<string, float>();
 
@@ -92,6 +99,7 @@ namespace HeartSignal
 		private Random rnd = new Random();
 
 		private static RenderTarget2D combinedRender;
+		private static RenderTarget2D combinedRender2;
 		//When we need to draw to the screen, it's done here.
 
 
@@ -128,8 +136,9 @@ namespace HeartSignal
 			if (Global.RenderOutput != null)
 			{
 				combinedRender?.Dispose();
-				combinedRender = new RenderTarget2D(Global.SharedSpriteBatch.GraphicsDevice,
-					Global.RenderOutput.Width, Global.RenderOutput.Height);
+				combinedRender = new RenderTarget2D(Global.SharedSpriteBatch.GraphicsDevice, Global.RenderOutput.Width, Global.RenderOutput.Height);
+				combinedRender2?.Dispose();
+				combinedRender2 = new RenderTarget2D(Global.SharedSpriteBatch.GraphicsDevice, Global.RenderOutput.Width, Global.RenderOutput.Height);
 			}
 		}
 
@@ -139,7 +148,7 @@ namespace HeartSignal
 		{
 
 			counter += 1f * EffectParams["clspeed"];
-			if (combinedRender == null)
+			if (combinedRender == null || combinedRender2 == null)//shitcode
 			{ 
 				RemakeRenderTarget(); 
 				return;
@@ -175,8 +184,8 @@ namespace HeartSignal
 			connectionEffect.Parameters["textureSize"].SetValue(new Vector2(Global.RenderOutput.Width, Global.RenderOutput.Height));
 			connectionEffect.Parameters["videoSize"].SetValue(new Vector2(Global.RenderOutput.Width, Global.RenderOutput.Height));
 			connectionEffect.Parameters["fps"].SetValue(counter);
-			connectionEffect.Parameters["staticAlpha"].SetValue(EffectParams["clalpha"]);
-			connectionEffect.Parameters["magnitude"].SetValue(EffectParams["clmagnitude"]);
+			connectionEffect.Parameters["staticAlpha"].SetValue(EffectParams["clalpha"] + GetNoise() * 0.05f);
+			connectionEffect.Parameters["magnitude"].SetValue(EffectParams["clmagnitude"] + GetNoise() * 1f);
 			if (overlayTexture != null)
 			{
 				connectionEffect.Parameters["overlay"].SetValue(overlayTexture);
@@ -191,6 +200,8 @@ namespace HeartSignal
 			colorEffect.Parameters["tint"].SetValue(new Vector4(EffectParams["tintR"],EffectParams["tintG"],EffectParams["tintB"],1));
 			
 
+			distortEffect.Parameters["fps"].SetValue(counter);
+			
 
 			if(oldMousePos ==SadConsole.Game.Instance.Mouse.ScreenPosition){
 				
@@ -220,65 +231,53 @@ namespace HeartSignal
 			}
 
 
-			float fade = Math.Clamp((3000 - (mouseInactivtyCounter-2000)) / 3000 * 1, 0, 1);		
+			float fade = Math.Clamp((3000 - (mouseInactivtyCounter-2000)) / 3000 * 1, 0, 1);
 
-				
-				
-			combineSpriteBatch.GraphicsDevice.SetRenderTarget(combinedRender);
 
-			combineSpriteBatch.Begin(blendState: BlendState.AlphaBlend);
+			combinedSpriteBatch.GraphicsDevice.SetRenderTarget(combinedRender);
+		combinedSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.LinearClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
 
-			combineSpriteBatch.Draw(Global.RenderOutput, Global.RenderOutput.Bounds,
-				Microsoft.Xna.Framework.Color.White);
+		combinedSpriteBatch.Draw(Global.RenderOutput, Global.RenderOutput.Bounds, Color.White);
 
-			combineSpriteBatch.Draw(cursorTexture2D,
-				new Vector2(SadConsole.Game.Instance.Mouse.ScreenPosition.X - cursorTexture2D.Width / 2,
-					SadConsole.Game.Instance.Mouse.ScreenPosition.Y - cursorTexture2D.Height / 2),
-				new Microsoft.Xna.Framework.Color(fade,fade,fade,fade));
-//)
-			combineSpriteBatch.End();
-			//combineSpriteBatch.GraphicsDevice.SetRenderTarget(null);
-			//combineSpriteBatch.GraphicsDevice.SetRenderTarget(combinedRender);
+		combinedSpriteBatch.Draw(cursorTexture2D, new Vector2(SadConsole.Game.Instance.Mouse.ScreenPosition.X - cursorTexture2D.Width / 2, SadConsole.Game.Instance.Mouse.ScreenPosition.Y - cursorTexture2D.Height / 2), new Microsoft.Xna.Framework.Color(fade,fade,fade,fade));
+		
+		combinedSpriteBatch.End();
+		
 
-			combineSpriteBatch.Begin(SpriteSortMode.Immediate);
+	
 
-				
-			colorEffect.CurrentTechnique.Passes[0].Apply();
-			combineSpriteBatch.Draw(combinedRender, combinedRender.Bounds,
-				Microsoft.Xna.Framework.Color.White);
-			combineSpriteBatch.End();
+
+
+
+
+	combinedSpriteBatch.GraphicsDevice.SetRenderTarget(combinedRender2);
+	combinedSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone,colorEffect);
+	combinedSpriteBatch.Draw(combinedRender, combinedRender.Bounds, Color.White);
+	combinedSpriteBatch.End();
+		
+	combinedSpriteBatch.GraphicsDevice.SetRenderTarget(combinedRender);
+	combinedSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone,connectionEffect);
+	combinedSpriteBatch.Draw(combinedRender2, combinedRender2.Bounds, Color.White);
+	combinedSpriteBatch.End();	
+		
+	
+	combinedSpriteBatch.GraphicsDevice.SetRenderTarget(combinedRender2);
+	combinedSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone,crtEffect);
+	combinedSpriteBatch.Draw(combinedRender, combinedRender.Bounds, Color.White);
+	combinedSpriteBatch.End();
+		
+
+
+
+		combinedRender.GraphicsDevice.SetRenderTarget(null);
+
+		
+		Global.SharedSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+		Global.SharedSpriteBatch.Draw(combinedRender2, combinedRender2.Bounds, Color.White);
+		Global.SharedSpriteBatch.End();
 			
-			
-			
-			
-			combineSpriteBatch.Begin(SpriteSortMode.Immediate);
+	
 
-				
-			crtEffect.CurrentTechnique.Passes[0].Apply();
-			combineSpriteBatch.Draw(combinedRender, combinedRender.Bounds,
-				Microsoft.Xna.Framework.Color.White);
-			combineSpriteBatch.End();
-			
-			
-			
-			
-			
-			
-			combineSpriteBatch.GraphicsDevice.SetRenderTarget(null);
-
-
-				
-				
-				
-			Global.SharedSpriteBatch.Begin(SpriteSortMode.Immediate);
-
-			connectionEffect.CurrentTechnique.Passes[0].Apply();
-				
-
-			Global.SharedSpriteBatch.Draw(combinedRender, combinedRender.Bounds,
-				Microsoft.Xna.Framework.Color.White);
-
-			Global.SharedSpriteBatch.End();
 	
 
 		}
@@ -290,7 +289,7 @@ namespace HeartSignal
 
 		public static void AddTween(string parameter,float target, float speed)
 		{
-		//return;
+		return;
 			EventWaitHandle eventWaitHandle = null;
 			while (tweens.FindIndex(x => x.parameter == parameter) != -1) //queue up if parameter is being currently tweened
 			{
