@@ -39,7 +39,7 @@ namespace HeartSignal
         }
         private void SendCommand() {
 
-            string data = this.GetString(0,( Width*Cursor.Position.Y)+Cursor.Position.X);
+            string data = this.GetString(1,( Width*Cursor.Position.Y)+Cursor.Position.X);
             
 #if RELEASE
 
@@ -52,7 +52,7 @@ namespace HeartSignal
             data = data.Replace("\n", "");
             data = data.Replace("\r", "");
             data = data.Replace("\t", "");
-           
+           data = data.Replace(">", "");
             data = data.Replace("<", "");
             data = data.Replace("+", "");
             data = data.Replace("-", "");
@@ -60,7 +60,7 @@ namespace HeartSignal
             data = data.Replace("!/", "");
 #endif
             
-            data = data.Replace(">", "");
+            
             
             
             
@@ -77,8 +77,14 @@ namespace HeartSignal
 
 
            // ReciveExternalInput("[c:r_f:darkgray]" + value);
-
-            NetworkManager.SendNetworkMessage("say "+data.Trim());
+           if (data[0] == '/')
+           {
+               NetworkManager.SendNetworkMessage(data.Trim().Remove(0,1));
+           }
+           else
+           {
+               NetworkManager.SendNetworkMessage("say "+data.Trim());
+           }
 
 
         }
