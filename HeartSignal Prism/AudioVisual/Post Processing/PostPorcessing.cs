@@ -63,7 +63,7 @@ namespace HeartSignal
 			
 			//loose conection
 			EffectParams["clmagnitude"] = 5f;
-			EffectParams["clalpha"] = 0.01f;
+			EffectParams["clalpha"] = 0.05f;
 			EffectParams["clspeed"] = 1f;
 			
 			
@@ -158,9 +158,9 @@ namespace HeartSignal
 		public override void Draw(GameTime gameTime)
 		{
 
-			clcounter += (float)gameTime.ElapsedGameTime.Seconds/1000 * EffectParams["clspeed"];
-			dxcounter += (float)gameTime.ElapsedGameTime.Seconds/1000 * EffectParams["dxspeed"];
-			dycounter += (float)gameTime.ElapsedGameTime.Seconds/1000 * EffectParams["dyspeed"];
+			clcounter += (float)gameTime.ElapsedGameTime.Milliseconds/1000 * EffectParams["clspeed"];
+			dxcounter += (float)gameTime.ElapsedGameTime.Milliseconds/1000 * EffectParams["dxspeed"];
+			dycounter += (float)gameTime.ElapsedGameTime.Milliseconds/1000 * EffectParams["dyspeed"];
 			
 			if (combinedRender == null || combinedRender2 == null)//shitcode
 			{ 
@@ -198,7 +198,7 @@ namespace HeartSignal
 			connectionEffect.Parameters["textureSize"].SetValue(new Vector2(Global.RenderOutput.Width, Global.RenderOutput.Height));
 			connectionEffect.Parameters["videoSize"].SetValue(new Vector2(Global.RenderOutput.Width, Global.RenderOutput.Height));
 			connectionEffect.Parameters["fps"].SetValue(clcounter);
-			connectionEffect.Parameters["staticAlpha"].SetValue(EffectParams["clalpha"] + GetNoise() * 0.05f);
+			connectionEffect.Parameters["staticAlpha"].SetValue(EffectParams["clalpha"] + GetNoise() * 0.01f);
 			connectionEffect.Parameters["magnitude"].SetValue(EffectParams["clmagnitude"] + GetNoise() * 1f);
 			if (overlayTexture != null)
 			{
@@ -315,7 +315,7 @@ namespace HeartSignal
 		private static readonly object syncObj = new object();
 		public static void AddTween(string parameter,float target, float speed, bool wipeQueue = false)
 		{
-			
+
 			lock (syncObj)
 			{ 
 				if (!awaitingthreadQueue.ContainsKey(parameter))
