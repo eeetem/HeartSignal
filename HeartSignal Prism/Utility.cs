@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using SadRogue.Primitives;
 using SadConsole.StringParser;
@@ -81,6 +82,12 @@ namespace HeartSignal
 
         }
 
+        public static int GetTaglessLenght(string name)
+        {
+            ColoredString parsedName = ColoredString.Parse(name);//just to get the lenght
+            return parsedName.ToString().Length;
+        }
+
         public static void CreateToolTip(string name, string tip, SadConsole.UI.ControlsConsole console, ActionWindow ac) {
             name = name.Replace("_", " ");
             string realtext = RemoveParserTags(name);
@@ -97,9 +104,9 @@ namespace HeartSignal
 
          //   pos = new Point(Math.Clamp(pos.X,  0, console.Width), pos.Y);
             
+           
 
-            
-            var button = new Button(name.Length, 1)
+            var button = new Button(realtext.Length, 1)
             {
                 Text = name,
                 Position = console.Cursor.Position,
@@ -110,7 +117,7 @@ namespace HeartSignal
             button.MouseEnter += (s, a) => ac.ShowTooltip(tip, console.Surface,pos);
 
             console.Controls.Add(button);
-            console.Cursor.Right(name.Length + 1);
+            console.Cursor.Right(realtext.Length + 1);
 
 
         }
