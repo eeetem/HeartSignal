@@ -306,53 +306,47 @@ namespace HeartSignal
 
 		}
 
-		private static bool lockTween = false;
 
 		
 		private static List<EventWaitHandle> threadQueue = new List<EventWaitHandle>();
-
-		public static void AddTween(string parameter,float target, float speed)
+		private static Dictionary<string, List<EventWaitHandle>> awaitingthreadQueue = new();
+		
+		
+		private static readonly object syncObj = new object();
+		public static void AddTween(string parameter,float target, float speed, bool wipeQueue = false)
 		{
 			
-			EventWaitHandle eventWaitHandle = null;
-			while (tweens.FindIndex(x => x.parameter == parameter) != -1) //queue up if parameter is being currently tweened
-			{
-				eventWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
-					
-				threadQueue.Add(eventWaitHandle);
-				//System.Console.WriteLine("stopped by lock"+request+param);
+			lock (syncObj)
+			{ 
+				if (!awaitingthreadQueue.ContainsKey(parameter))
+				{
+					awaitingthreadQueue[parameter] = new List<EventWaitHandle>(); //create queue for each parameter
+				}
 
-				eventWaitHandle.WaitOne();
-				eventWaitHandle.Close();
-			}
+				if (wipeQueue)
+				{
+					awaitingthreadQueue[parameter] = new List<EventWaitHandle>();
+					int index = tweens.FindIndex(x => x.parameter == parameter);
+					if (index > -1)
+					{
+						tweens.RemoveAt(index);
+					}
 
-			
-			if (lockTween)
-			{
-				eventWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
-					
-				threadQueue.Add(eventWaitHandle);
-				//System.Console.WriteLine("stopped by lock"+request+param);
+				}
 
-				eventWaitHandle.WaitOne();
+				if (tweens.FindIndex(x => x.parameter == parameter) != -1) //queue up if parameter is being currently tweened
+				{
 
-			}
+					var eventWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
+					awaitingthreadQueue[parameter].Add(eventWaitHandle);
+					System.Console.WriteLine("stoped by awaiting for: "+parameter);
+					eventWaitHandle.WaitOne();
+					eventWaitHandle.Close();
+				}
 
-			if (eventWaitHandle != null) eventWaitHandle.Close();
-			
-			lockTween = true;
-			Tween t = new Tween(parameter,EffectParams[parameter],speed,target);
-			tweens.Add(t);
-
-
-			lockTween = false;
-			
-			if (threadQueue.Count > 0)
-			{
-				EventWaitHandle nextThread = threadQueue[^1];
-
-				nextThread.Set();
-				threadQueue.RemoveAt(threadQueue.Count -1);
+				System.Console.WriteLine("passed and set: "+parameter);
+				Tween t = new Tween(parameter,EffectParams[parameter],speed,target);
+				tweens.Add(t);
 
 			}
 
@@ -368,6 +362,14 @@ namespace HeartSignal
 				if (t.counter > 1)
 				{
 					tweens.Remove(t);
+					if (awaitingthreadQueue[t.parameter].Count > 0)
+					{
+						EventWaitHandle nextThread = awaitingthreadQueue[t.parameter][^1];
+
+						nextThread.Set();
+						awaitingthreadQueue[t.parameter].RemoveAt(awaitingthreadQueue[t.parameter].Count -1);
+
+					}
 					continue;
 				}
 				t.Lerp(gameTime);

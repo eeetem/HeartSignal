@@ -516,9 +516,9 @@ namespace HeartSignal
 					case "effect":
 						returned = RemoveParseTag(cutstring);
 						cutstring = returned[0];
-						//string effectToAdjust = returned[1];//for when we get more effects
+						string extraparam = returned[1];
 						args = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-						PostPorcessing.AddTween(args[0],float.Parse(args[1],CultureInfo.InvariantCulture),float.Parse(args[2],CultureInfo.InvariantCulture));
+						PostPorcessing.AddTween(args[0],float.Parse(args[1],CultureInfo.InvariantCulture),float.Parse(args[2],CultureInfo.InvariantCulture),extraparam == "wipe");
 					
 						break;
 					
