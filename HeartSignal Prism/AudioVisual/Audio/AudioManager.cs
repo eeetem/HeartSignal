@@ -14,11 +14,11 @@ namespace HeartSignal
 {
 	static class AudioManager
 	{
-		private static List<EventWaitHandle> threadQueue = new List<EventWaitHandle>();
-		private static EventWaitHandle downloadThreadsWairWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
 
+		private static EventWaitHandle downloadThreadsWairWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
+		private static readonly object syncObj = new object();
 		public static bool ProcessingSound = false;
-		public static void ParseRequest(string ID, string request, string param, bool bypass = false)
+		public static void ParseRequest(string ID, string request, string param)
 		{
 			
 			//System.Console.WriteLine("recived " +request+param);
@@ -27,144 +27,119 @@ namespace HeartSignal
 			 ID = 	new Random().Next(0, 1000).ToString();//this isnt gonna happend often so i dont want to store a random in memory
 			}
 
-			if (!bypass)
+	
+			while (DownloadQueue.FindIndex(x => x.ID == ID) >= 0) //if the soundeffect with this id is downloading - wait
 			{
-				while (DownloadQueue.FindIndex(x => x.ID == ID) >= 0) //if the soundeffect with this id is downloading - wait
-				{
 				//	System.Console.WriteLine("stopped by download"+request+param);
 					
-					downloadThreadsWairWaitHandle.WaitOne();
-					//after this even is called the sound might still be in the queue so this is a while loop to double check
-				}
+				downloadThreadsWairWaitHandle.WaitOne();
+				//after this even is called the sound might still be in the queue so this is a while loop to double check
+			}
 
-				EventWaitHandle eventWaitHandle = null;
-				if (ProcessingSound)
+
+			lock (syncObj)
+			{
+				
+	
+				switch (request)
 				{
-					eventWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
+					case "preload":
+						InitiateDownload(param,"",ID);
+						break;
+					case "play":
+						if (Sounds.ContainsKey(ID)) {
+							Sounds[ID].Play();
 					
-					threadQueue.Add(eventWaitHandle);
-					//System.Console.WriteLine("stopped by lock"+request+param);
+					
+						}
+						else if (InitiateDownload(param,"",ID))
+						{
+							playSound(ID, param);
+						}
+						break;
+					case "stopall":
+						StopAllSounds();
+						break;
+					case "forceplay":
+						if (Sounds.ContainsKey(ID))
+						{
+							Sounds[ID].Play();
 
-						eventWaitHandle.WaitOne();
 
+						}
+						else if(InitiateDownload(param, "play", ID))
+						{
+							playSound(ID, param);
+						}
+						break;
+					case "loop":
+						if (Sounds.ContainsKey(ID))
+						{
+							Sounds[ID].IsLooped = true;
+							Sounds[ID].Play();
+
+
+						}
+						else if(InitiateDownload(param, "loop", ID))
+						{
+							playSound(ID, param, true);
+						}
+						break;
+					case "pause":
+						if (Sounds.ContainsKey(ID))
+						{
+							Sounds[ID].Pause();
+
+
+						}
+						break;
+					case "stop":
+						if (Sounds.ContainsKey(ID))
+						{
+						
+							Sounds[ID].Stop();
+							Sounds[ID].Dispose();
+							Sounds.Remove(ID);
+
+						}
+						break;
+					case "reassign":
+						if (Sounds.ContainsKey(ID))
+						{
+							Sounds[param.ToString()] = Sounds[ID];
+							Sounds.Remove(ID);
+						}
+						break;
+					case "pan":
+						if (Sounds.ContainsKey(ID))
+						{
+							float setting =  Math.Clamp(float.Parse(param,CultureInfo.InvariantCulture), -1, 1);
+							Sounds[ID].Pan = setting;
+						}
+						break;
+
+					case "pitch":
+						if (Sounds.ContainsKey(ID))
+						{
+							float setting =  Math.Clamp(float.Parse(param,CultureInfo.InvariantCulture), -1, 1);
+							Sounds[ID].Pitch =setting;
+						}
+						break;
+					case "volume":
+						if (Sounds.ContainsKey(ID))
+						{
+							float setting =  Math.Clamp(float.Parse(param,CultureInfo.InvariantCulture), -1, 1);
+							Sounds[ID].Volume = setting;
+						}
+						break;
+
+					
 				}
 
-				if (eventWaitHandle != null) eventWaitHandle.Close();
-			}
-			
-		
-			ProcessingSound = true; 
-
-	//	System.Console.WriteLine("passed checks by " +request+param);
-			
-			switch (request)
-			{
-				case "preload":
-					InitiateDownload(param,"",ID);
-					break;
-				case "play":
-					if (Sounds.ContainsKey(ID)) {
-						Sounds[ID].Play();
-					
-					
-					}
-					else if (InitiateDownload(param,"",ID))
-					{
-						playSound(ID, param);
-					}
-					break;
-				case "stopall":
-					StopAllSounds();
-					break;
-				case "forceplay":
-					if (Sounds.ContainsKey(ID))
-					{
-						Sounds[ID].Play();
-
-
-					}
-					else if(InitiateDownload(param, "play", ID))
-					{
-						playSound(ID, param);
-					}
-					break;
-				case "loop":
-					if (Sounds.ContainsKey(ID))
-					{
-						Sounds[ID].IsLooped = true;
-						Sounds[ID].Play();
-
-
-					}
-					else if(InitiateDownload(param, "loop", ID))
-					{
-						playSound(ID, param, true);
-					}
-					break;
-				case "pause":
-					if (Sounds.ContainsKey(ID))
-					{
-						Sounds[ID].Pause();
-
-
-					}
-					break;
-				case "stop":
-					if (Sounds.ContainsKey(ID))
-					{
-						
-						Sounds[ID].Stop();
-						Sounds[ID].Dispose();
-						Sounds.Remove(ID);
-
-					}
-					break;
-				case "reassign":
-					if (Sounds.ContainsKey(ID))
-					{
-						Sounds[param.ToString()] = Sounds[ID];
-						Sounds.Remove(ID);
-					}
-					break;
-				case "pan":
-					if (Sounds.ContainsKey(ID))
-					{
-						float setting =  Math.Clamp(float.Parse(param,CultureInfo.InvariantCulture), -1, 1);
-						Sounds[ID].Pan = setting;
-					}
-					break;
-
-				case "pitch":
-					if (Sounds.ContainsKey(ID))
-					{
-						float setting =  Math.Clamp(float.Parse(param,CultureInfo.InvariantCulture), -1, 1);
-						Sounds[ID].Pitch =setting;
-					}
-					break;
-				case "volume":
-					if (Sounds.ContainsKey(ID))
-					{
-						float setting =  Math.Clamp(float.Parse(param,CultureInfo.InvariantCulture), -1, 1);
-						Sounds[ID].Volume = setting;
-					}
-					break;
-
-					
+				downloadThreadsWairWaitHandle.Set();//make all the download queue threads check is they should proceed and get caught by thread lock
+				downloadThreadsWairWaitHandle.Reset();//reset the event so nothing gets through when we set processing to false
 			}
 
-			downloadThreadsWairWaitHandle.Set();//make all the download queue threads check is they should proceed and get caught by thread lock
-			downloadThreadsWairWaitHandle.Reset();//reset the event so nothing gets through when we set processing to false
-			ProcessingSound = false;
-			
-			//now activate most recent thread
-			if (threadQueue.Count > 0)
-			{
-				EventWaitHandle nextThread = threadQueue[^1];
-
-				nextThread.Set();
-				threadQueue.RemoveAt(threadQueue.Count -1);
-
-			}
 
 
 
@@ -234,7 +209,7 @@ namespace HeartSignal
 			DownloadQueue.Remove(DownloadQueue[0]);
 			if (finishedDownload.afteraction.Length >1)//if an after action was supplied now that the sound is downloaded perform that actions
 			{
-				ParseRequest(finishedDownload.ID, finishedDownload.afteraction, finishedDownload.file,true);
+				ParseRequest(finishedDownload.ID, finishedDownload.afteraction, finishedDownload.file);
 			}
 			
 			
@@ -255,7 +230,7 @@ namespace HeartSignal
 
 			foreach (KeyValuePair<string, SoundEffectInstance> sound in Sounds) {
 
-				ParseRequest(sound.Key, "stop",null,true);
+				ParseRequest(sound.Key, "stop",null);
 			
 			}
 		

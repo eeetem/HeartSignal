@@ -339,12 +339,12 @@ namespace HeartSignal
 
 					var eventWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
 					awaitingthreadQueue[parameter].Add(eventWaitHandle);
-					System.Console.WriteLine("stoped by awaiting for: "+parameter);
+					//System.Console.WriteLine("stoped by awaiting for: "+parameter);
 					eventWaitHandle.WaitOne();
 					eventWaitHandle.Close();
 				}
 
-				System.Console.WriteLine("passed and set: "+parameter);
+			//	System.Console.WriteLine("passed and set: "+parameter);
 				Tween t = new Tween(parameter,EffectParams[parameter],speed,target);
 				tweens.Add(t);
 
