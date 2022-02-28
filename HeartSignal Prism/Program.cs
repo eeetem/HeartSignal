@@ -456,6 +456,22 @@ namespace HeartSignal
 						MapConsole.cexists = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
 						MapConsole.ReDraw();
 						break;
+					case "version":
+
+						
+
+						string localversion = File.ReadAllText(@"Version.ver");
+						string serverversion = cutstring.Remove(0, cutstring.IndexOf(":", StringComparison.Ordinal)+1);
+						if (serverversion != localversion)
+						{
+							PromptWindow.toptext = "outdated version";
+							PromptWindow.middletext = "  Your version of the game is outdated, use the launcher to update";
+							PromptWindow.Type = PromptWindow.PopupType.Permanent;
+							PromptWindow.needsDraw = true;
+						}
+
+
+						break;
 					case "inventory":
 
 
