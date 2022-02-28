@@ -1,5 +1,4 @@
-﻿using System;
-using SadConsole;
+﻿using SadConsole;
 using Console = SadConsole.Console;
 using SadRogue.Primitives;
 using SadConsole.Input;

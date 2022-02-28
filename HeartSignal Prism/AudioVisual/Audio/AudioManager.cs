@@ -4,11 +4,9 @@ using System.Linq;
 using System.Net;
 using System.IO;
 using System.ComponentModel;
-using System.Drawing;
 using System.Globalization;
 using System.Threading;
 using Microsoft.Xna.Framework.Audio;
-using Console = SadConsole.Console;
 
 namespace HeartSignal
 {
