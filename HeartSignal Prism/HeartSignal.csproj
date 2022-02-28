@@ -25,8 +25,8 @@
    </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ImageProcessor" Version="2.9.1" />
-    <PackageReference Include="SadConsole.Host.MonoGame" Version="9.1.1" />
     <PackageReference Include="System.Security.Permissions" Version="5.0.0" />
+    <PackageReference Include="SadConsole.Host.MonoGame" Version="9.2.2" />
     <PackageReference Include="Telnet" Version="0.8.6" />
   </ItemGroup>
 
@@ -45,6 +45,9 @@
     </None>
     <None Update="tagline.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Version.ver">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

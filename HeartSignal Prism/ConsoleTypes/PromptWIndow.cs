@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework.Graphics;
 using SadConsole;
+using SadConsole.Effects;
 using SadConsole.Input;
 using SadRogue.Primitives;
 using SadConsole.UI.Controls;
@@ -15,10 +17,13 @@ namespace HeartSignal
 
 
             this.Position = position;
-            Cursor.DisableWordBreak = false;
             IsVisible = false;
-            UsePrintProcessor = true;
+            
+            
+            Cursor.DisableWordBreak = true;
             Cursor.UseStringParser = true;
+            UsePrintProcessor = true;
+            
             SadComponents.Add( new MouseHandler());
            
         }
@@ -45,15 +50,10 @@ namespace HeartSignal
             Controls.Clear();
         
             this.Cursor.Position = new Point(1, 1);
-            string[] words = middletext.Split(' ');
-            foreach (string word in words)
-            {
-                if (Cursor.Position.X + Utility.RemoveParserTags(word).Length + 1 > Width)
-                {
-                    Cursor.NewLine().Right(1);
-                }
-                Cursor.Print(word.Replace(";", " ")).RightWrap(1);
-            }
+            Cursor.NewLine();
+            Utility.PrintParseMessage(middletext,null,this,false);
+
+            
             if (Type == PopupType.Choice)
             {
 
@@ -148,7 +148,8 @@ namespace HeartSignal
 
 
             }
-            this.Resize(Width, Cursor.Position.Y + 2, Width, Cursor.Position.Y + 2, false);
+
+            this.Resize(Width, Cursor.Position.Y + 2,  false);
             var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.LightGray, Color.Transparent));
             this.DrawBox(new Rectangle(0, 0, Width, Height), boxShape);
             this.Print(Width/2-toptext.Length/2, 0, toptext);

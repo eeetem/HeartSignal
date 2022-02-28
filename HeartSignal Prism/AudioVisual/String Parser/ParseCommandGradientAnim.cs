@@ -73,7 +73,7 @@ namespace HeartSignal
                 }
 
 
-                GradientString = new ColorGradient(steps.ToArray()).ToColoredString(new string(' ', foregroundLenght));
+                GradientString = new Gradient(steps.ToArray()).ToColoredString(new string(' ', foregroundLenght));
                 Color[] colors = new Color[foregroundLenght];
                index = 0;
                 foreach (ColoredString.ColoredGlyphEffect C in GradientString)
@@ -90,20 +90,19 @@ namespace HeartSignal
                     for (int i = (int)backroundindex + 1; i < parametersArray.Length - 1; i++)
                         steps.Add(Color.White.FromParser(parametersArray[i], out bool keep, out keep, out keep, out keep, out bool useDefault));
 
-                    GradientString = new ColorGradient(steps.ToArray()).ToColoredString(new string(' ', (int)backroundLenght));
+                    GradientString = new Gradient(steps.ToArray()).ToColoredString(new string(' ', (int)backroundLenght));
                     colors = new Color[(int)backroundLenght];
                     index = 0;
-                    foreach (ColoredString.ColoredGlyphEffect C in GradientString)
+                    foreach (ColoredString.ColoredGlyphEffect c in GradientString)
                     {
-                        colors[index] = C.Foreground;
+                        colors[index] = c.Foreground;
                         index++;
 
 
                     }
                     backgrad = new Gradient(colors);
                 }
-
-                commandStack.TurnOnEffects = true;
+                
 
             }
 
@@ -148,8 +147,7 @@ namespace HeartSignal
         }
         int backcounter = 0;
         int forecounter = 0;
-        public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex,
-            ICellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
+        public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex, ICellSurface surface, ref int stringIndex, ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
         {
 
             /*

@@ -263,7 +263,7 @@ namespace HeartSignal
 						player.IsLooped = true;
 					}
 				
-						player.Play();
+					player.Play();
 
 					
 

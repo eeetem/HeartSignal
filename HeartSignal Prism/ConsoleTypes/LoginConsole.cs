@@ -9,13 +9,15 @@ using Color = SadRogue.Primitives.Color;
 using Point = SadRogue.Primitives.Point;
 using System.Threading;
 
+
 namespace HeartSignal
 {
     public class LoginConsole : SadConsole.UI.ControlsConsole
     {
+        public static string version;
         public LoginConsole(int width, int height) : base(width, height)
         {
-
+            version = File.ReadAllText(@"Version.ver");
             // Disable the cursor since our keyboard handler will do the work.
             Cursor.IsEnabled = false;
             Cursor.IsVisible = false;
@@ -103,7 +105,7 @@ namespace HeartSignal
                 }
             }
 
-            File.AppendAllText("logindebug.txt", "LOGIN DEBUG: memory streams finished\n");
+
             var surfaceHeight = Program.Height;
             var surfaceWidth = Program.Height * 2;
             // this chunk of code is taken straight out of ToSurface() in sadconsole - however since the GetPixel() can't be dont outside of main thread i had to reuse their fucntion but with getpixel done on main thread beforehand
@@ -112,8 +114,6 @@ namespace HeartSignal
 
             this.Clear();
             ICellSurface surface = this.Surface;
-            File.AppendAllText("logindebug.txt", "LOGIN DEBUG: surface cleared\n");
-
 
             int fontSizeX = texture.Width / surfaceWidth;
             int fontSizeY = texture.Height / surfaceHeight;
@@ -185,15 +185,14 @@ namespace HeartSignal
                     }
                 }
             );
-            File.AppendAllText("logindebug.txt", "LOGIN DEBUG: for loop done\n");
 
-            
 
             Position = new Point((Program.Width / 2) - Program.Height, 0);
             miniDisplay.Position = new Point((Width / 2) - miniDisplay.Width / 2, (Program.Height / 2) + 6);
             surface.Print(Width / 2 - Tagline.Length / 2, (Program.Height / 2) - 7, Tagline);
-            
-            cachedSurface = surface;
+            surface.Print(2,2, "Version: "+version);
+
+  
             if (!surfaceCreated)
             {
                 surfaceCreated = true;
@@ -208,7 +207,6 @@ namespace HeartSignal
 
         public Console miniDisplay;
 
-        private ICellSurface cachedSurface;
 
         private string tagline = "";
 
@@ -276,8 +274,8 @@ namespace HeartSignal
                 Text = "Be Born",
                 Position = new Point(Width / 2 - 5, (Program.Height / 2) + 2),
             };
-            button.MouseButtonClicked += (s, a) => input.FocusLost();
-            button.MouseButtonClicked += (s, a) => password.FocusLost();
+            button.MouseButtonClicked += (s, a) => input.IsFocused = false;
+            button.MouseButtonClicked += (s, a) => password.IsFocused = false;//update text
             button.MouseButtonClicked += (s, a) =>
                 NetworkManager.SendNetworkMessage("connect " + input.Text + " " + password.Text);
 
@@ -341,17 +339,6 @@ namespace HeartSignal
 
             base.Update(delta);
 
-        }
-
-        public override void Render(TimeSpan delta)
-        {
-    
-            if (cachedSurface != null)
-            {
-                Surface = cachedSurface;
-            }
-            
-            base.Render(delta);
         }
 
         protected override void Dispose(bool disposing)

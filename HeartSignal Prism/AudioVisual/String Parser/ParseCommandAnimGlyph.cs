@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SadConsole;
 using SadRogue.Primitives;
 using SadConsole.StringParser;
@@ -19,12 +20,11 @@ namespace HeartSignal
             
             }
             CommandType = CommandTypes.Effect;
-            commandStack.TurnOnEffects = true;
+
         }
 
 
-        public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex,
-            ICellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
+        public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex, ICellSurface surface, ref int stringIndex, ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
         {
 
             glyphState.Effect = new AnimGlyph(Glyphs);

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole;
+using SadConsole.StringParser;
 using SadConsole.UI;
 using SadConsole.UI.Themes;
 using SadRogue.Primitives;
@@ -64,7 +65,6 @@ namespace HeartSignal
 			Game.Create(SCREEN_WIDTH, SCREEN_HEIGHT);
 			//Game.Instance.DefaultFont = new fon
 
-
 			
 			SadConsole.Host.Global.GraphicsDeviceManager.GraphicsProfile = GraphicsProfile.HiDef;
 			SadConsole.Host.Global.GraphicsDeviceManager.ApplyChanges();
@@ -83,7 +83,8 @@ namespace HeartSignal
 			
 			
 			Game.Instance.MonoGameInstance.Components.Add(new PostPorcessing());
-			ColoredString.CustomProcessor = Utility.CustomParseCommand;
+			Default d = (Default) ColoredString.Parser;
+			d.CustomProcessor = Utility.CustomParseCommand;
 			
 			
 			
@@ -122,7 +123,7 @@ namespace HeartSignal
 			PromptWindow = new PromptWindow(76, 10, new Point(Width / 2 - 38, Height / 2 - 5));
 
 			root.Children.Add(PromptWindow);
-
+			loginConsole.Children.Add(PromptWindow);
 
 			
 			PositionConsoles();
@@ -156,10 +157,14 @@ namespace HeartSignal
 			Program.Width = Game.Instance.MonoGameInstance.WindowWidth / root.FontSize.X;
 			Program.Height = Game.Instance.MonoGameInstance.WindowHeight / root.FontSize.Y;
 
+			
+			PromptWindow.Position = new Point(Program.Width / 2 - (PromptWindow.Width/2), Program.Height / 2 - 5);
+			
 			if (loginConsole != null)
 			{
 				//LoginConsole.ImageDrawThread?.Interrupt();//bad things happen if we dont due to texture size and surface size mismatch
-				
+				PromptWindow.Position = PromptWindow.Position - new Point((Program.Width / 2) - Program.Height,0);
+
 				loginConsole.Resize(Program.Height*2, Program.Height, Height*2, Program.Height, false);
 				loginConsole.MakeControlls();
 				PostPorcessing.RemakeRenderTarget();
@@ -167,7 +172,8 @@ namespace HeartSignal
 			}
 
             
-            
+			
+
 			root.Resize(Program.Width, Program.Height, Program.Width, Program.Height, false);
 
 
@@ -261,7 +267,6 @@ namespace HeartSignal
 			RoomConsole.Position = new Point(posx, posy);
 			RoomConsole.ReDraw();
 			
-			PromptWindow.Position = new Point(Program.Width / 2 - PromptWindow.Width/2, Program.Height / 2 - 5);
 
 
 			

@@ -357,22 +357,27 @@ namespace HeartSignal
 		private static List<Tween> tweens = new List<Tween>();
 		private void ProcessTweens(GameTime gameTime)
 		{
-			foreach (Tween t in tweens.ToList())
+			lock (syncObj)
 			{
-				if (t.counter > 1)
+				foreach (Tween t in tweens.ToList())
 				{
-					tweens.Remove(t);
-					if (awaitingthreadQueue[t.parameter].Count > 0)
+					if (t.counter > 1)
 					{
-						EventWaitHandle nextThread = awaitingthreadQueue[t.parameter][^1];
+						tweens.Remove(t);
+						if (awaitingthreadQueue[t.parameter].Count > 0)
+						{
+							EventWaitHandle nextThread = awaitingthreadQueue[t.parameter][^1];
 
-						nextThread.Set();
-						awaitingthreadQueue[t.parameter].RemoveAt(awaitingthreadQueue[t.parameter].Count -1);
+							nextThread.Set();
+							awaitingthreadQueue[t.parameter].RemoveAt(awaitingthreadQueue[t.parameter].Count - 1);
 
+						}
+
+						continue;
 					}
-					continue;
+
+					t.Lerp(gameTime);
 				}
-				t.Lerp(gameTime);
 			}
 		}
 

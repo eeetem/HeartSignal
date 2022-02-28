@@ -53,7 +53,6 @@ namespace HeartSignal
 
 
 
-
         public static ParseCommandBase CustomParseCommand(string command, string parameters, ColoredGlyph[] glyphString,
                                                   ICellSurface surface, ParseCommandStacks commandStacks)
         {
@@ -84,7 +83,7 @@ namespace HeartSignal
 
         public static int GetTaglessLenght(string name)
         {
-            ColoredString parsedName = ColoredString.Parse(name);//just to get the lenght
+            ColoredString parsedName = ColoredString.Parser.Parse(name);//just to get the lenght
             return parsedName.ToString().Length;
         }
 

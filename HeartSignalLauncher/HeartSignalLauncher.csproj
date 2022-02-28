@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <ApplicationIcon>Icon.ico</ApplicationIcon>
+        <AssemblyName>HeartSignalLauncher</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="SadConsole.Host.MonoGame" Version="9.2.2" />
+      <PackageReference Include="Telnet" Version="0.8.6" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Version.txt" />
+    </ItemGroup>
+
+</Project>

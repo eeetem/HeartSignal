@@ -1,4 +1,5 @@
-﻿using SadConsole;
+﻿using System;
+using SadConsole;
 using SadRogue.Primitives;
 using SadConsole.Effects;
 
@@ -20,9 +21,9 @@ namespace HeartSignal
  
             Counter = 0;
             RemoveOnFinished = false;
-            StartDelay = 0d;
+            StartDelay = TimeSpan.Zero;
             IsFinished = false;
-            _timeElapsed = 0d;
+            _timeElapsed = TimeSpan.Zero;
         }
 
         public override bool ApplyToCell(ColoredGlyph cell, ColoredGlyphState originalState)
@@ -48,17 +49,17 @@ namespace HeartSignal
 
 
 
-        public override void Update(double timeElapsed)
+        public override void Update(TimeSpan delta)
         {
             
 
-            Counter += (float)timeElapsed * Utility.GlobalAnimationSpeed * 0.2f;
+            Counter += delta.Milliseconds * Utility.GlobalAnimationSpeed * 0.2f;
             if (Counter > 1)
             {
 
                 Counter = 0;
             }
-            base.Update(timeElapsed);
+            base.Update(delta);
 
             
 

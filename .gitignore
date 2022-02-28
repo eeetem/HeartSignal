@@ -1,4 +1,3 @@
-
 HeartSignal Prism/bin/
 HeartSignal Prism/obj/
 *.xnb
@@ -7,3 +6,6 @@ HeartSignal Prism/Content/obj/DesktopGL/content/.mgstats
 buildem.bat
 HeartSignal Prism/HeartSignal.csproj
 *.zip
+HeartSignalLauncher/bin/
+HeartSignalLauncher/obj/
+.vs/HeartSignal Prism/v16/.suo
