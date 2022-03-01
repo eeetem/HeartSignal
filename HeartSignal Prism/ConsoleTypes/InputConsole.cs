@@ -47,7 +47,6 @@ namespace HeartSignal
             data = data.Replace("]", "");
             data = data.Replace("{", "");
             data = data.Replace("}", "");
-            data = data.Replace(Environment.NewLine, "");
             data = data.Replace("\n", "");
             data = data.Replace("\r", "");
             data = data.Replace("\t", "");
