@@ -110,7 +110,7 @@ namespace UpdateUnpacker
 			{
 				Exec("chmod +x \"HeartSignal Prism/HeartSignal\"");
 			}
-			Program.root.Clear(Program.root.Width / 2 - 30,Program.root.Height / 2,50);
+			Program.root.Clear(Program.root.Width / 2 - 30,Program.root.Height / 2,40);
 			Program.root.Print(Program.root.Width / 2 - 8,Program.root.Height / 2,ColoredString.Parser.Parse("[c:r f:green]Ready To Launch![c:u]"));
 			Program.ReadyToLaunch = true;
 			File.Delete("downloaded.zip");
