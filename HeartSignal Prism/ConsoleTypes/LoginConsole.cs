@@ -305,7 +305,7 @@ namespace HeartSignal
 						
                 Program.PositionConsoles();
                 Program.MainConsole.ClearText();
-						
+                Program.root.Children.Add(Program.PromptWindow);
                 Game.Instance.Screen =  Program.root;
                 
                 

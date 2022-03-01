@@ -122,7 +122,7 @@ namespace HeartSignal
 
 			PromptWindow = new PromptWindow(76, 10, new Point(Width / 2 - 38, Height / 2 - 5));
 
-			root.Children.Add(PromptWindow);
+			
 			loginConsole.Children.Add(PromptWindow);
 
 			
