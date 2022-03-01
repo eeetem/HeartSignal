@@ -52,10 +52,15 @@ namespace UpdateUnpacker
 			
 			
 			Game.Instance.Dispose();
-	
+			
+			Thread.Sleep(1000);
+			Process.GetCurrentProcess().CloseMainWindow();
+			p.WaitForExit();
+
 
 		}
-		
+
+		private static Process p;
 		public static int Width = 0;
 		public static int Height;
 
@@ -110,7 +115,6 @@ namespace UpdateUnpacker
 			ProcessStartInfo startInfo = new ProcessStartInfo();
 			startInfo.CreateNoWindow = false;
 			startInfo.UseShellExecute = false;
-			
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			{
 				startInfo.FileName = "HeartSignal Prism/HeartSignal.exe";
@@ -119,8 +123,8 @@ namespace UpdateUnpacker
 				startInfo.FileName = "HeartSignal Prism/HeartSignal";
 			}
 			startInfo.WorkingDirectory = Directory.GetCurrentDirectory() + "/HeartSignal Prism";
-			Process p = Process.Start(startInfo);
-			
+			p = Process.Start(startInfo);
+	
 			Game.Instance.MonoGameInstance.Exit();
 		}
 
