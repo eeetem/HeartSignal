@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using Microsoft.Xna.Framework.Graphics;
 using PrimS.Telnet;
@@ -108,7 +109,14 @@ namespace UpdateUnpacker
 			ProcessStartInfo startInfo = new ProcessStartInfo();
 			startInfo.CreateNoWindow = false;
 			startInfo.UseShellExecute = false;
-			startInfo.FileName = "HeartSignal Prism/HeartSignal.exe";
+			
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				startInfo.FileName = "HeartSignal Prism/HeartSignal.exe";
+			}else
+			{
+				startInfo.FileName = "HeartSignal Prism/HeartSignal";
+			}
 			startInfo.RedirectStandardInput = true;
 			startInfo.RedirectStandardOutput = true;
 			startInfo.RedirectStandardError = true;
