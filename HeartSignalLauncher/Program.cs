@@ -31,7 +31,7 @@ namespace UpdateUnpacker
 			{
 				version = File.ReadAllText(@"HeartSignal Prism/Version.ver");
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				version = "NONE";
 			}
@@ -52,6 +52,7 @@ namespace UpdateUnpacker
 			
 			
 			Game.Instance.Dispose();
+	
 
 		}
 		
@@ -83,7 +84,7 @@ namespace UpdateUnpacker
 			var button = new Button(10)
 			{
 				Text = "Launch",
-				Position = new Point(root.Width / 2 - 5, (root.Height / 2) + 2),
+				Position = new Point(root.Width / 2 - 5, (root.Height / 2) + 2)
 			};
 			button.MouseButtonClicked += (s, a) => LaunchGame();
 	
@@ -117,12 +118,9 @@ namespace UpdateUnpacker
 			{
 				startInfo.FileName = "HeartSignal Prism/HeartSignal";
 			}
-			startInfo.RedirectStandardInput = true;
-			startInfo.RedirectStandardOutput = true;
-			startInfo.RedirectStandardError = true;
 			startInfo.WorkingDirectory = Directory.GetCurrentDirectory() + "/HeartSignal Prism";
 			Process p = Process.Start(startInfo);
-
+			
 			Game.Instance.MonoGameInstance.Exit();
 		}
 

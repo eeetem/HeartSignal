@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.IO.Compression;
@@ -95,10 +96,17 @@ namespace UpdateUnpacker
 				return;
 			}
 
+			try
+			{
+				Directory.Delete("HeartSignal Prism", true);
+			}
+			catch (Exception)
+			{
+			}
 
-			
 			ZipFile.ExtractToDirectory("downloaded.zip",Directory.GetCurrentDirectory());
-			Program.root.Clear(Program.root.Width / 2 - 30,Program.root.Height / 2,100);
+			
+			Program.root.Clear(Program.root.Width / 2 - 30,Program.root.Height / 2,50);
 			Program.root.Print(Program.root.Width / 2 - 8,Program.root.Height / 2,ColoredString.Parser.Parse("[c:r f:green]Ready To Launch![c:u]"));
 			Program.ReadyToLaunch = true;
 			File.Delete("downloaded.zip");

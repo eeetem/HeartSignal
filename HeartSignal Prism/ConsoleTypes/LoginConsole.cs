@@ -341,10 +341,6 @@ namespace HeartSignal
 
         }
 
-        protected override void Dispose(bool disposing)
-        {
-           // ImageDrawThread.Join((int)counter+1000);
-            base.Dispose(disposing);
-        }
+
     }
 }
