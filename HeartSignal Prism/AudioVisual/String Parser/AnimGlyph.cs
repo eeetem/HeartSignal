@@ -41,7 +41,7 @@ namespace HeartSignal
         {
             
 
-            Counter += delta.Milliseconds *Utility.GlobalAnimationSpeed;
+            Counter += (float)delta.Milliseconds/1000 *Utility.GlobalAnimationSpeed;
             if (Counter > glyphs.Count)
             {
 

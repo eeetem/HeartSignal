@@ -53,7 +53,7 @@ namespace HeartSignal
         {
             
 
-            Counter += delta.Milliseconds * Utility.GlobalAnimationSpeed * 0.2f;
+            Counter += (float)delta.Milliseconds/1000 * Utility.GlobalAnimationSpeed * 0.2f;
             if (Counter > 1)
             {
 
