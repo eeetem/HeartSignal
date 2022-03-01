@@ -48,8 +48,8 @@ namespace HeartSignal
             Controls.Clear();
         
             this.Cursor.Position = new Point(1, 1);
-            Cursor.NewLine();
-            Utility.PrintParseMessage(middletext,null,this,false);
+            Cursor.NewLine().Right(1);
+            Utility.PrintParseMessage(middletext,null,this,false,1);
 
             
             if (Type == PopupType.Choice)

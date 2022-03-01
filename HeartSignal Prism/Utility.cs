@@ -327,7 +327,7 @@ namespace HeartSignal
 
             return Texture2D.FromFile(Global.GraphicsDevice, "img/" + file);
         }
-        public static void PrintParseMessage(string message,ActionWindow ac,SadConsole.UI.ControlsConsole  con, bool explicitLook)
+        public static void PrintParseMessage(string message,ActionWindow ac,SadConsole.UI.ControlsConsole  con, bool explicitLook = false,int buffer = 0)
         {
             string[] words = message.Split(" ");
             try
@@ -372,16 +372,16 @@ namespace HeartSignal
                     
                     else
                     {
-                        if (con.Cursor.Position.X + word.Length > con.Width && !word.Contains("["))
+                        if (con.Cursor.Position.X + word.Length+buffer > con.Width && !word.Contains("["))
                         {
-                            con.Cursor.NewLine();
+                            con.Cursor.NewLine().Right(buffer);
                         }
 
                         con.Cursor.Print(word.Replace("_", " ").Replace(";", " ") + " ");
                     }
                 }
 
-                con.Cursor.NewLine();
+                con.Cursor.NewLine().Right(buffer);
             }
             catch(Exception)
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
@@ -105,12 +106,35 @@ namespace UpdateUnpacker
 			}
 
 			ZipFile.ExtractToDirectory("downloaded.zip",Directory.GetCurrentDirectory());
-			
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+			{
+				Exec("chmod +x \"HeartSignal Prism/HeartSignal\"");
+			}
 			Program.root.Clear(Program.root.Width / 2 - 30,Program.root.Height / 2,50);
 			Program.root.Print(Program.root.Width / 2 - 8,Program.root.Height / 2,ColoredString.Parser.Parse("[c:r f:green]Ready To Launch![c:u]"));
 			Program.ReadyToLaunch = true;
 			File.Delete("downloaded.zip");
 
+		}
+		public static void Exec(string cmd)
+		{
+			var escapedArgs = cmd.Replace("\"", "\\\"");
+        
+			using var process = new Process
+			{
+				StartInfo = new ProcessStartInfo
+				{
+					RedirectStandardOutput = true,
+					UseShellExecute = false,
+					CreateNoWindow = true,
+					WindowStyle = ProcessWindowStyle.Hidden,
+					FileName = "/bin/bash",
+					Arguments = $"-c \"{escapedArgs}\""
+				}
+			};
+
+			process.Start();
+			process.WaitForExit();
 		}
 	}
 }
