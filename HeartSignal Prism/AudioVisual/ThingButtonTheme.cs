@@ -13,15 +13,14 @@ namespace HeartSignal
         Gradient grad;
         float gradientCounter;
         Color textcolor;
-        bool ForceApreanace = true;
-        public ThingButtonTheme(Gradient grad = null, bool forceapreaance = true) : base() {
+        public ThingButtonTheme(Gradient grad = null) : base() {
 
-            ForceApreanace = forceapreaance;
+
             if (grad != null)
             {
                 this.grad = grad;
             }
-           else
+            else
             {
                 this.grad = new Gradient(Color.Red, Color.Pink, Color.Red);
             }
@@ -55,18 +54,20 @@ namespace HeartSignal
             
             button.Surface.UsePrintProcessor = true;
             //button.Surface.Print(0, 0, button.Text);
-            if (ForceApreanace)
-            {
+        
                 button.Surface.Print(0, middle, button.Text.Align(button.TextAlignment, button.Width), appearance);
 
-            }
-            else {
+            
                 ColoredString parsedText = ColoredString.Parser.Parse(button.Text.Replace(";"," "));
                 parsedText.IgnoreEffect = false;
-               
-                 button.Surface.Print(0, middle, parsedText);
+                if (textcolor != Color.White)
+                {
+                    parsedText.SetForeground(textcolor);
+                }
 
-            }
+                button.Surface.Print(0, middle, parsedText);
+
+            
            
             Color color = grad.Lerp(gradientCounter);
             button.Surface.SetDecorator(0, button.Surface.Width, new GlyphDefinition(ICellSurface.ConnectedLineThinExtended[7], Mirror.None).CreateCellDecorator(color));

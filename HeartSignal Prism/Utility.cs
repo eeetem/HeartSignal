@@ -90,8 +90,6 @@ namespace HeartSignal
             name = name.Replace("_", " ");
             string realtext = RemoveParserTags(name);
 
-            bool forceAppearance = realtext == name;//if there's parsing tags fo some apearance boogaloo
-
 
             if (realtext.Length + console.Cursor.Position.X > console.Width)
             {
@@ -108,7 +106,7 @@ namespace HeartSignal
             {
                 Text = name,
                 Position = console.Cursor.Position,
-                Theme = new ThingButtonTheme(new Gradient(Color.Green, Color.LimeGreen, Color.Green), forceAppearance)
+                Theme = new ThingButtonTheme(new Gradient(Color.Green, Color.LimeGreen, Color.Green))
             };
 
 
@@ -228,7 +226,7 @@ namespace HeartSignal
 
             string realtext = RemoveParserTags(thingid[0]);
 
-            bool forceApearance = realtext == thingid[0];
+
 
 
             if (realtext.Length + console.Cursor.Position.X > console.Width)
@@ -254,7 +252,7 @@ namespace HeartSignal
                 {
                     Text = thingid[0],
                     Position = console.Cursor.Position,
-                    Theme = new ThingButtonTheme(null, forceApearance)
+                    Theme = new ThingButtonTheme(null)
                 };
 
 
