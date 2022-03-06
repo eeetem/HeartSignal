@@ -313,7 +313,7 @@ namespace HeartSignal
 		{
 
 			lock (syncObj)
-			{ 
+			{
 				if (!awaitingthreadQueue.ContainsKey(parameter))
 				{
 					awaitingthreadQueue[parameter] = new List<EventWaitHandle>(); //create queue for each parameter
@@ -329,18 +329,20 @@ namespace HeartSignal
 					}
 
 				}
+			}
 
-				if (tweens.FindIndex(x => x.parameter == parameter) != -1) //queue up if parameter is being currently tweened
-				{
+			if (tweens.FindIndex(x => x.parameter == parameter) != -1) //queue up if parameter is being currently tweened
+			{
 
-					var eventWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
-					awaitingthreadQueue[parameter].Add(eventWaitHandle);
-					//System.Console.WriteLine("stoped by awaiting for: "+parameter);
-					eventWaitHandle.WaitOne();
-					eventWaitHandle.Close();
-				}
-
-			//	System.Console.WriteLine("passed and set: "+parameter);
+				var eventWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
+				awaitingthreadQueue[parameter].Add(eventWaitHandle);
+				//System.Console.WriteLine("stoped by awaiting for: "+parameter);
+				eventWaitHandle.WaitOne();
+				eventWaitHandle.Close();
+			}
+			lock (syncObj)
+			{
+				//	System.Console.WriteLine("passed and set: "+parameter);
 				Tween t = new Tween(parameter,EffectParams[parameter],speed,target);
 				tweens.Add(t);
 
