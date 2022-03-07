@@ -485,7 +485,7 @@ namespace HeartSignal
 							NestedInfo innerinfo = GetNestedBrackets(cutstring);
 							info2.Contents.Add(innerinfo);
 							int[] innerindexes = GetOutermostBrackets(cutstring);
-							cutstring = cutstring.Remove(0, innerindexes[1] + 2).Replace(",", "").Trim();
+							cutstring = cutstring.Remove(0, innerindexes[1] + 2).Trim();
 						}
 						InventoryConsole.tagline = returned[1];
 						InventoryConsole.inventoryInfo = info2;
@@ -504,7 +504,7 @@ namespace HeartSignal
 							NestedInfo innerinfo = GetNestedBrackets(cutstring);
 							info3.Contents.Add(innerinfo);
 							int[] innerindexes = GetOutermostBrackets(cutstring);
-							cutstring = cutstring.Remove(0, innerindexes[1] + 2).Replace(",", "").Trim();
+							cutstring = cutstring.Remove(0, innerindexes[1] + 2).Trim();
 						}
 						ExamInventoryConsole.tagline = returned[1];
 						ExamInventoryConsole.inventoryInfo = info3;
@@ -521,7 +521,7 @@ namespace HeartSignal
 							NestedInfo innerinfo = GetNestedBrackets(cutstring);
 							info.Contents.Add(innerinfo);
 							int[] innerindexes = GetOutermostBrackets(cutstring);
-							cutstring = cutstring.Remove(0, innerindexes[1] + 2).Replace(",", "").Trim();
+							cutstring = cutstring.Remove(0, innerindexes[1] + 2).Trim();
 						}
 						GrasperConsole.tagline = returned[1];
 						GrasperConsole.inventoryInfo = info;
