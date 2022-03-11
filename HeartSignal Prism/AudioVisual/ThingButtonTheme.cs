@@ -26,56 +26,60 @@ namespace HeartSignal
             }
             textcolor = Color.White;
         }
+
+        private bool inited = false;
+        public void InitialDraw(Button button, TimeSpan time)
+        {
+            if (inited) return;
+            inited = true;
+            //do the underline animation regardless
+
+      
+            int middle = button.Surface.Height != 1 ? button.Surface.Height / 2 : 0;
+            
+            
+            button.Surface.UsePrintProcessor = true;
+
+            //button.Surface.Print(0, middle, button.Text.Align(button.TextAlignment, button.Width), appearance);
+
+            
+            ColoredString parsedText = ColoredString.Parser.Parse(button.Text.Replace(";"," "));
+            if (textcolor != Color.White)
+            {
+                parsedText.SetForeground(textcolor);
+            }
+
+            button.Surface.Print(0, middle, parsedText);
+
+            
+            
+        }
+
         public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
+            
+            
+            
             if (!(control is Button button)) return;
-            if (!button.IsDirty) return;
+            
+            InitialDraw(button,time);
+            
+            if (button.Surface.Effects.Count != 0)
+            {
+                button.Surface.Effects.UpdateEffects(time);
+                button.IsDirty = true;
+            }
 
-            RefreshTheme(control.FindThemeColors(), control);
-            ColoredGlyph appearance;
-
-
-
-            appearance = ControlThemeState.GetStateAppearance(control.State);
-            int middle = button.Surface.Height != 1 ? button.Surface.Height / 2 : 0;
+            
             gradientCounter += (float)time.TotalSeconds/2;
             if (gradientCounter > 1)
             {
 
                 gradientCounter = 0;
             }
-
-
-            // Redraw the control
-            button.Surface.Fill(appearance.Foreground, appearance.Background,
-                                appearance.Glyph, Mirror.None);
-
-            appearance.Foreground = textcolor;
-            
-            button.Surface.UsePrintProcessor = true;
-            //button.Surface.Print(0, 0, button.Text);
-        
-                button.Surface.Print(0, middle, button.Text.Align(button.TextAlignment, button.Width), appearance);
-
-            
-                ColoredString parsedText = ColoredString.Parser.Parse(button.Text.Replace(";"," "));
-                parsedText.IgnoreEffect = false;
-                if (textcolor != Color.White)
-                {
-                    parsedText.SetForeground(textcolor);
-                }
-
-                button.Surface.Print(0, middle, parsedText);
-
-            
-           
             Color color = grad.Lerp(gradientCounter);
             button.Surface.SetDecorator(0, button.Surface.Width, new GlyphDefinition(ICellSurface.ConnectedLineThinExtended[7], Mirror.None).CreateCellDecorator(color));
-              ///  button.Surface.AddDecorator(0, 1, button.Parent.Host.ParentConsole.Font.GetDecorator("box-edge-left", topleftcolor));
-               // button.Surface.AddDecorator(button.Surface.Width - 1, 1, button.Parent.Host.ParentConsole.Font.GetDecorator("box-edge-right", bottomrightcolor));
 
-
-               button.IsDirty = true;
         }
         public void AdjustColor() {
 
@@ -93,10 +97,13 @@ namespace HeartSignal
 
                 textcolor = Color.White;
             }
-        
+
+            inited = false;
+
         }
         public void DefaultColor()
         {
+            inited = false;
             textcolor = Color.White;
 
 

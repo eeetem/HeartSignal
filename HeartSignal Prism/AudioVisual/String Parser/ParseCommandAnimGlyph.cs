@@ -29,7 +29,6 @@ namespace HeartSignal
 
             glyphState.Effect = new AnimGlyph(Glyphs);
 
-            commandStack.RemoveSafe(this);
         }
     }
 }

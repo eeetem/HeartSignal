@@ -18,7 +18,8 @@ namespace HeartSignal
 		    {
 			    return;
 		    }
-		    ServerLoop();
+		    
+		    new Thread(ServerLoop).Start();
 	    }
 
 	    private static void SplitServerMessage(string input)
@@ -104,19 +105,20 @@ namespace HeartSignal
 		{
 
 
-			
-			using (Client client = new Client("deathcult.today", 6666, new CancellationToken()))
+			try
+			{
+				using (Client client = new Client("deathcult.today", 6666, new CancellationToken()))
 				{
 					await client.TryLoginAsync("", "", 1000);
 
 
 					TelnetClient = client;
-					
+
 
 
 					while (TelnetClient.IsConnected)
 					{
-				
+
 						if (needToSendMessage)
 						{
 							foreach (string message in new List<string>(messageQueue))
@@ -141,20 +143,21 @@ namespace HeartSignal
 								response += recived;
 								continue;
 							}
+
 							//if nothing was recived in last 100ms process it
 							break;
 
 						}
 
-						
+
 						if (response.Length > 1)
 						{
 							SplitServerMessage(response);
 #if DEBUG
 
-   
-                        System.Console.WriteLine(response);
-                    
+
+							System.Console.WriteLine(response);
+
 
 
 #endif
@@ -167,9 +170,12 @@ namespace HeartSignal
 						//await Task.Delay(50);
 					}
 				}
-			
-		
-		
+
+			}
+			catch (Exception)
+			{
+			}
+
 			Program.loginConsole.miniDisplay.Cursor.Print("Could not connect to server").NewLine();
 			
 

@@ -62,6 +62,6 @@ namespace HeartSignal
         };
 
 
-       // public override string ToString() => string.Format("BLINK-{0}-{1}-{2}-{3}-{4}", BlinkOutColor.PackedValue, BlinkSpeed, UseCellBackgroundColor, StartDelay, BlinkCount);
+
     }
 }
