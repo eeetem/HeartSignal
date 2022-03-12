@@ -61,6 +61,7 @@ namespace HeartSignal
 			EffectParams["clmagnitude"] = 5f;
 			EffectParams["clalpha"] = 0.05f;
 			EffectParams["clspeed"] = 1f;
+			EffectParams["overlayalpha"] = 0.5f;
 			
 			
 			
@@ -196,6 +197,7 @@ namespace HeartSignal
 			connectionEffect.Parameters["fps"].SetValue(clcounter);
 			connectionEffect.Parameters["staticAlpha"].SetValue(EffectParams["clalpha"] + GetNoise() * 0.01f);
 			connectionEffect.Parameters["magnitude"].SetValue(EffectParams["clmagnitude"] + GetNoise() * 1f);
+			connectionEffect.Parameters["overlayalpha"].SetValue(EffectParams["overlayalpha"] + GetNoise() * 0.05f);
 			if (overlayTexture != null)
 			{
 				connectionEffect.Parameters["overlay"].SetValue(overlayTexture);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole;
 using SadConsole.StringParser;
@@ -337,6 +338,7 @@ namespace HeartSignal
 			return strings;
 
 		}
+
 
 		public static void ParseServerMessage(string input)
 		{

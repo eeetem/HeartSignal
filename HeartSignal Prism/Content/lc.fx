@@ -131,6 +131,7 @@ float2 textureSize;
 float2 videoSize;
 float1 fps;
 float1 staticAlpha = 0.05;
+float overlayalpha = 1;
 
 float4 loose_connection(float2 texture_size, float2 video_size, float frame_count, float2 texCoord, sampler2D decal,sampler2D overlay)
 {
@@ -140,6 +141,7 @@ float4 loose_connection(float2 texture_size, float2 video_size, float frame_coun
 	float col = nn(-texCoord * video_size.y * 4.0, timer);
 	float3 play = distort(overlay, jumpy(LUTeffectiveCoord, timer), magnitude, timer);
 	float overlay_alpha = tex2D(overlay, jumpy(LUTeffectiveCoord, timer)).a;
+    overlay_alpha = clamp(overlay_alpha,0,overlayalpha);
 	float show_overlay = clamp(overlay_alpha, 0.0, 0.8);
 	res = lerp(res, play, show_overlay);
  

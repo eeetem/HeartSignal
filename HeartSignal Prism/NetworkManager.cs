@@ -104,7 +104,6 @@ namespace HeartSignal
 	    private static async void ServerLoop()
 		{
 
-
 			try
 			{
 				using (Client client = new Client("deathcult.today", 6666, new CancellationToken()))
