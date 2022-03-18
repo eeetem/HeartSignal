@@ -171,8 +171,12 @@ namespace HeartSignal
 				}
 
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
+				Program.loginConsole.miniDisplay.Cursor.Print(needToSendMessage.ToString()).NewLine();
+			
+
+				Program.MainConsole.ReciveExternalInput(e.ToString());
 			}
 
 			Program.loginConsole.miniDisplay.Cursor.Print("Could not connect to server").NewLine();

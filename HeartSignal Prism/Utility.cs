@@ -266,7 +266,7 @@ namespace HeartSignal
             else
             {
 
-                var button = new Button(thingid[0].Length, 1)
+                var button = new Button(realtext.Length, 1)
                 {
                     Text = thingid[0],
                     Position = console.Cursor.Position,
@@ -277,7 +277,7 @@ namespace HeartSignal
 
                 // button.Click += (s, a) => actionWindow.SetFocus(thing.Key);
                 console.Controls.Add(button);
-                console.Cursor.Right(thingid[0].Length);
+                console.Cursor.Right(realtext.Length);
 
 
 

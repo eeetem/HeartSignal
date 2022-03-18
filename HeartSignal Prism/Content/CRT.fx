@@ -29,6 +29,7 @@ struct VertexShaderOutput
 // It is an example what I personally would want as a display option for pixel art games.
 // Please take and use, change, or whatever.
 //
+//PORTED INTO HSLS BY ETET2
 
 // -- config  -- //
 // #pragma parameter hardScan "hardScan" -8.0 -20.0 0.0 1.0 // default, minimum, maximum, optional step
@@ -44,6 +45,8 @@ struct VertexShaderOutput
 // #pragma parameter hardBloomScan "bloom-y soft" -2.0 -4.0 -1.0 0.1
 // #pragma parameter bloomAmount "bloom amt" 0.15 0.0 1.0 0.05
 // #pragma parameter shape "filter kernel shape" 2.0 0.0 10.0 0.05
+
+
 
 float hardScan;
 float hardPix;

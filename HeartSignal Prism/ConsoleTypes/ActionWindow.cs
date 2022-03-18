@@ -221,7 +221,7 @@ namespace HeartSignal
             Controls.Clear();
             var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.Red, Color.Transparent));
             this.DrawBox(new Rectangle(0, 0, Width, Height), boxShape);
-            this.Print(1, 0, name);
+            this.Print(1, 0, Utility.RemoveParserTags(name).CreateColored(Color.Gray));
             this.Cursor.Position = new Point(1, 1);
             Cursor.Print("Which one?").NewLine().Right(1);
             for (int i = 1; i < IDs.Count() + 1; i++)
