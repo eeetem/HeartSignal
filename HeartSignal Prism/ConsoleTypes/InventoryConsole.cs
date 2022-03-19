@@ -17,42 +17,16 @@ namespace HeartSignal
 
 
         public NestedInfo inventoryInfo = new NestedInfo();
-        public string tagline = "";
-        public bool clickableFirstLayer = true;
+
         public Point ActionOffset = new Point(0,0);
 
-        public bool self = false;//cringe 
 
 
         protected override void DrawConsole()
         {
             Resize(ViewWidth,ViewHeight,Width,100,false);
-            if (tagline.Length < 1) {
-                tagline = "Me";
-            }
 
-           
-            if (self) {
-
-
-                Utility.CreateButtonThingId(new string[] { tagline, "me" }, this, actionWindow, false, ActionOffset);
-            
-            }
-            else
-            {
-                Cursor.Print(tagline);
-
-            }
-            Cursor.Print(":").NewLine();
-            if (clickableFirstLayer)
-            {
-                DrawNestedInfo(inventoryInfo);
-            }
-            else {
-
-                DrawNestedInfo(inventoryInfo.Contents);
-
-            }
+            DrawContents(inventoryInfo, 0);
 
             Resize(ViewWidth,ViewHeight,Width,Math.Max(Cursor.Position.Y,ViewHeight),false);
         }
@@ -100,12 +74,11 @@ namespace HeartSignal
             Cursor.NewLine();
         }
         private void DrawContents(NestedInfo info,int layer) {
-   
-                string[] returned = Utility.SplitThingId(info.Header);
-                string thing = returned[0];
-                string id = returned[1];
-                this.DrawLine(Cursor.Position, Cursor.Position + new Point(layer, 0), ICellSurface.ConnectedLineThin[1]);
-                 Cursor.Right(layer);
+            if(info.Header == null) return;
+            string[] returned = Utility.SplitThingId(info.Header); string thing = returned[0];
+            string id = returned[1];
+            this.DrawLine(Cursor.Position, Cursor.Position + new Point(layer, 0), ICellSurface.ConnectedLineThin[1]);
+            Cursor.Right(layer);
             Utility.CreateButtonThingId(returned, this, actionWindow, false,ActionOffset);
             if (layer == 0)
             {

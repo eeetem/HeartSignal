@@ -45,7 +45,7 @@ namespace HeartSignal
 		    {
 			    string MSG = input.Substring(0, idx);
 			    File.AppendAllText("debuglog.txt", "parsing:"+MSG+"\n");
-			    Thread t = new Thread(() => Program.ParseServerMessage(MSG));
+			    Thread t = new Thread(() => MessageParser.ParseServerMessage(MSG));
 			    t.IsBackground = true;
 			    t.Start();
 
@@ -70,7 +70,7 @@ namespace HeartSignal
 			    return;
 		    }
 
-		    Thread t2 = new Thread(() => Program.ParseServerMessage(input));
+		    Thread t2 = new Thread(() => MessageParser.ParseServerMessage(input));
 		    t2.IsBackground = true;
 		    t2.Start();
 

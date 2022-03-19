@@ -52,20 +52,26 @@ namespace HeartSignal
         }
 
         private bool needsClear = false;
+        
+        private static readonly object syncObj = new object();
         public override void Update(TimeSpan delta)
         {
-            if (needsClear)
+
+            lock (syncObj)
             {
-                this.Clear();
-                this.Effects.RemoveAll();
-                Surface.ViewPosition = new Point(0, 0);
-                Cursor.Position = new Point(0, 0);
-                Cursor.NewLine();
-                needsClear = false;
+                if (needsClear)
+                {
+                    this.Clear();
+                    this.Effects.RemoveAll();
+                    Surface.ViewPosition = new Point(0, 0);
+                    Cursor.Position = new Point(0, 0);
+                    Cursor.NewLine();
+                    needsClear = false;
 
+                }
+
+                base.Update(delta);
             }
-
-            base.Update(delta);
         }
 
         public void ClearText()
@@ -79,25 +85,29 @@ namespace HeartSignal
         //probably should be renamed to something better
         public void ReciveExternalInput(string value) {
 
-            if (value.Contains("[clear]")){
-                ClearText();
-                return;
-            }
-
-            if (Height < Cursor.Position.Y + 10)
+            lock (syncObj)
             {
-                Resize(ViewWidth,ViewHeight,Width,Height+50,false);
-            }
+                if (value.Contains("[clear]"))
+                {
+                    ClearText();
+                    return;
+                }
 
-            Utility.PrintParseMessage(value, actionWindow, this, false);
-#if  DEBUG
-            System.Console.WriteLine(value);
+                if (Height < Cursor.Position.Y + 10)
+                {
+                    Resize(ViewWidth, ViewHeight, Width, Height + 50, false);
+                }
 
-                
-            System.Console.WriteLine(Cursor.Position);
+                Utility.PrintParseMessage(value, actionWindow, this, false);
+#if DEBUG
+                System.Console.WriteLine(value);
+
+
+                System.Console.WriteLine(Cursor.Position);
 #endif
-            
+
                 SetRelevantViewPos();
+            }
 
         }
 
