@@ -355,6 +355,13 @@ namespace HeartSignal
                     {
                         string text2 = word;
                         string leftover = "";
+                        if (word.IndexOf("<") > 0)
+                        {
+                            string beginingbit = text2.Substring(0, text2.IndexOf("<"));
+                            con.Cursor.Print(beginingbit.Replace("_", " ").Replace(";", " "));
+                            text2 = text2.Remove(0, text2.IndexOf("<"));
+                        }
+
                         if (text2.Length > text2.IndexOf('>'))
                         {
                             leftover = text2.Substring(text2.IndexOf('>') + 1, text2.Length - (text2.IndexOf('>') + 1));
@@ -365,7 +372,7 @@ namespace HeartSignal
                         Utility.CreateButtonThingId(Utility.SplitThingId(text2.Replace("_", " ")), con, ac,
                             explicitLook,
                             null, true);
-                        con.Cursor.Print(leftover).Right(1);
+                        con.Cursor.Print(leftover.Replace("_", " ").Replace(";", " ")).Right(1);
                     }
                     
                     else
