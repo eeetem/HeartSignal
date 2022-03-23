@@ -45,12 +45,21 @@ namespace HeartSignal
 
 		private static void JsonParse(string input)
 		{
-			input = input.Replace("[JSON]","");
-			JObject jsonObj = JsonConvert.DeserializeObject(input) as JObject;
-
-			if (jsonObj["type"] == null)
+			JObject jsonObj;
+			try
 			{
-				Program.MainConsole.ReciveExternalInput("Error parsing: "+input);
+				input = input.Replace("[JSON]", "");
+				jsonObj = JsonConvert.DeserializeObject(input) as JObject;
+
+				if (jsonObj["type"] == null)
+				{
+					Program.MainConsole.ReciveExternalInput("Error parsing: " + input);
+					return;
+				}
+			}
+			catch (Exception e)
+			{
+				Program.MainConsole.ReciveExternalInput("failed to parse: "+input);
 				return;
 			}
 
@@ -135,6 +144,13 @@ namespace HeartSignal
 
 					ActionWindow.actionDatabase[args[0]][args[1]] =
 						ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+					foreach ( KeyValuePair<string,ActionWindow> ac in ActionWindow.activeWindows)
+					{
+						if (ac.Key == args[0])
+						{
+						//	ac.Value.DisplayActions();
+						}
+					}
 					break;
 				//obsolete
 				case "argactions":

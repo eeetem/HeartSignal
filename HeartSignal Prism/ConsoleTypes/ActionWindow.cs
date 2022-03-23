@@ -18,6 +18,8 @@ namespace HeartSignal
 
         }
         public static Dictionary<string, Dictionary<string, List<string>>> actionDatabase = new Dictionary<string, Dictionary<string, List<string>>>();
+
+        public static Dictionary<string, ActionWindow> activeWindows = new Dictionary<string, ActionWindow>();
        // public static Dictionary<string, Dictionary<string, List<string>>> argactionDatabase = new Dictionary<string, Dictionary<string, List<string>>>();
         static string lastitem = "";
         public string selectedTab = "";
@@ -25,10 +27,13 @@ namespace HeartSignal
             IsVisible = false;
             IsEnabled = false;
             lastitem = "";
-        
-        
+            activeWindows.Remove(Utility.SplitThingId(lastitem)[1]);
+
         }
-        
+
+        private ICellSurface referenceSurface;
+        private Point? PosOffset;
+        private bool explicitlook2;//cringe
 
         //a lot fo reapeating code in here, integrate this better at some point
         public void ShowTooltip(string text,ICellSurface surface, Point? newPosition = null) {
@@ -66,10 +71,12 @@ namespace HeartSignal
             this.IsEnabled = true;
         }
 
-
-
-        public void DisplayActions(string item,  ICellSurface surface,Point? newPosition = null, bool expilcitlook = false)
+        public void DisplayActions(string item = null,  ICellSurface surface = null,Point? newPosition = null, bool expilcitlook = false)
         {
+            
+            referenceSurface = surface;
+            PosOffset = newPosition;
+            explicitlook2 = expilcitlook;
             //if (focusitem != null) { item = focusitem; }
             if (awaitingItemClick) { return; }
 
@@ -78,6 +85,7 @@ namespace HeartSignal
             string[] returned = Utility.SplitThingId(item);
             string thing = returned[0];
             string id = returned[1];
+            activeWindows.Add(id,this);
 
             if (lastitem != item)
             {
@@ -356,6 +364,7 @@ namespace HeartSignal
 
         public static void GetDesc(string id)
         {
+            
             NetworkManager.SendNetworkMessage("look " + id);
 
         }

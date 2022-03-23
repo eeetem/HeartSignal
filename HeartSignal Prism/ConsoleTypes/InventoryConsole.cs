@@ -75,16 +75,10 @@ namespace HeartSignal
         }
         private void DrawContents(NestedInfo info,int layer) {
             if(info.Header == null) return;
-            string[] returned = Utility.SplitThingId(info.Header); string thing = returned[0];
-            string id = returned[1];
+
             this.DrawLine(Cursor.Position, Cursor.Position + new Point(layer, 0), ICellSurface.ConnectedLineThin[1]);
             Cursor.Right(layer);
-            Utility.CreateButtonThingId(returned, this, actionWindow, false,ActionOffset);
-            if (layer == 0)
-            {
-                Cursor.Print(":");
-            }
-            Cursor.NewLine();
+            Utility.PrintParseMessage(info.Header,actionWindow,this,false);
             foreach (NestedInfo innerinfo in info.Contents) {
                 DrawContents(innerinfo, layer + 1);
 

@@ -31,8 +31,8 @@ namespace HeartSignal
 
             if (thingid.IndexOf("(") <= 0)
             {
-                Program.MainConsole.ReciveExternalInput("ERROR: attempted to get id from an item without id: "+thingid);
-                return new string[]{thingid,"0"};
+        //        Program.MainConsole.ReciveExternalInput("ERROR: attempted to get id from an item without id: "+thingid);
+                return new string[]{thingid,"none"};
             }
 
             string idstring = thingid.Substring(thingid.IndexOf("("), thingid.IndexOf(")") - thingid.IndexOf("("));
