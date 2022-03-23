@@ -144,11 +144,11 @@ namespace HeartSignal
 
 					ActionWindow.actionDatabase[args[0]][args[1]] =
 						ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-					foreach ( KeyValuePair<string,ActionWindow> ac in ActionWindow.activeWindows)
+					foreach ( KeyValuePair<string,ActionWindow> ac in new Dictionary<string, ActionWindow>(ActionWindow.activeWindows))
 					{
 						if (ac.Key == args[0])
 						{
-						//	ac.Value.DisplayActions();
+							ac.Value.DisplayActions();
 						}
 					}
 					break;

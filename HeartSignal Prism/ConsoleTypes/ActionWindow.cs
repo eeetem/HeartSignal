@@ -33,7 +33,7 @@ namespace HeartSignal
 
         private ICellSurface referenceSurface;
         private Point? PosOffset;
-        private bool explicitlook2;//cringe
+        private bool explicitLook;
 
         //a lot fo reapeating code in here, integrate this better at some point
         public void ShowTooltip(string text,ICellSurface surface, Point? newPosition = null) {
@@ -71,12 +71,33 @@ namespace HeartSignal
             this.IsEnabled = true;
         }
 
-        public void DisplayActions(string item = null,  ICellSurface surface = null,Point? newPosition = null, bool expilcitlook = false)
+        
+        public void DisplayActions(string item = null,  ICellSurface surface = null,Point? newPosition = null, bool? _expilcitLook = null)
         {
+            if (item == null)
+            {
+                item = lastitem;
+            }
+
+            if (surface == null)
+            {
+                surface = referenceSurface;
+            }
+            
             
             referenceSurface = surface;
-            PosOffset = newPosition;
-            explicitlook2 = expilcitlook;
+
+            bool explicitlook = false;
+            
+            if (_expilcitLook == null)
+            {
+                explicitlook = explicitLook;
+            }
+            else
+            {
+                explicitlook = (bool) _expilcitLook;
+            }
+            
             //if (focusitem != null) { item = focusitem; }
             if (awaitingItemClick) { return; }
 
@@ -85,11 +106,11 @@ namespace HeartSignal
             string[] returned = Utility.SplitThingId(item);
             string thing = returned[0];
             string id = returned[1];
-            activeWindows.Add(id,this);
+            
 
             if (lastitem != item)
             {
-                if (!expilcitlook)
+                if (!explicitlook)
                 {
                     GetDesc(id);
                 }
@@ -140,7 +161,7 @@ namespace HeartSignal
                         Theme = new ThingButtonTheme()
                     };
                     tab.MouseButtonClicked += (s, a) => selectedTab = tabs.Key;
-                    tab.MouseButtonClicked += (s, a) => DisplayActions(item, surface,newPosition, expilcitlook);
+                    tab.MouseButtonClicked += (s, a) => DisplayActions(item, surface,newPosition, explicitlook);
                     this.Controls.Add(tab);
                     Cursor.Right(tabs.Key.Length+1);
                 }
@@ -149,7 +170,7 @@ namespace HeartSignal
             }
          
 
-            if (expilcitlook)
+            if (explicitlook)
             {
                 var look = new Button(4, 1)
                 {
@@ -208,7 +229,8 @@ namespace HeartSignal
                 this.Controls.Add(exit);
                  */
 
-            
+            activeWindows.Remove(id);    
+            activeWindows.Add(id,this);
             this.IsVisible = true;
             this.IsEnabled = true;
 
