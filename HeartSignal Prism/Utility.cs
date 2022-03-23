@@ -375,7 +375,7 @@ namespace HeartSignal
                             con.Cursor.NewLine().Right(buffer);
                         }
 
-                        con.Cursor.Print(word.Replace("_", " ").Replace(";", " ") + " ");
+                        con.Cursor.Print(word.Replace("_", " ").Replace(";", " ")).Right(1);
                     }
                 }
 

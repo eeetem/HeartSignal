@@ -78,7 +78,7 @@ namespace HeartSignal
 
             this.DrawLine(Cursor.Position, Cursor.Position + new Point(layer, 0), ICellSurface.ConnectedLineThin[1]);
             Cursor.Right(layer);
-            Utility.PrintParseMessage(info.Header,actionWindow,this,false);
+            Utility.PrintParseMessage(info.Header,actionWindow,this,false,1);
             foreach (NestedInfo innerinfo in info.Contents) {
                 DrawContents(innerinfo, layer + 1);
 
