@@ -30,6 +30,10 @@ namespace HeartSignal
             string msg = "";
             if (Game.Instance.Keyboard.IsKeyDown(Keys.LeftShift))
             {
+                msg = "run ";
+            }
+            if (Game.Instance.Keyboard.IsKeyDown(Keys.LeftControl))
+            {
                 msg = "look ";
             }
 
