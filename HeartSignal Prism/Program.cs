@@ -179,17 +179,20 @@ namespace HeartSignal
 
 
 			int MapConsoleHeight = 7;
-			int inventoryWidth = 31;
+			int inventoryWidth = 30;
 			int roomConsoleWidth = (Program.Width - (inventoryWidth * 3)) / 2;
 			int barConsoleHeight = 6;//ONLY EVEN due to map console size increase
-			int topConsoleRowHeight = 18 + (int)(Program.Height* 0.05);
-
+			int topConsoleRowHeight = 15 + (int)(Program.Height* 0.2);
+			if (topConsoleRowHeight % 2 != 0)
+			{
+				topConsoleRowHeight += 1;
+			}
 
 			int width = Program.Width - (inventoryWidth * 2) - 2;
 			int height = Program.Height - (topConsoleRowHeight + barConsoleHeight + 4);
 			InputConsole input = MainConsole.GetInputSource();
-			input.Resize(width, 30, width, 30, false);//fun fact: input console is gigantic - just hidden under
-			input.Position = new Point(0, height + 2);
+			input.Resize(width, 2, width, 2, false);//fun fact: input console is gigantic - just hidden under
+			input.Position = new Point(0,  height+2);
 			input.Cursor.Position = new Point(0, 0);
 			input.Clear();
 			input.Cursor.Print(">");
@@ -198,14 +201,18 @@ namespace HeartSignal
 				MainConsole.FontSize = MainConsole.Font.GetFontSize(IFont.Sizes.Two);
 				width = width / 2;
 				height = height / 2;
+				MainConsole.Position = new Point((inventoryWidth + 2) / 2, (topConsoleRowHeight + barConsoleHeight) / 2);
+
 			}
 			else
 			{
 				MainConsole.FontSize = MainConsole.Font.GetFontSize(IFont.Sizes.One);
+				MainConsole.Position = new Point((inventoryWidth + 2), (topConsoleRowHeight + barConsoleHeight));
+				
 			}
 
 			MainConsole.Resize(width , height , width , Math.Max(20,MainConsole.Height), false);
-			MainConsole.Position = new Point((inventoryWidth + 2) / 2, (topConsoleRowHeight + barConsoleHeight) / 2);
+			
 			MainConsole.SetRelevantViewPos();
 
 
@@ -216,7 +223,7 @@ namespace HeartSignal
 			MapConsole.ReDraw();
 
 			width = inventoryWidth;
-			height = MapConsoleHeight/2;
+			height = MapConsoleHeight*2;
 			delayConsole.Resize(width, height, width, 100, false);
 			delayConsole.Position = new Point(0 , barConsoleHeight);
 			delayConsole.ReDraw();
@@ -225,7 +232,7 @@ namespace HeartSignal
 			height = topConsoleRowHeight;
 			int posx = inventoryWidth + 1;
 			int posy = barConsoleHeight;
-			if (width > 80)
+			if (height > 31)
 			{
 				ThingConsole.FontSize = ThingConsole.Font.GetFontSize(IFont.Sizes.Two);
 				ThingConsole.actionWindow.FontSize = ThingConsole.actionWindow.Font.GetFontSize(IFont.Sizes.Two);
@@ -249,7 +256,7 @@ namespace HeartSignal
 			height = topConsoleRowHeight;
 			posx = inventoryWidth * 2 + roomConsoleWidth + 2;
 			posy = barConsoleHeight;
-			if (width > 80)
+			if (height > 31)
 			{
 				RoomConsole.FontSize = RoomConsole.Font.GetFontSize(IFont.Sizes.Two);
 				RoomConsole.actionWindow.FontSize = RoomConsole.actionWindow.Font.GetFontSize(IFont.Sizes.Two);
@@ -268,7 +275,25 @@ namespace HeartSignal
 			RoomConsole.Position = new Point(posx, posy);
 			RoomConsole.ReDraw();
 			
-
+			
+			
+			width = inventoryWidth;
+			height = topConsoleRowHeight;
+			posx = inventoryWidth + roomConsoleWidth + 1;
+			posy = barConsoleHeight;
+			if (height > 31)
+			{
+				height += 1;
+			}
+			else
+			{
+				GrasperConsole.FontSize = GrasperConsole.Font.GetFontSize(IFont.Sizes.One);
+				GrasperConsole.actionWindow.FontSize = GrasperConsole.actionWindow.Font.GetFontSize(IFont.Sizes.One);
+			}
+			GrasperConsole.Resize(width, height, width, 100, false);
+			GrasperConsole.Position = new Point(posx,posy );
+			GrasperConsole.ActionOffset = new Point(0, 1);
+			GrasperConsole.ReDraw();
 
 			
 			width = inventoryWidth;
@@ -287,12 +312,6 @@ namespace HeartSignal
 
 
 
-			width = inventoryWidth;
-			height = topConsoleRowHeight;
-			GrasperConsole.Resize(width, height, width, 100, false);
-			GrasperConsole.Position = new Point(inventoryWidth + roomConsoleWidth + 1, barConsoleHeight);
-			GrasperConsole.ActionOffset = new Point(0, 1);
-			GrasperConsole.ReDraw();
 
 			width = Program.Width;
 			height = barConsoleHeight - 1;

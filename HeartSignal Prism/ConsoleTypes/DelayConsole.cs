@@ -58,6 +58,9 @@ namespace HeartSignal
 		             delays.Remove(db.name);
 	             }
 
+	             Cursor.NewLine();
+	             Cursor.NewLine();
+
 
 
              }

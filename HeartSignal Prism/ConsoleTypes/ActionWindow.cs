@@ -32,8 +32,7 @@ namespace HeartSignal
         }
 
         private ICellSurface referenceSurface;
-        private Point? PosOffset;
-        private bool explicitLook;
+
 
         //a lot fo reapeating code in here, integrate this better at some point
         public void ShowTooltip(string text,ICellSurface surface, Point? newPosition = null) {
@@ -71,7 +70,7 @@ namespace HeartSignal
             this.IsEnabled = true;
         }
 
-        
+        private bool GexplicitLook;
         public void DisplayActions(string item = null,  ICellSurface surface = null,Point? newPosition = null, bool? _expilcitLook = null)
         {
             if (item == null)
@@ -91,11 +90,12 @@ namespace HeartSignal
             
             if (_expilcitLook == null)
             {
-                explicitlook = explicitLook;
+                explicitlook = GexplicitLook;
             }
             else
             {
                 explicitlook = (bool) _expilcitLook;
+                GexplicitLook = (bool) _expilcitLook;
             }
             
             //if (focusitem != null) { item = focusitem; }

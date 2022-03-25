@@ -57,7 +57,7 @@ namespace HeartSignal
 					return;
 				}
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				Program.MainConsole.ReciveExternalInput("failed to parse: "+input);
 				return;
