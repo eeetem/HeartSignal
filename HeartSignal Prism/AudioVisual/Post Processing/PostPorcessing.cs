@@ -7,7 +7,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Color = Microsoft.Xna.Framework.Color;
 using Point = SadRogue.Primitives.Point;
-
+using SadRogue.Primitives;
+using SadConsole.UI.Controls;
+using SadConsole.UI.Themes;
+using SadConsole.Input;
 
 namespace HeartSignal
 {
@@ -233,7 +236,12 @@ namespace HeartSignal
 			oldMousePos = SadConsole.Game.Instance.Mouse.ScreenPosition;
 
 			Texture2D cursorTexture2D;
-			if (mouseInactivtyCounter > 2000)
+			if (SadConsole.Game.Instance.Mouse.LeftButtonDown)
+			{
+				cursorTexture2D = cursorTextures[3];
+				mouseInactivtyCounter = 0;
+			}
+			else if (mouseInactivtyCounter > 2000)
 			{
 				cursorTexture2D = cursorTextures[2];
 			}else if (mouseInactivtyCounter > 1000)
@@ -247,6 +255,29 @@ namespace HeartSignal
 		
 			}
 
+			Color targetcolor = Color.Green;
+
+			if (SadConsole.Game.Instance.Keyboard.IsKeyDown(Keys.LeftShift))
+			{
+				targetcolor = Color.Red;
+			}
+			else if (SadConsole.Game.Instance.Keyboard.IsKeyDown(Keys.LeftControl))
+			{
+				targetcolor = Color.Blue;
+			}
+
+			Color[] tcolor=new Color[cursorTexture2D.Width*cursorTexture2D.Height];
+			cursorTexture2D.GetData<Color>(tcolor);
+
+			for (int i = 0;  i < tcolor.Length; i++)
+			{
+				if (tcolor[i].A > 1)
+				{
+					tcolor[i] = targetcolor;
+				}
+			}
+	
+			cursorTexture2D.SetData<Color>(tcolor);
 
 			float fade = Math.Clamp((3000 - (mouseInactivtyCounter-2000)) / 3000 * 1, 0, 1);
 
