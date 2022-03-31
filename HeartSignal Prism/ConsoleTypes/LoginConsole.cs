@@ -8,6 +8,7 @@ using ImageProcessor;
 using Color = SadRogue.Primitives.Color;
 using Point = SadRogue.Primitives.Point;
 using System.Threading;
+using Microsoft.Xna.Framework.Graphics;
 
 
 namespace HeartSignal
@@ -30,20 +31,18 @@ namespace HeartSignal
 
             // miniDisplay.SadComponents.Add(new AnimatedBorderComponent());
             Children.Add(miniDisplay);
-            baseImage = File.ReadAllBytes("lobby.png");
+
             //MakeSurfaceImage();
             Random rnd = new Random();
             blurCounter = rnd.Next(0, 18);
             contrastCounter = rnd.Next(0, 40);
             gammaCounter = rnd.Next(0, 20);
 
-            using (MemoryStream stream = new MemoryStream(baseImage))
-            {
-                texture = GameHost.Instance.GetTexture(stream);
-            }
+
         }
 
-        private byte[] baseImage;
+        public byte[] baseData;
+
 
         private int blurCounter;
         private int contrastCounter;
@@ -60,6 +59,7 @@ namespace HeartSignal
         public void MakeSurfaceImage()
         {
             if (Tagline == "") return;
+            if (baseData == null) return;
             var watch = System.Diagnostics.Stopwatch.StartNew();
             //this.Clear();
 
@@ -69,7 +69,8 @@ namespace HeartSignal
             
             File.AppendAllText("logindebug.txt", "LOGIN DEBUG: begining memory streams\n");
             Random rnd = new Random();
-            using (MemoryStream inStream = new MemoryStream(baseImage))
+            
+            using (MemoryStream inStream = new MemoryStream(baseData))
             {
                 using (MemoryStream outStream = new MemoryStream())
                 {
@@ -316,10 +317,11 @@ namespace HeartSignal
 
 
             counter -= delta.Milliseconds;
-            if (counter < 0)
+            if (counter < 0 && baseData !=null)
             {
-                
-                pixelCache = texture.GetPixels();
+    
+
+                pixelCache = texture?.GetPixels();
                 ImageDrawThread?.Join();
                 
 

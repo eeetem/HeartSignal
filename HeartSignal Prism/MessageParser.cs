@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SadConsole;
@@ -82,6 +83,22 @@ namespace HeartSignal
 					Program.ExamInventoryConsole.inventoryInfo = MakeNestedInfo((JObject)jsonObj["root"]);
 					Program.ExamInventoryConsole.ReDraw();
 					break;
+				case "login":
+
+					if (Program.loginConsole != null)
+					{
+						Program.loginConsole.Tagline = jsonObj["tagline"].ToString();
+						Settings.WindowTitle = Program.loginConsole.Tagline;
+						Program.loginConsole.MakeSurfaceImage();
+						
+						
+						Utility.GetImageOrDownload(jsonObj["background"].ToString());//just for the sake of download
+						Program.loginConsole.baseData =  File.ReadAllBytes("img/" + jsonObj["background"]);
+					}
+
+
+					break;
+
 
 			}
 			
@@ -311,17 +328,6 @@ namespace HeartSignal
 
 
 					Program.loginConsole?.Delete();
-
-					break;
-				case "tagline":
-
-					if (Program.loginConsole != null)
-					{
-						Program.loginConsole.Tagline = cutstring.Remove(0, cutstring.IndexOf(":", StringComparison.Ordinal) + 1);
-						Settings.WindowTitle = Program.loginConsole.Tagline;
-						Program.loginConsole.MakeSurfaceImage();
-					}
-
 
 					break;
 
