@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>E:/my games/HeartSignal/HeartSignal Prism/Content/CRT.fx</SourceFile>
-  <SourceTime>2022-03-18T15:14:45.1638402+00:00</SourceTime>
-  <DestFile>E:/my games/HeartSignal/HeartSignal Prism/Content/bin/DesktopGL/content/CRT.xnb</DestFile>
-  <DestTime>2022-03-18T17:06:38.1155012+00:00</DestTime>
+  <SourceFile>C:/Users/Jane/source/repos/HeartSignal/HeartSignal Prism/Content/CRT.fx</SourceFile>
+  <SourceTime>2022-03-18T18:24:45.7703173-04:00</SourceTime>
+  <DestFile>C:/Users/Jane/source/repos/HeartSignal/HeartSignal Prism/Content/bin/DesktopGL/content/CRT.xnb</DestFile>
+  <DestTime>2022-03-26T15:17:28.891696-04:00</DestTime>
   <Importer>EffectImporter</Importer>
-  <ImporterTime>2020-08-10T17:17:54+01:00</ImporterTime>
+  <ImporterTime>2020-08-10T12:17:54-04:00</ImporterTime>
   <Processor>EffectProcessor</Processor>
-  <ProcessorTime>2020-08-10T17:17:54+01:00</ProcessorTime>
+  <ProcessorTime>2020-08-10T12:17:54-04:00</ProcessorTime>
   <Parameters>
     <Key>DebugMode</Key>
     <Value>Auto</Value>
