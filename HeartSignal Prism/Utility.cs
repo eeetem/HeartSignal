@@ -63,6 +63,8 @@ namespace HeartSignal
                     return new ParseCommandGradientAnim(parameters, commandStacks);
                 case "glyph":
                     return new ParseCommandAnimGlyph(parameters, commandStacks);
+                case "timed":
+                    return new ParseCommandTimedGradient(parameters, commandStacks);
                 default:
                     return null; 
             }

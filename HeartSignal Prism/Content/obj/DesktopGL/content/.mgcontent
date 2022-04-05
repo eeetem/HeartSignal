@@ -4,11 +4,11 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Jane/source/repos/HeartSignal/HeartSignal Prism/Content/colorshader.fx</File>
-    <File>C:/Users/Jane/source/repos/HeartSignal/HeartSignal Prism/Content/CRT.fx</File>
-    <File>C:/Users/Jane/source/repos/HeartSignal/HeartSignal Prism/Content/distort.fx</File>
-    <File>C:/Users/Jane/source/repos/HeartSignal/HeartSignal Prism/Content/eye.png</File>
-    <File>C:/Users/Jane/source/repos/HeartSignal/HeartSignal Prism/Content/lc.fx</File>
+    <File>E:/my games/HeartSignal/HeartSignal Prism/Content/colorshader.fx</File>
+    <File>E:/my games/HeartSignal/HeartSignal Prism/Content/CRT.fx</File>
+    <File>E:/my games/HeartSignal/HeartSignal Prism/Content/distort.fx</File>
+    <File>E:/my games/HeartSignal/HeartSignal Prism/Content/eye.png</File>
+    <File>E:/my games/HeartSignal/HeartSignal Prism/Content/lc.fx</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

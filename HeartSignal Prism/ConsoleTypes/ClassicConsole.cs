@@ -67,6 +67,7 @@ namespace HeartSignal
                     Cursor.Position = new Point(0, 0);
                     Cursor.NewLine();
                     needsClear = false;
+                    Cursor.Print("");
 
                 }
 
