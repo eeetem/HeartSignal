@@ -335,7 +335,7 @@ namespace HeartSignal
                 foreach (string word in words)
                 {
 
-                    string spaced = word.Replace("-", " ");
+                    string spaced = word.Replace("¦", " ",StringComparison.InvariantCultureIgnoreCase);
                     if (spaced.Contains("!+!"))
                     {
                         string text;
