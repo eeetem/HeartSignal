@@ -14,7 +14,7 @@ namespace HeartSignal
         {
             string[] glyphs = parameters.Split(':');
             foreach (string glyph in glyphs) { 
-               string[] param = glyph.Split("-");
+               string[] param = glyph.Split(";");
                 bool keep = false;
                 Glyphs.Add(new ColoredGlyph(Color.White.FromParser(param[0], out keep, out keep, out keep, out keep, out keep), Color.White.FromParser(param[1], out keep, out keep, out keep, out keep, out keep),(int)param[2][0]));
             
