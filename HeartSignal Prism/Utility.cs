@@ -157,7 +157,7 @@ namespace HeartSignal
             }
 
 
-            var button = new Button(title.Length, 1)
+            var button = new Button(Utility.RemoveParserTags(title).Length, 1)
             {
                 Text = title,
                 Position = console.Cursor.Position,
@@ -334,10 +334,12 @@ namespace HeartSignal
             {
                 foreach (string word in words)
                 {
-                    if (word.Contains("!+!"))
+                 
+                    string spaced = word.Replace("-", " ").Replace(";"," ");
+                    if (spaced.Contains("!+!"))
                     {
                         string text;
-                        text = word.Replace("!+!", "").Replace("_", " ");
+                        text = spaced.Replace("!+!", "").Replace("_", " ");
                         string tip = text.Substring(text.IndexOf('(') + 1, text.Length - (text.IndexOf('(') + 2));
                         text = text.Remove(text.IndexOf('('), text.Length - text.IndexOf('('));
                         tip = tip.Replace(")", "");
@@ -345,19 +347,18 @@ namespace HeartSignal
                         Utility.CreateToolTip(text, tip, con, ac);
                     }
                     //"!/!click_me(output,theme)!/!"
-                   else if (word.Contains("!/!"))
+                   else if (spaced.Contains("!/!"))
                     {
-                        string spaced = word.Replace("-", " ");
                         string title = spaced.Substring(spaced.IndexOf("!/!")+3, spaced.IndexOf('(') - (spaced.IndexOf("!/!")+3));
                         string output = spaced.Substring(spaced.IndexOf("(")+1, spaced.IndexOf(',') - (spaced.IndexOf("(")+1));
                         string theme = spaced.Substring(spaced.IndexOf(",") + 1,   spaced.IndexOf(')') - (spaced.IndexOf(",")+1));
                         Utility.CreateButton(title, output, theme, con);
                     }
-                    else if (word.Contains("<"))
+                    else if (spaced.Contains("<"))
                     {
-                        string text2 = word;
+                        string text2 = spaced;
                         string leftover = "";
-                        if (word.IndexOf("<") > 0)
+                        if (spaced.IndexOf("<") > 0)
                         {
                             string beginingbit = text2.Substring(0, text2.IndexOf("<"));
                             con.Cursor.Print(beginingbit.Replace("_", " ").Replace(";", " "));
@@ -374,17 +375,17 @@ namespace HeartSignal
                         Utility.CreateButtonThingId(Utility.SplitThingId(text2.Replace("_", " ")), con, ac,
                             explicitLook,
                             null, true);
-                        con.Cursor.Print(leftover.Replace("_", " ").Replace(";", " ")).Right(1);
+                        con.Cursor.Print(leftover).Right(1);
                     }
                     
                     else
                     {
-                        if (con.Cursor.Position.X + word.Length+buffer > con.Width && !word.Contains("["))
+                        if (con.Cursor.Position.X + spaced.Length+buffer > con.Width && !spaced.Contains("["))
                         {
                             con.Cursor.NewLine().Right(buffer);
                         }
 
-                        con.Cursor.Print(word.Replace("_", " ").Replace(";", " ")).Right(1);
+                        con.Cursor.Print(spaced).Right(1);
                     }
                 }
 

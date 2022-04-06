@@ -8,9 +8,7 @@ namespace HeartSignal
 
     public class TimedGradient : CellEffectBase
     {
-        private float Counter = 0;
-
-
+     
         private double turnTime;
         private ColoredGlyph inital;
         private ColoredGlyph final;
