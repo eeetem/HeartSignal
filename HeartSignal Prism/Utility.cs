@@ -356,23 +356,23 @@ namespace HeartSignal
                     }
                     else if (spaced.Contains("<"))
                     {
-                        string text2 = spaced;
+                    
                         string leftover = "";
                         if (spaced.IndexOf("<") > 0)
                         {
-                            string beginingbit = text2.Substring(0, text2.IndexOf("<"));
-                            con.Cursor.Print(beginingbit.Replace("_", " ").Replace(";", " "));
-                            text2 = text2.Remove(0, text2.IndexOf("<"));
+                            string beginingbit = spaced.Substring(0, spaced.IndexOf("<"));
+                            con.Cursor.Print(beginingbit);
+                            spaced = spaced.Remove(0, spaced.IndexOf("<"));
                         }
 
-                        if (text2.Length > text2.IndexOf('>'))
+                        if (spaced.Length > spaced.IndexOf('>'))
                         {
-                            leftover = text2.Substring(text2.IndexOf('>') + 1, text2.Length - (text2.IndexOf('>') + 1));
+                            leftover = spaced.Substring(spaced.IndexOf('>') + 1, spaced.Length - (spaced.IndexOf('>') + 1));
                         }
 
-                        text2 = text2.Remove(text2.IndexOf('>'), text2.Length - text2.IndexOf('>'));
-                        text2 = text2.Replace("<", "").Replace(">", "");
-                        Utility.CreateButtonThingId(Utility.SplitThingId(text2.Replace("_", " ")), con, ac,
+                        spaced = spaced.Remove(spaced.IndexOf('>'), spaced.Length - spaced.IndexOf('>'));
+                        spaced = spaced.Replace("<", "").Replace(">", "");
+                        Utility.CreateButtonThingId(Utility.SplitThingId(spaced), con, ac,
                             explicitLook,
                             null, true);
                         con.Cursor.Print(leftover).Right(1);
