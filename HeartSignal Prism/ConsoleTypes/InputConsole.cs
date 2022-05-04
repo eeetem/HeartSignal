@@ -36,6 +36,17 @@ namespace HeartSignal
 
 
         }
+
+        public void ClearInput()
+        {
+            Cursor.Position = new Point(0, 0);
+            this.DefaultBackground = Color.Gray;
+            DefaultForeground = Color.White;
+            this.Clear();
+            TimesShiftedUp = 0;
+            Cursor.Print(">");
+        }
+
         private void SendCommand() {
 
             string data = this.GetString(1,( Width*Cursor.Position.Y)+Cursor.Position.X);
@@ -57,17 +68,12 @@ namespace HeartSignal
             data = data.Replace("\\", "");
             data = data.Replace("!/", "");
 #endif
+
+
+
+            ClearInput();
             
-            
-            
-            
-            
-            Cursor.Position = new Point(0, 0);
-            this.DefaultBackground = Color.Gray;
-            DefaultForeground = Color.White;
-            this.Clear();
-            TimesShiftedUp = 0;
-            Cursor.Print(">");
+
             
             
 

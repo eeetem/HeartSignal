@@ -189,13 +189,11 @@ namespace HeartSignal
 			}
 
 			int width = Program.Width - (inventoryWidth * 2) - 2;
-			int height = Program.Height - (topConsoleRowHeight + barConsoleHeight + 4);
+			int height = Program.Height - (topConsoleRowHeight + barConsoleHeight+3);
 			InputConsole input = MainConsole.GetInputSource();
 			input.Resize(width, 2, width, 2, false);//fun fact: input console is gigantic - just hidden under
-			input.Position = new Point(0,  height+2);
-			input.Cursor.Position = new Point(0, 0);
-			input.Clear();
-			input.Cursor.Print(">");
+			input.Position = new Point(0,  height);
+			input.ClearInput();
 			if (height > 24)
 			{
 				MainConsole.FontSize = MainConsole.Font.GetFontSize(IFont.Sizes.Two);
@@ -211,7 +209,7 @@ namespace HeartSignal
 				
 			}
 
-			MainConsole.Resize(width , height , width , Math.Max(20,MainConsole.Height), false);
+			MainConsole.Resize(width , height , width , Math.Max(height,MainConsole.Height), false);
 			
 			MainConsole.SetRelevantViewPos();
 

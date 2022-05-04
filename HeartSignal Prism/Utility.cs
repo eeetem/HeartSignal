@@ -391,10 +391,10 @@ namespace HeartSignal
 
                 con.Cursor.NewLine().Right(buffer);
             }
-            catch(Exception)
+            catch(Exception e)
             {
                 File.AppendAllText("debuglog.txt",
-                    "Error print parsing: " + message + " report this and make sure it does not have any odd symbols");
+                    "Error print parsing: " + message + e);
                 con.Cursor.Print("Error print parsing: " + message);
             }
         }

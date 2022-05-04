@@ -25,8 +25,7 @@ namespace HeartSignal
             Cursor.DisableWordBreak = true;
             
             Cursor.UseStringParser = true;
-           // UseKeyboard = true;
-
+            
             input = new InputConsole(width, 2);
 
             input.Position = new Point(0, 0);
