@@ -15,6 +15,7 @@ namespace HeartSignal
 
             this.UsePrintProcessor = true;
             this.Position = position;
+            Cursor.UseStringParser = true;
 
         }
         public static Dictionary<string, Dictionary<string, List<string>>> actionDatabase = new Dictionary<string, Dictionary<string, List<string>>>();
@@ -51,17 +52,24 @@ namespace HeartSignal
 
             this.Cursor.Position = new Point(1, 1);
             string[] words = text.Split(" ");
-            foreach (string w in words)
-            {
-                string Word = w;
-                if (!Word.Contains("[") && Cursor.Position.X + Word.Length + 2 > Width || Word.Contains("[newline]"))
-                {
 
-                    Word = Word.Replace("[newline]", "");
-                    Cursor.NewLine().Right(1);
+            
+            string toPrint = "";
+            foreach (var word in words)
+            {
+                if (word.Contains("[newline]") || (Cursor.Position.X + word.Length + 2 > Width && !word.Contains("[")))
+                {
+                    
+                    Cursor.Print(toPrint).NewLine().Right(1);
+                    toPrint = "";
                 }
-                Cursor.Print(Word.Replace(";"," ")).Right(1);
+
+                toPrint +=" " + word;
+                toPrint = toPrint.Replace("[newline]", "");
             }
+
+            Cursor.Print(toPrint);
+            
             this.Resize(Width, Cursor.Position.Y + 2, Width, Cursor.Position.Y + 2, false);
             var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.Green, Color.Transparent));
             this.DrawBox(new Rectangle(0, 0, Width, Height), boxShape);

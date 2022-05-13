@@ -89,7 +89,6 @@ namespace HeartSignal
         }
 
         public static void CreateToolTip(string name, string tip, SadConsole.UI.ControlsConsole console, ActionWindow ac) {
-            name = name.Replace("_", " ");
             string realtext = RemoveParserTags(name);
 
 
