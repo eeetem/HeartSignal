@@ -37,7 +37,7 @@ namespace HeartSignal
 
         //a lot fo reapeating code in here, integrate this better at some point
         public void ShowTooltip(string text,ICellSurface surface, Point? newPosition = null) {
-            this.Resize(40, 12, 40, 12, false);
+            this.Resize(45, 12, 45, 12, false);
             AudioManager.ParseRequest(null, "play", "misc/tooltip.ogg");
             if (newPosition != null)
             {
@@ -50,14 +50,14 @@ namespace HeartSignal
             this.Clear();
             Controls.Clear();
 
-            this.Cursor.Position = new Point(1, 1);
+            this.Cursor.Position = new Point(0, 1);
             string[] words = text.Split(" ");
 
             
             string toPrint = "";
             foreach (var word in words)
             {
-                if (word.Contains("[newline]") || (Cursor.Position.X + word.Length + 2 > Width && !word.Contains("[")))
+                if (word.Contains("[newline]") || (Utility.RemoveParserTags(toPrint).Length + word.Length + 2 > Width && !word.Contains("[")))
                 {
                     
                     Cursor.Print(toPrint).NewLine().Right(1);
@@ -65,7 +65,7 @@ namespace HeartSignal
                 }
 
                 toPrint +=" " + word;
-                toPrint = toPrint.Replace("[newline]", "");
+                toPrint = toPrint.Replace(" [newline]", "");
             }
 
             Cursor.Print(toPrint);
