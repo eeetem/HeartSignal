@@ -25,8 +25,7 @@ namespace HeartSignal
 	    private static void SplitServerMessage(string input)
 	    {
 		    
-		    File.AppendAllText("debuglog.txt", "splitting:"+input+"\n");
-
+		   
 		    int idx = 0;
 		    //int idx = input.IndexOf(Environment.NewLine, StringComparison.Ordinal);
 		    //          if (idx < 1) {
@@ -103,6 +102,8 @@ namespace HeartSignal
 	    static bool needToSendMessage = false;
 	    private static async void ServerLoop()
 		{
+			
+			SplitServerMessage("[JSON]{\"root\":{\"1\":{\"1\":{\"name\":\"[c:r¦f:yellow]{[c:u]<sad¦mask(#321)>[c:r¦f:yellow]}[c:u]\"},\"2\":{\"name\":\"<[c:r¦f:white]left¦eye[c:u](#1793)>\"},\"3\":{\"name\":\"<[c:r¦f:white]right¦eye[c:u](#1794)>\"},\"name\":\"<[c:r¦f:white]head[c:u](#1763)>\"},\"2\":{\"name\":\"<[c:r¦f:white]mouth[c:u](#1795)>\"},\"3\":{\"name\":\"<[c:r¦f:white]neck[c:u](#1762)>\"},\"4\":{\"1\":{\"name\":\"[c:r¦f:yellow]{[c:u]<elated¦shirt(#1796)>[c:r¦f:yellow]}[c:u]\"},\"name\":\"<[c:r¦f:white]torso[c:u](#1757)>\"},\"5\":{\"1\":{\"name\":\"[c:r¦f:yellow]{[c:u]<left¦elated¦shirt¦sleeve(#1796)>[c:r¦f:yellow]}[c:u]\"},\"2\":{\"1\":{\"name\":\"[c:glyph¦0,128,0;0,0,0;!:128,128,128;0,0,0;.].[c:u]<wooden¦club(#1798)>[c:glyph¦0,128,0;0,0,0;!:128,128,128;0,0,0;.].\"},\"name\":\"[c:glyph¦255,0,0;0,0,0;/:0,128,0;0,0,0;Ä:0,0,255;0,0,0;\\\\:0,128,0;0,0,0;|].[c:u]<[c:r¦f:white]left¦hand[c:u](#1769)>[c:glyph¦255,0,0;0,0,0;/:0,128,0;0,0,0;Ä:0,0,255;0,0,0;\\\\:0,128,0;0,0,0;|].[c:u]\"},\"name\":\"<[c:r¦f:white]left¦arm[c:u](#1765)>\"},\"6\":{\"1\":{\"name\":\"[c:r¦f:yellow]{[c:u]<right¦elated¦shirt¦sleeve(#1796)>[c:r¦f:yellow]}[c:u]\"},\"2\":{\"1\":{\"name\":\"[c:r¦f:gray]@[c:u]<dagger¦'Virginslayer'(#1540)>[c:r¦f:gray]@[c:u]\"},\"name\":\"<[c:r¦f:white]right¦hand[c:u](#1771)>\"},\"name\":\"<[c:r¦f:white]right¦arm[c:u](#1767)>\"},\"7\":{\"1\":{\"name\":\"[c:r¦f:yellow]{[c:u]<elated¦shirt(#1796)>[c:r¦f:yellow]}[c:u]\"},\"name\":\"<[c:r¦f:white]abdomen[c:u](#1759)>\"},\"8\":{\"1\":{\"name\":\"[c:r¦f:yellow]{[c:u]<pair¦of¦elated¦pants(#1797)>[c:r¦f:yellow]}[c:u]\"},\"name\":\"<[c:r¦f:white]groin[c:u](#1760)>\"},\"9\":{\"1\":{\"name\":\"[c:r¦f:yellow]{[c:u]<pair¦of¦elated¦pants(#1797)>[c:r¦f:yellow]}[c:u]\"},\"2\":{\"name\":\"<[c:r¦f:white]left¦foot[c:u](#1779)>\"},\"name\":\"<[c:r¦f:white]left¦leg[c:u](#1773)>\"},\"10\":{\"1\":{\"name\":\"[c:r¦f:yellow]{[c:u]<pair¦of¦elated¦pants(#1797)>[c:r¦f:yellow]}[c:u]\"},\"2\":{\"name\":\"<[c:r¦f:white]right¦foot[c:u](#1781)>\"},\"name\":\"<[c:r¦f:white]right¦leg[c:u](#1776)>\"},\"name\":\"i, <Constantine(#1756)>\"},\"type\":\"inventory\"}");
 
 			try
 			{
@@ -135,7 +136,7 @@ namespace HeartSignal
 						string response = "";
 						while (true)
 						{
-							string recived = await client.ReadAsync(TimeSpan.FromMilliseconds(100));
+							string recived = await client.ReadAsync(TimeSpan.FromMilliseconds(150));
 							if (recived.Length > 1)
 							{
 								//if we recived something - try reciving again since the message might have been cut halfway

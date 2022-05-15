@@ -199,7 +199,7 @@ namespace HeartSignal
 				MainConsole.FontSize = MainConsole.Font.GetFontSize(IFont.Sizes.Two);
 				width = width / 2;
 				height = height / 2;
-				MainConsole.Position = new Point((inventoryWidth + 2) / 2, (topConsoleRowHeight + barConsoleHeight) / 2);
+				MainConsole.Position = new Point((inventoryWidth + 2) / 2, ((topConsoleRowHeight + barConsoleHeight) / 2)+1);
 
 			}
 			else
@@ -236,7 +236,7 @@ namespace HeartSignal
 				ThingConsole.actionWindow.FontSize = ThingConsole.actionWindow.Font.GetFontSize(IFont.Sizes.Two);
 				width = width / 2;
 				height = height / 2;
-				posx = posx / 2;
+				posx = (posx / 2)+0;
 				posy = posy / 2;
 			}
 			else
@@ -258,9 +258,9 @@ namespace HeartSignal
 			{
 				RoomConsole.FontSize = RoomConsole.Font.GetFontSize(IFont.Sizes.Two);
 				RoomConsole.actionWindow.FontSize = RoomConsole.actionWindow.Font.GetFontSize(IFont.Sizes.Two);
-				width = width / 2;
+				width = (width / 2)-1;
 				height = height / 2;
-				posx = posx / 2;
+				posx = (posx / 2)+1;
 				posy = posy / 2;
 			}
 			else

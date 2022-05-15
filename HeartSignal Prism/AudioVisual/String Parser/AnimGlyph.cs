@@ -23,35 +23,32 @@ namespace HeartSignal
             IsFinished = false;
             _timeElapsed = TimeSpan.Zero;
         }
-		private static readonly object syncObj = new object();
+
         public override bool ApplyToCell(ColoredGlyph cell, ColoredGlyphState originalState)
         {
 
-            lock (syncObj)
-            {
+          
                 ColoredGlyph target = glyphs[(int) Counter];
                 cell.Foreground = target.Foreground;
                 cell.Background = target.Background;
                 cell.Glyph = target.Glyph;
-            }
+                return true;   
+            
 
-            return true;        
+                
         }
 
 
 
         public override void Update(System.TimeSpan delta)
         {
-            lock (syncObj)
+           
+            Counter = Math.Clamp(Counter +(float) delta.Milliseconds / 1000 * Utility.GlobalAnimationSpeed,0,glyphs.Count);
+            if (Counter >= glyphs.Count)
             {
-
-                Counter += (float) delta.Milliseconds / 1000 * Utility.GlobalAnimationSpeed;
-                if (Counter > glyphs.Count)
-                {
-
-                    Counter = 0;
-                }
+                Counter = 0;
             }
+            
 
             base.Update(delta);
 

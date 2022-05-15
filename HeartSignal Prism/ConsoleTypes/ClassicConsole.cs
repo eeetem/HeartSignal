@@ -61,6 +61,7 @@ namespace HeartSignal
                 if (needsClear)
                 {
                     this.Clear();
+                    Controls.Clear();
                     this.Effects.RemoveAll();
                     Surface.ViewPosition = new Point(0, 0);
                     Cursor.Position = new Point(0, 0);
