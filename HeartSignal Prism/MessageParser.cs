@@ -98,7 +98,14 @@ namespace HeartSignal
 
 
 					break;
-
+				case "desc":
+					Program.ThingConsole.contents = jsonObj["contents"].ToString();
+					Program.ThingConsole.ReDraw();
+					break;
+				case "room":
+					Program.RoomConsole.contents = jsonObj["contents"].ToString();
+					Program.RoomConsole.ReDraw();
+					break;
 
 			}
 			
@@ -135,20 +142,7 @@ namespace HeartSignal
 			switch (sub)
 			{
 				//a lot of parse repeating - turn this into a function at some point - me from the future: turned some bits into functions however there is still shitload of repeating, needs quite a big refactor
-				case "desc":
-					returned = RemoveParseTag(cutstring);
-					cutstring = returned[0];
 
-					Program.ThingConsole.lines = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-					Program.ThingConsole.ReDraw();
-					break;
-				case "room":
-					returned = RemoveParseTag(cutstring);
-					cutstring = returned[0];
-
-					Program.RoomConsole.lines = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-					Program.RoomConsole.ReDraw();
-					break;
 				case "actions":
 					returned = RemoveParseTag(cutstring);
 					cutstring = returned[0];
@@ -170,7 +164,10 @@ namespace HeartSignal
 					}
 					break;
 				//obsolete
+				case "desc":
+				case "room":
 				case "argactions":
+				case "bars":
 					Program.MainConsole.ReciveExternalInput("obsolete parsing tag recived:");
 					Program.MainConsole.ReciveExternalInput(cutstring);
 					break;
@@ -180,16 +177,7 @@ namespace HeartSignal
 					Program.buttonConsole.MakeButtons(args);
 					break;
 
-				case "bars":
-					Program.MainConsole.ReciveExternalInput("obsolete parsing tag recived:");
-					Program.MainConsole.ReciveExternalInput(cutstring);
-					/*	returned = RemoveParseTag(cutstring);
-							cutstring = returned[0];
-	
-	
-							BarConsole.AddBar(returned[1],
-								ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));*/
-					break;
+
 				//[tag]delay:attack{"1235","1234","64:64:64}
 				case "delay":
 					returned = RemoveParseTag(cutstring);
