@@ -20,30 +20,45 @@ namespace HeartSignal
 
 				switch (key.Key)
 				{
-					case(Keys.NumPad8):
+					case (Keys.NumPad8):
 						NetworkManager.SendNetworkMessage("north");
 						return;
-					case(Keys.NumPad7):
+					case (Keys.NumPad7):
 						NetworkManager.SendNetworkMessage("northwest");
 						return;
-					case(Keys.NumPad9):
+					case (Keys.NumPad9):
 						NetworkManager.SendNetworkMessage("northeast");
 						return;
-					case(Keys.NumPad4):
+					case (Keys.NumPad4):
 						NetworkManager.SendNetworkMessage("west");
 						return;
-					case(Keys.NumPad6):
+					case (Keys.NumPad6):
 						NetworkManager.SendNetworkMessage("east");
 						return;
-					case(Keys.NumPad2):
+					case (Keys.NumPad2):
 						NetworkManager.SendNetworkMessage("south");
 						return;
-					case(Keys.NumPad1):
+					case (Keys.NumPad1):
 						NetworkManager.SendNetworkMessage("southwest");
 						return;
-					case(Keys.NumPad3):
+					case (Keys.NumPad3):
 						NetworkManager.SendNetworkMessage("southeast");
 						return;
+					case (Keys.Z):
+						if (SadConsole.Game.Instance.Keyboard.IsKeyDown(Keys.LeftControl))
+						{
+							if (SadConsole.Game.Instance.Keyboard.IsKeyDown(Keys.LeftShift))
+							{
+								NetworkManager.SendNetworkMessage("stop");
+							}
+							else
+							{
+								NetworkManager.SendNetworkMessage("stopall");
+							}
+
+						}
+
+						break;
 					case(Keys.Enter):
 						Program.MainConsole.GetInputSource().IsFocused = true;
 						if (SadConsole.Game.Instance.Keyboard.IsKeyDown(Keys.LeftAlt))
