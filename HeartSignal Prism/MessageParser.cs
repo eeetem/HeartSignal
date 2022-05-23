@@ -106,6 +106,9 @@ namespace HeartSignal
 					Program.RoomConsole.contents = jsonObj["contents"].ToString();
 					Program.RoomConsole.ReDraw();
 					break;
+				case "var":
+					Utility.SetVar(jsonObj["name"].ToString(),jsonObj["value"].ToString());
+					break;
 
 			}
 			

@@ -18,6 +18,25 @@ namespace HeartSignal
     {
 
         public static float GlobalAnimationSpeed = 1f;
+        private static Dictionary<string, string> globalVars = new Dictionary<string, string>();
+
+
+        public static void SetVar(string name, string value)
+        {
+            if (!globalVars.ContainsKey(name))
+            {
+                globalVars.Add(name,value);
+            }
+
+            globalVars[name] = value;
+            
+            
+        }
+
+        public static string GetVar(string name)
+        {
+            return globalVars[name];
+        }
 
         public static double GetAngleOfLineBetweenTwoPoints(SadRogue.Primitives.Point p1, SadRogue.Primitives.Point p2)
         {
@@ -335,6 +354,14 @@ namespace HeartSignal
                 {
 
                     string spaced = word.Replace("¦", " ",StringComparison.InvariantCultureIgnoreCase);
+                    
+                    if (spaced.Contains("{"))
+                    {
+                        string varbl = spaced.Substring(spaced.IndexOf("{"), spaced.IndexOf("{")-spaced.IndexOf("}")+1);
+                        spaced.Replace("{" + varbl + "}",GetVar(varbl));
+                    }
+                    
+                    
                     if (spaced.Contains("!+!"))
                     {
                         string text;
@@ -376,7 +403,7 @@ namespace HeartSignal
                             null, true);
                         con.Cursor.Print(leftover).Right(1);
                     }
-                    
+
                     else
                     {
                         if (con.Cursor.Position.X + spaced.Length+buffer > con.Width && !spaced.Contains("["))
