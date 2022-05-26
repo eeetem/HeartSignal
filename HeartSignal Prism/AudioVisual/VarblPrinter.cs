@@ -18,9 +18,9 @@ namespace HeartSignal
 		{
 			Label L = control as Label;
 			L.Surface.Clear();
-			if (control.Width != Utility.GetVar(varkey).Length)
+			if (control.Width != Utility.RemoveParserTags(Utility.GetVar(varkey)).Length)
 			{
-				L.Resize(Utility.GetVar(varkey).Length, 1);
+				L.Resize(Utility.RemoveParserTags(Utility.GetVar(varkey)).Length, 1);
 				BaseConsole dc = control.Parent.Host.ParentConsole as BaseConsole;
 				if (dc != null)
 				{

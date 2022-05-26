@@ -374,7 +374,7 @@ namespace HeartSignal
                             Theme = new VarblPrinterTheme(varbl)
                         };
                         con.Controls.Add(varble);
-                        con.Cursor.Right(Utility.GetVar(varbl).Length + 1);
+                        con.Cursor.Right(RemoveParserTags(Utility.GetVar(varbl)).Length + 1);
             
                     }
                         else if (spaced.Contains("!+!"))
