@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Console = SadConsole.Console;
 
 namespace HeartSignal
 {
@@ -45,6 +46,6 @@ namespace HeartSignal
             
         }
 
-      
+
     }
 }

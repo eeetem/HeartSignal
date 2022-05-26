@@ -8,6 +8,7 @@ using SadConsole.StringParser;
 using SadConsole;
 using SadConsole.UI.Controls;
 using Microsoft.Xna.Framework.Graphics;
+using SadConsole.Components;
 using SadConsole.Host;
 using SadConsole.UI.Themes;
 using Point = SadRogue.Primitives.Point;
@@ -30,6 +31,7 @@ namespace HeartSignal
             }
 
             globalVars[name] = value;
+            
             
             
         }
@@ -366,11 +368,16 @@ namespace HeartSignal
                     if (spaced.Contains("{"))
                     {
                         string varbl = spaced.Substring(spaced.IndexOf("{")+1, spaced.IndexOf("}")-spaced.IndexOf("{")-1);
-                         spaced =  spaced.Replace("{" + varbl + "}",GetVar(varbl));
+                        var varble = new Label(Utility.GetVar(varbl))
+                        {
+                            Position = con.Cursor.Position,
+                            Theme = new VarblPrinterTheme(varbl)
+                        };
+                        con.Controls.Add(varble);
+                        con.Cursor.Right(Utility.GetVar(varbl).Length + 1);
+            
                     }
-                    
-                    
-                    if (spaced.Contains("!+!"))
+                        else if (spaced.Contains("!+!"))
                     {
                         string text;
                         text = spaced.Replace("!+!", "").Replace("_", " ");
