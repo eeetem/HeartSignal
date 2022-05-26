@@ -368,7 +368,7 @@ namespace HeartSignal
                     if (spaced.Contains("{"))
                     {
                         string varbl = spaced.Substring(spaced.IndexOf("{")+1, spaced.IndexOf("}")-spaced.IndexOf("{")-1);
-                        var varble = new Label(Utility.GetVar(varbl))
+                        var varble = new Label(RemoveParserTags(Utility.GetVar(varbl)).Length)
                         {
                             Position = con.Cursor.Position,
                             Theme = new VarblPrinterTheme(varbl)
@@ -377,7 +377,7 @@ namespace HeartSignal
                         con.Cursor.Right(RemoveParserTags(Utility.GetVar(varbl)).Length + 1);
             
                     }
-                        else if (spaced.Contains("!+!"))
+                    else if (spaced.Contains("!+!"))
                     {
                         string text;
                         text = spaced.Replace("!+!", "").Replace("_", " ");
