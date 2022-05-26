@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using SadRogue.Primitives;
 using SadConsole.StringParser;
@@ -35,7 +36,14 @@ namespace HeartSignal
 
         public static string GetVar(string name)
         {
-            return globalVars[name];
+            if (globalVars.ContainsKey(name))
+            {
+                
+                return globalVars[name];
+            }
+
+            return "";
+
         }
 
         public static double GetAngleOfLineBetweenTwoPoints(SadRogue.Primitives.Point p1, SadRogue.Primitives.Point p2)
@@ -357,8 +365,8 @@ namespace HeartSignal
                     
                     if (spaced.Contains("{"))
                     {
-                        string varbl = spaced.Substring(spaced.IndexOf("{"), spaced.IndexOf("{")-spaced.IndexOf("}")+1);
-                        spaced.Replace("{" + varbl + "}",GetVar(varbl));
+                        string varbl = spaced.Substring(spaced.IndexOf("{")+1, spaced.IndexOf("}")-spaced.IndexOf("{")-1);
+                         spaced =  spaced.Replace("{" + varbl + "}",GetVar(varbl));
                     }
                     
                     
