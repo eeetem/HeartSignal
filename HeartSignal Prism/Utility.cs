@@ -375,9 +375,10 @@ namespace HeartSignal
                         };
                         con.Controls.Add(varble);
                         con.Cursor.Right(RemoveParserTags(Utility.GetVar(varbl)).Length + 1);
-            
+                        spaced = spaced.Remove(spaced.IndexOf("{"), spaced.IndexOf("}") - spaced.IndexOf("{")+1);
+
                     }
-                    else if (spaced.Contains("!+!"))
+                    if (spaced.Contains("!+!"))
                     {
                         string text;
                         text = spaced.Replace("!+!", "").Replace("_", " ");
