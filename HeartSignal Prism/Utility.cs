@@ -44,7 +44,7 @@ namespace HeartSignal
                 return globalVars[name];
             }
 
-            return "";
+            return " ";
 
         }
 
