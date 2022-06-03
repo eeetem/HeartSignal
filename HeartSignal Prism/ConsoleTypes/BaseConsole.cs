@@ -4,7 +4,7 @@ using SadRogue.Primitives;
 
 namespace HeartSignal
 {
-    internal class BaseConsole : SadConsole.UI.ControlsConsole
+    public class BaseConsole : SadConsole.UI.ControlsConsole
     {
 
         public BaseConsole(int width, int height, bool border= true, bool actionW=false) : base(width, height)

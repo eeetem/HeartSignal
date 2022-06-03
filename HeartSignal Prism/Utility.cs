@@ -238,7 +238,7 @@ namespace HeartSignal
             {
                 foreach (string id in sameThingsIDs)
                 {
-                    if (!ActionWindow.actionDatabase.ContainsKey(id)){
+                    if (!ThingDatabase.thingDatabase.ContainsKey(id)){
 
                         InitThingId(id);
 
@@ -247,7 +247,7 @@ namespace HeartSignal
                 }
 
 
-            } else if(!ActionWindow.actionDatabase.ContainsKey(thingid[1]))
+            } else if(!ThingDatabase.thingDatabase.ContainsKey(thingid[1]))
             {
 
                 InitThingId(thingid[1]);

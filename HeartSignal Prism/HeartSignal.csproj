@@ -28,6 +28,7 @@
     <PackageReference Include="System.Security.Permissions" Version="5.0.0" />
     <PackageReference Include="SadConsole.Host.MonoGame" Version="9.2.2" />
     <PackageReference Include="Telnet" Version="0.8.6" />
+    <PackageReference Include="TheSadRogue.Primitives" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>

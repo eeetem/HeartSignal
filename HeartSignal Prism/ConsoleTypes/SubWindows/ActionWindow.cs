@@ -8,17 +8,20 @@ using SadConsole.Input;
 
 namespace HeartSignal
 {
-    class ActionWindow : SadConsole.UI.ControlsConsole
+    public class ActionWindow : SadConsole.UI.ControlsConsole
     {
         public ActionWindow(int width, int height, Point position) : base(width, height)
         {
 
             this.UsePrintProcessor = true;
-            this.Position = position;
             Cursor.UseStringParser = true;
+            this.Position = position;
+            IsVisible = false;
+            IsEnabled = false;
+         
 
         }
-        public static Dictionary<string, Dictionary<string, List<string>>> actionDatabase = new Dictionary<string, Dictionary<string, List<string>>>();
+     
 
         public static Dictionary<string, ActionWindow> activeWindows = new Dictionary<string, ActionWindow>();
        // public static Dictionary<string, Dictionary<string, List<string>>> argactionDatabase = new Dictionary<string, Dictionary<string, List<string>>>();
@@ -120,12 +123,13 @@ namespace HeartSignal
             {
                 if (!explicitlook)
                 {
-                    GetDesc(id);
+                    ThingDatabase.Examine(id);
                 }
 
                 lastitem = item;
             }
-            if (!actionDatabase.ContainsKey(id)) {
+            if (!ThingDatabase.thingDatabase.ContainsKey(id) && ThingDatabase.thingDatabase[id].name != "error") {
+                ThingDatabase.GetData(id);
                 return;
             }
 
@@ -141,18 +145,19 @@ namespace HeartSignal
             this.Cursor.Position = new Point(0, 0);
             Cursor.Right(1).Print("Actions").Right(1);
             //if the action menu does not contain currently selected tab - switch to the first one
-            if (!actionDatabase[id].ContainsKey(selectedTab))
+            if (!ThingDatabase.thingDatabase[id].actionDatabase.ContainsKey(selectedTab))
 			{
-                var first = actionDatabase[id].First();
+                var first = ThingDatabase.thingDatabase[id].actionDatabase.First();
                 selectedTab = first.Key;
 
 
             }
 
 
-            foreach (KeyValuePair<string, List<string>> tabs in actionDatabase[id])
+            foreach (KeyValuePair<string, List<string>> tabs in ThingDatabase.thingDatabase[id].actionDatabase)
             {
-
+                if (tabs.Key == "basic") continue;
+                
                 if (tabs.Key == selectedTab)
                 {
                     Surface.SetDecorator(Cursor.Position.X, Cursor.Position.Y, tabs.Key.Length, new GlyphDefinition(ICellSurface.ConnectedLineThinExtended[7], Mirror.None).CreateCellDecorator(Color.White));
@@ -188,15 +193,15 @@ namespace HeartSignal
                 };
                 look.MouseButtonClicked += (s, a) => IsVisible = false;
                 look.MouseButtonClicked += (s, a) => IsEnabled = false;
-                look.MouseButtonClicked += (s, a) => GetDesc(id);
+                look.MouseButtonClicked += (s, a) => ThingDatabase.Examine(id);
                 this.Controls.Add(look);
 
 
             }
             Cursor.NewLine().Right(1);
-            if (actionDatabase[id].ContainsKey(selectedTab))
+            if (ThingDatabase.thingDatabase[id].actionDatabase.ContainsKey(selectedTab))
             {
-                foreach (string action in actionDatabase[id][selectedTab])
+                foreach (string action in ThingDatabase.thingDatabase[id].actionDatabase[selectedTab])
                 {
                     bool argFlag = action.Contains("[whatever]");
                     string parsedAction = action.Replace(" [this]", "").Replace("[whatever]", "...").Replace("_", " ");
@@ -213,7 +218,7 @@ namespace HeartSignal
                     };
                     if (argFlag)
                     {
-                        button.MouseButtonClicked += (s, a) => DoArgAction(id, action, thing);
+                        button.MouseButtonClicked += (s, a) => DoArgAction(id, action);
                     }
                     else
                     {
@@ -326,7 +331,7 @@ namespace HeartSignal
 
         }
 
-        private void DoAction(string id, string action)
+        public void DoAction(string id, string action)
         {
             //index++;///arrays starting at 1 momment
             NetworkManager.SendNetworkMessage(action + " " + id);
@@ -335,13 +340,13 @@ namespace HeartSignal
 
         public static bool awaitingItemClick = false;
         static string pendingArgMessage = "";
-        private static void DoArgAction(string id, string action,string name)
+        private static void DoArgAction(string id, string action)
         {
             // index++;//arrays starting at 1 momment
             pendingArgMessage = action.Replace("[this]", id);
             awaitingItemClick = true;
             Program.PromptWindow.toptext = "Click a thing to complete";
-            Program.PromptWindow.middletext = action.Replace("[this]", name).Replace("[whatever]", "...?");
+            Program.PromptWindow.middletext = action.Replace("[this]", ThingDatabase.thingDatabase[id].name).Replace("[whatever]", "...?");
             Program.PromptWindow.Type = PromptWindow.PopupType.Permanent;
 
             Program.PromptWindow.needsDraw = true;
@@ -392,12 +397,7 @@ namespace HeartSignal
             }
         }
 
-        public static void GetDesc(string id)
-        {
-            
-            NetworkManager.SendNetworkMessage("look " + id);
 
-        }
 
 
     }

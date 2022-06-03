@@ -99,17 +99,70 @@ namespace HeartSignal
 
 					break;
 				case "desc":
-					Program.ThingConsole.contents = jsonObj["contents"].ToString();
-					Program.ThingConsole.ReDraw();
+				///	Program.ThingConsole.contents = jsonObj["contents"].ToString();
+				//	Program.ThingConsole.ReDraw();
 					break;
 				case "room":
 					Program.RoomConsole.contents = jsonObj["contents"].ToString();
+					List<string> things = new List<string>();
+					foreach (var jToken in jsonObj["things"])
+					{
+
+						things.Add(jToken.ToString());
+
+
+					}
+
+					Program.RoomConsole.things = things;
 					Program.RoomConsole.ReDraw();
 					break;
 				case "var":
 					Utility.SetVar(jsonObj["name"].ToString(),jsonObj["value"].ToString());
 					break;
+				case "thingdata":
+					string id = jsonObj["id"].ToString();
+					string desc = jsonObj["desc"].ToString();
+					string name = jsonObj["name"].ToString();
+					Dictionary<string, List<string>> actionDatabase = new Dictionary<string, List<string>>();
+					foreach (var jToken in jsonObj["actions"])
+					{
+						var actionList = (JProperty) jToken;
+						string tabName = actionList.Name;
+						var array = (JArray) actionList.Value;
+						List<string> actions = new List<string>();
+						foreach (var action in array)
+						{
+							actions.Add(action.ToString());
+						}
+						actionDatabase.Add(tabName,actions);
 
+
+					}
+
+					lock (ThingDatabase.DatabaseSyncObj)
+					{
+						ThingDatabase.ThingUpdate updaters = null;
+						if (ThingDatabase.thingDatabase.ContainsKey(id))
+						{
+							updaters = ThingDatabase.thingDatabase[id].updateEvent;
+							ThingDatabase.thingDatabase.Remove(id);
+
+						}
+
+						ThingDatabase.ThingData data = new ThingDatabase.ThingData(name,desc);
+						data.actionDatabase = actionDatabase;
+						data.updateEvent = updaters;
+
+						ThingDatabase.thingDatabase.Add(id, data);
+
+						if (ThingDatabase.thingDatabase[id].updateEvent != null)
+						{
+							ThingDatabase.thingDatabase[id].updateEvent.Invoke();
+						}
+						
+					}
+
+					break;
 			}
 			
 
@@ -147,6 +200,8 @@ namespace HeartSignal
 				//a lot of parse repeating - turn this into a function at some point - me from the future: turned some bits into functions however there is still shitload of repeating, needs quite a big refactor
 
 				case "actions":
+					return;
+					/*
 					returned = RemoveParseTag(cutstring);
 					cutstring = returned[0];
 
@@ -164,7 +219,7 @@ namespace HeartSignal
 						{
 							ac.Value.DisplayActions();
 						}
-					}
+					}*/
 					break;
 				//obsolete
 				case "desc":
@@ -178,6 +233,10 @@ namespace HeartSignal
 					returned = RemoveParseTag(cutstring);
 					args = ExtractQuotationStrings(returned[0]);
 					Program.buttonConsole.MakeButtons(args);
+					break;
+				case "exits":
+
+					//todo
 					break;
 
 
@@ -310,11 +369,7 @@ namespace HeartSignal
 
 					break;
 
-
-				case "exits":
-
-					//todo
-					break;
+				
 				case "accept":
 
 

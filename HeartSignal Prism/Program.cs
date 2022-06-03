@@ -21,7 +21,7 @@ namespace HeartSignal
 	{
 		public static ClassicConsole MainConsole;
 		public static DisplayConsole RoomConsole;
-		public static DisplayConsole ThingConsole;
+		//public static DisplayConsole ThingConsole;
 		public static MapConsole MapConsole;
 		public static PromptWindow PromptWindow;
 		public static InventoryConsole InventoryConsole;
@@ -98,9 +98,9 @@ namespace HeartSignal
 			root.Children.Add(MapConsole);
 			RoomConsole = new DisplayConsole(1, 1);
 			root.Children.Add(RoomConsole);
-			ThingConsole = new DisplayConsole(1, 1);
-			ThingConsole.ExplicitLook = true;
-			root.Children.Add(ThingConsole);
+			//ThingConsole = new DisplayConsole(1, 1);
+			//ThingConsole.ExplicitLook = true;
+		//	root.Children.Add(ThingConsole);
 			InventoryConsole = new InventoryConsole(1, 1);
 
 
@@ -180,7 +180,7 @@ namespace HeartSignal
 
 			int MapConsoleHeight = 7;
 			int inventoryWidth = 30;
-			int roomConsoleWidth = (Program.Width - (inventoryWidth * 3)) / 2;
+			int roomConsoleWidth = (Program.Width - (inventoryWidth * 2));
 			int barConsoleHeight = 6;//ONLY EVEN due to map console size increase
 			int topConsoleRowHeight = 15 + (int)(Program.Height* 0.2);
 			if (topConsoleRowHeight % 2 != 0)
@@ -228,31 +228,31 @@ namespace HeartSignal
 
 			width = roomConsoleWidth - 1;
 			height = topConsoleRowHeight;
-			int posx = inventoryWidth + 1;
+		int posx = inventoryWidth + 1;
 			int posy = barConsoleHeight;
-			if (height > 31)
-			{
-				ThingConsole.FontSize = ThingConsole.Font.GetFontSize(IFont.Sizes.Two);
-				ThingConsole.actionWindow.FontSize = ThingConsole.actionWindow.Font.GetFontSize(IFont.Sizes.Two);
-				width = width / 2;
-				height = height / 2;
-				posx = (posx / 2)+0;
-				posy = posy / 2;
-			}
-			else
-			{
-				ThingConsole.FontSize = ThingConsole.Font.GetFontSize(IFont.Sizes.One);
-				ThingConsole.actionWindow.FontSize = ThingConsole.actionWindow.Font.GetFontSize(IFont.Sizes.One);
-			}
+			/*		if (height > 31)
+				{
+					ThingConsole.FontSize = ThingConsole.Font.GetFontSize(IFont.Sizes.Two);
+					ThingConsole.actionWindow.FontSize = ThingConsole.actionWindow.Font.GetFontSize(IFont.Sizes.Two);
+					width = width / 2;
+					height = height / 2;
+					posx = (posx / 2)+0;
+					posy = posy / 2;
+				}
+				else
+				{
+					ThingConsole.FontSize = ThingConsole.Font.GetFontSize(IFont.Sizes.One);
+					ThingConsole.actionWindow.FontSize = ThingConsole.actionWindow.Font.GetFontSize(IFont.Sizes.One);
+				}
+	
+				ThingConsole.Resize(width, height, width, 100, true);
+				ThingConsole.Position = new Point(posx, posy);
+				ThingConsole.ReDraw();*/
 
-			ThingConsole.Resize(width, height, width, 100, true);
-			ThingConsole.Position = new Point(posx, posy);
-			ThingConsole.ReDraw();
 
-
-			width = roomConsoleWidth - 3;
+			width = roomConsoleWidth-3;
 			height = topConsoleRowHeight;
-			posx = inventoryWidth * 2 + roomConsoleWidth + 2;
+			posx = inventoryWidth+ 2;
 			posy = barConsoleHeight;
 			if (height > 31)
 			{
@@ -277,7 +277,7 @@ namespace HeartSignal
 			
 			width = inventoryWidth;
 			height = topConsoleRowHeight;
-			posx = inventoryWidth + roomConsoleWidth + 1;
+			posx = 0;
 			posy = barConsoleHeight;
 			if (height > 31)
 			{
@@ -301,8 +301,9 @@ namespace HeartSignal
 			ExamInventoryConsole.ActionOffset = new Point(-30, 1);
 			ExamInventoryConsole.ReDraw();
 
+			height = Program.Height - (topConsoleRowHeight) - barConsoleHeight-1;
 			InventoryConsole.Resize(width, height, width, 100, true);
-			InventoryConsole.Position = new Point(0, (MapConsoleHeight * 2) + 1 + barConsoleHeight);
+			InventoryConsole.Position = new Point(0, topConsoleRowHeight + 1 + barConsoleHeight);
 			InventoryConsole.ActionOffset = new Point(10, 1);
 			InventoryConsole.ReDraw();
 

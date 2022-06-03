@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using SadRogue.Primitives;
 using Console = SadConsole.Console;
 
 namespace HeartSignal
 {
-    internal class DisplayConsole : BaseConsole
+    public class DisplayConsole : BaseConsole
     {
 
         public DisplayConsole(int width, int height) : base(width, height,true,true)
@@ -17,35 +18,69 @@ namespace HeartSignal
         }
         public bool ExplicitLook = false;
         public string contents = "";
+        public List<string> things = new List<string>();
+        public List<ThingWindow> subWindows = new List<ThingWindow>();
 
         protected override void DrawConsole()
         {
             Resize(ViewWidth,ViewHeight,Width,50,false);
 
-         /*   string[] words = contents.Split(" ");
-            string toPrint = "";
-            foreach (var word in words)
-            {
-                if (word.Contains("[nl]"))
-                {
-
-                    Utility.PrintParseMessage(toPrint,actionWindow,this,ExplicitLook);
-                    Cursor.NewLine();
-                    toPrint = "";
-                }
-
-                toPrint +=word+" ";
-                toPrint = toPrint.Replace("[nl]", "");
-            }*/
          
             Utility.PrintParseMessage(contents.Replace("[nl]","\r\n"),actionWindow,this,ExplicitLook);
+
             
-            //TODO ADD THIS BACK WHEN SADCONSOLE FIXED EFFECT CLEARING
-            Resize(ViewWidth,ViewHeight,Width,Math.Max(Cursor.Position.Y,ViewHeight),false);
-            //temp fix
+            //todo search for big windows and print em first
+           
+             subWindows = new List<ThingWindow>();
+            foreach(string thing in things)
+            {
+                ThingWindow tw = new ThingWindow(this, thing);
+                subWindows.Add(tw);
+                Children.Add(tw);
+            }
+           
+            
+          
+            WindowSort();
             
         }
 
+        public void WindowSort()
+        {
+            Resize(ViewWidth,ViewHeight,Width,100,false);
+            Point nextWindowPos = Cursor.Position + new Point(0,1);
+            int highestHeigth = 0;
+            subWindows.Sort(new WindowHeightCompare());
 
+
+
+            foreach (var window in subWindows)
+            {
+                Children.MoveToBottom(window);
+                window.Position = nextWindowPos;
+                nextWindowPos += new Point(window.Width,0);
+                if (window.Height > highestHeigth)
+                {
+                    highestHeigth = window.Height;
+                }
+                if (nextWindowPos.X + 35 > this.Width)
+                {
+                    nextWindowPos = new Point(0, nextWindowPos.Y + highestHeigth);
+                    highestHeigth = 0;
+                }
+            }
+            
+            Resize(ViewWidth,ViewHeight,Width,Math.Max(nextWindowPos.Y+15,ViewHeight),false);
+
+        }
+    }
+
+    public class WindowHeightCompare : Comparer<ThingWindow>
+    {
+        // Compares by Length, Height, and Width.
+        public override int Compare(ThingWindow x, ThingWindow y)
+        {
+            return y.Height.CompareTo(x.Height);
+        }
     }
 }
