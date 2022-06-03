@@ -357,6 +357,7 @@ namespace HeartSignal
         }
         public static void PrintParseMessage(string message,ActionWindow ac,SadConsole.UI.ControlsConsole  con, bool explicitLook = false,int buffer = 0)
         {
+            message = message.Replace("[nl]", "\r\n");
             string[] words = message.Split(" ");
             try
             {

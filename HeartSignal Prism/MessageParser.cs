@@ -99,8 +99,7 @@ namespace HeartSignal
 
 					break;
 				case "desc":
-				///	Program.ThingConsole.contents = jsonObj["contents"].ToString();
-				//	Program.ThingConsole.ReDraw();
+					Program.RoomConsole.Examine(jsonObj["contents"].ToString());
 					break;
 				case "room":
 					Program.RoomConsole.contents = jsonObj["contents"].ToString();
