@@ -355,10 +355,11 @@ namespace HeartSignal
 
         }
 
-
+        private bool clickedThisFrame = false;
         public void ClickItem(string item)
         {
-            
+            if(clickedThisFrame) return;
+            clickedThisFrame = true;    //probably not the most elegant solution
 
 
             if (awaitingItemClick)
@@ -400,8 +401,10 @@ namespace HeartSignal
             }
         }
 
-
-
-
+        public override void Update(TimeSpan delta)
+        {
+            clickedThisFrame = false;
+            base.Update(delta);
+        }
     }
 }

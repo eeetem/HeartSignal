@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using SadConsole;
+using SadConsole.Quick;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 using Color = SadRogue.Primitives.Color;
@@ -17,7 +18,8 @@ namespace HeartSignal
 		private string _id;
 		private DisplayConsole parent;
 		private static readonly object T = new object();
-		
+
+		private Button interactibleThingId;
 		public ThingWindow(DisplayConsole parent, string ID) : base(34, 100)
 		{
 			this.parent = parent;
@@ -43,6 +45,7 @@ namespace HeartSignal
 				ThingDatabase.thingDatabase.Remove(_id);
 				ThingDatabase.thingDatabase.Add(_id, thingData);
 			}
+			this.MouseButtonClicked += (s, a) => interactibleThingId?.InvokeClick();
 
 			Draw();
 		}
@@ -94,9 +97,9 @@ namespace HeartSignal
 			Cursor.Right("examine".Length+1);
 
 			Cursor.Position = new Point(Width - 8, Height-1);
-			Button thingId = Utility.CreateButtonThingId(new[]{"interact",_id},this,_actionWindow,true);
-
-			this.MouseButtonClicked += (s, a) => thingId.InvokeClick();
+			interactibleThingId = Utility.CreateButtonThingId(new[]{"interact",_id},this,_actionWindow,true);
+			
+			
 			
 			this.IsVisible = true;
 			this.IsEnabled = true;
