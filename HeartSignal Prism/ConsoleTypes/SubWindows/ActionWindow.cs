@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework.Input;
 using SadConsole;
 using SadRogue.Primitives;
 using SadConsole.UI.Controls;
 using SadConsole.Input;
+using Keys = SadConsole.Input.Keys;
 
 namespace HeartSignal
 {
@@ -123,12 +125,12 @@ namespace HeartSignal
             {
                 if (!explicitlook)
                 {
-                    ThingDatabase.Examine(id);
+                    ThingDatabase.GetData(id);
                 }
 
                 lastitem = item;
             }
-            if (!ThingDatabase.thingDatabase.ContainsKey(id) && ThingDatabase.thingDatabase[id].name != "error") {
+            if (!ThingDatabase.thingDatabase.ContainsKey(id) || ThingDatabase.thingDatabase[id].name == "error" || ThingDatabase.thingDatabase[id].actionDatabase.Count == 0) {
                 ThingDatabase.GetData(id);
                 return;
             }
@@ -307,7 +309,7 @@ namespace HeartSignal
 
                 int foo = i - 1;
                 button.MouseEnter += (s, a) => DisplayActions(name + "(" + IDs[foo] + ")", null);
-                button.MouseButtonClicked += (s, a) => ClickItem(IDs[foo],a);
+                button.MouseButtonClicked += (s, a) => ClickItem(IDs[foo]);
                 this.Controls.Add(button);
                 this.Cursor.Right(buttontext.Length + 1);
 
@@ -354,8 +356,9 @@ namespace HeartSignal
         }
 
 
-        public void ClickItem(string item, ControlBase.ControlMouseState mouse)
+        public void ClickItem(string item)
         {
+            
 
 
             if (awaitingItemClick)
@@ -367,7 +370,7 @@ namespace HeartSignal
                 return;
             }
             
-            if (mouse.OriginalMouseState.Mouse.LeftClicked) {
+            if (Game.Instance.Mouse.LeftClicked) {
                 if (Game.Instance.Keyboard.IsKeyDown(Keys.LeftShift)){
                     NetworkManager.SendNetworkMessage("lmbshift " + item);
 
@@ -378,7 +381,7 @@ namespace HeartSignal
                     NetworkManager.SendNetworkMessage("lmb " + item);
                 }
             }
-            if (mouse.OriginalMouseState.Mouse.RightClicked)
+            if (Game.Instance.Mouse.RightClicked)
             {
                 if (Game.Instance.Keyboard.IsKeyDown(Keys.LeftShift))
                 {

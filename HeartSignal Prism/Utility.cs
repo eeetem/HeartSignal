@@ -203,7 +203,7 @@ namespace HeartSignal
             console.Cursor.Right(title.Length + 1);
         }
 
-        public static void CreateButtonThingId(string[] thingid, SadConsole.UI.ControlsConsole console, ActionWindow ac,bool explicitlook = false, Point? offset = null,bool clampactionwindow = false) {
+        public static Button CreateButtonThingId(string[] thingid, SadConsole.UI.ControlsConsole console, ActionWindow ac,bool explicitlook = false, Point? offset = null,bool clampactionwindow = false) {
 
             //if there is other things with same name process them at the same time
             List<string> sameThingsIDs = new List<string>();
@@ -240,7 +240,7 @@ namespace HeartSignal
                 {
                     if (!ThingDatabase.thingDatabase.ContainsKey(id)){
 
-                        InitThingId(id);
+                        ThingDatabase.GetData(id);
 
                     }
 
@@ -250,7 +250,7 @@ namespace HeartSignal
             } else if(!ThingDatabase.thingDatabase.ContainsKey(thingid[1]))
             {
 
-                InitThingId(thingid[1]);
+                ThingDatabase.GetData(thingid[1]);
             }
 
 
@@ -289,9 +289,10 @@ namespace HeartSignal
                 button.MouseEnter += (s, a) => ac.DisplayActions(thingid[0] + "(" + thingid[1] + ")", console.Surface,pos, explicitlook);
                 button.MouseMove += (s, a) => (button.Theme as ThingButtonTheme).AdjustColor();
                 button.MouseExit += (s, a) => (button.Theme as ThingButtonTheme).DefaultColor();
-                button.MouseButtonClicked += (s, a) => ac.ClickItem(thingid[1],a);
+                button.Click += (s, a) => ac.ClickItem(thingid[1]);
                 console.Controls.Add(button);
                 console.Cursor.Right(realtext.Length);
+                return button;
             }
             else
             {
@@ -309,19 +310,12 @@ namespace HeartSignal
                 console.Controls.Add(button);
                 console.Cursor.Right(realtext.Length);
 
-
+                return button;
 
             }
 
         }
-        public static void InitThingId(string id)
-        {
 
-            //this being outside the IF causes ex spam but currently it's needed for descriptions, definatelly possible to optimise this if needed
-            NetworkManager.SendNetworkMessage("ex " + id);
-
-
-        }
         public static Texture2D GetImageOrDownload(string file)
         {
             if (File.Exists("img/" + file))

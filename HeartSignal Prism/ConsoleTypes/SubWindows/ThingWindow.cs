@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using SadConsole;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
+using Color = SadRogue.Primitives.Color;
 using Console = SadConsole.Console;
+using Point = SadRogue.Primitives.Point;
+using Rectangle = SadRogue.Primitives.Rectangle;
 
 namespace HeartSignal
 {
@@ -85,11 +89,14 @@ namespace HeartSignal
 				Theme = new ThingButtonTheme(new Gradient(Color.Black,Color.White,Color.Black))
 			};
 			examineAction.MouseButtonClicked += (s, a) => ThingDatabase.Examine(_id);
+			
 			this.Controls.Add(examineAction);
 			Cursor.Right("examine".Length+1);
 
 			Cursor.Position = new Point(Width - 8, Height-1);
-			Utility.CreateButtonThingId(new[]{"Interact",_id},this,_actionWindow,true);
+			Button thingId = Utility.CreateButtonThingId(new[]{"interact",_id},this,_actionWindow,true);
+
+			this.MouseButtonClicked += (s, a) => thingId.InvokeClick();
 			
 			this.IsVisible = true;
 			this.IsEnabled = true;
