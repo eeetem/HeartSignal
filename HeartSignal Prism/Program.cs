@@ -292,6 +292,7 @@ namespace HeartSignal
 			GrasperConsole.Position = new Point(posx,posy );
 			GrasperConsole.ActionOffset = new Point(0, 1);
 			GrasperConsole.ReDraw();
+			
 
 			
 			width = inventoryWidth;
