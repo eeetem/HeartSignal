@@ -64,6 +64,10 @@ namespace HeartSignal
 
 		
 			this.Resize(35, (int) MathF.Min(Cursor.Position.Y + 2,7), false);
+			foreach (var control in Controls)
+			{
+				control.Position = new Point(control.Position.X + 1, control.Position.Y);
+			}
 			this.Surface.ShiftRight();
 			var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(AnimatedBorderComponent._borderCellStyle.Foreground, Color.Transparent));
 			this.DrawBox(new Rectangle(0, 0, Width, Height), boxShape);
@@ -107,6 +111,10 @@ namespace HeartSignal
 			parent.WindowSort();//this gets run too many times, optimise perhaps
 		}
 
-		
+		protected override void Dispose(bool disposing)
+		{
+			_actionWindow.Dispose();
+			base.Dispose(disposing);
+		}
 	}
 }
