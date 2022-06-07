@@ -26,8 +26,8 @@ namespace HeartSignal
 		public static PromptWindow PromptWindow;
 		public static InventoryConsole InventoryConsole;
 		public static InventoryConsole ExamInventoryConsole;
-		public static InventoryConsole GrasperConsole;
-		public static DelayConsole delayConsole;
+		public static TabConsole StatusConsole;
+		//public static DelayConsole delayConsole;
 		public static ButtonConsole buttonConsole;
 		public static Console root;
 		public static LoginConsole loginConsole;
@@ -108,13 +108,13 @@ namespace HeartSignal
 			ExamInventoryConsole = new InventoryConsole(1, 1);
 
 			root.Children.Add(ExamInventoryConsole);
-			GrasperConsole = new InventoryConsole(1, 1);
+			StatusConsole = new TabConsole(1, 1);
 
-			root.Children.Add(GrasperConsole);
+			root.Children.Add(StatusConsole);
 			buttonConsole = new ButtonConsole(1, 1);
 			root.Children.Add(buttonConsole);
-			delayConsole = new DelayConsole(1, 1);
-			root.Children.Add(delayConsole);
+			//delayConsole = new DelayConsole(1, 1);
+			//root.Children.Add(delayConsole);
 
 			loginConsole = new LoginConsole(1, 1);
 			
@@ -220,11 +220,11 @@ namespace HeartSignal
 			MapConsole.Position = new Point((Program.Width / 2) - (inventoryWidth / 2) , (barConsoleHeight) / 2);
 			MapConsole.ReDraw();
 
-			width = inventoryWidth;
-			height = MapConsoleHeight*2;
-			delayConsole.Resize(width, height, width, 100, false);
-			delayConsole.Position = new Point(0 , barConsoleHeight);
-			delayConsole.ReDraw();
+		//	width = inventoryWidth;
+		//	height = MapConsoleHeight*2;
+			//delayConsole.Resize(width, height, width, 100, false);
+			//delayConsole.Position = new Point(0 , barConsoleHeight);
+			//delayConsole.ReDraw();
 
 			width = roomConsoleWidth - 1;
 			height = topConsoleRowHeight;
@@ -285,13 +285,12 @@ namespace HeartSignal
 			}
 			else
 			{
-				GrasperConsole.FontSize = GrasperConsole.Font.GetFontSize(IFont.Sizes.One);
-				GrasperConsole.actionWindow.FontSize = GrasperConsole.actionWindow.Font.GetFontSize(IFont.Sizes.One);
+				StatusConsole.FontSize = StatusConsole.Font.GetFontSize(IFont.Sizes.One);
+				StatusConsole.actionWindow.FontSize = StatusConsole.actionWindow.Font.GetFontSize(IFont.Sizes.One);
 			}
-			GrasperConsole.Resize(width, height, width, 100, false);
-			GrasperConsole.Position = new Point(posx,posy );
-			GrasperConsole.ActionOffset = new Point(0, 1);
-			GrasperConsole.ReDraw();
+			StatusConsole.Resize(width, height, width, 100, false);
+			StatusConsole.Position = new Point(posx,posy );
+			StatusConsole.ReDraw();
 			
 
 			

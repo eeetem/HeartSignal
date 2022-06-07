@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SadConsole;
 using SadRogue.Primitives;
+using Console = System.Console;
 
 namespace HeartSignal
 {
@@ -74,9 +75,7 @@ namespace HeartSignal
 					Program.InventoryConsole.ReDraw();
 					break;
 				case "holding":
-
-					Program.GrasperConsole.inventoryInfo = MakeNestedInfo((JObject)jsonObj["root"]);
-					Program.GrasperConsole.ReDraw();
+					Program.MainConsole.ReciveExternalInput("obsolete parsing tag recived: holding");
 					break;
 				case "exam":
 
@@ -162,6 +161,18 @@ namespace HeartSignal
 					}
 
 					break;
+				case "status":
+					foreach (var jToken in jsonObj["tabs"])
+					{
+						JProperty property = (JProperty) jToken;
+						string tabname = property.Name;
+						string contents = property.Value.ToString();
+						Program.StatusConsole.tabs.Remove(tabname);
+						Program.StatusConsole.tabs.Add(tabname,contents);
+						Program.StatusConsole.ReDraw();
+					}
+					break;
+
 			}
 			
 
@@ -241,6 +252,7 @@ namespace HeartSignal
 
 				//[tag]delay:attack{"1235","1234","64:64:64}
 				case "delay":
+					return;
 					returned = RemoveParseTag(cutstring);
 					cutstring = returned[0];
 
@@ -262,7 +274,7 @@ namespace HeartSignal
 					}
 
 					
-					Program.delayConsole.DisplayDelay(returned[1], new Gradient(Colors), float.Parse(args[0], CultureInfo.InvariantCulture), float.Parse(args[1], CultureInfo.InvariantCulture));
+					//Program.delayConsole.DisplayDelay(returned[1], new Gradient(Colors), float.Parse(args[0], CultureInfo.InvariantCulture), float.Parse(args[1], CultureInfo.InvariantCulture));
 					break;
 				case "map":
 
