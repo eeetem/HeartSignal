@@ -86,6 +86,7 @@ namespace HeartSignal
         private bool GexplicitLook;
         public void DisplayActions(string item = null,  ICellSurface surface = null,Point? newPosition = null, bool? _expilcitLook = null)
         {
+            _expilcitLook = true;
             if (item == null)
             {
                 item = lastitem;
@@ -309,7 +310,8 @@ namespace HeartSignal
 
                 int foo = i - 1;
                 button.MouseEnter += (s, a) => DisplayActions(name + "(" + IDs[foo] + ")", null);
-                button.MouseButtonClicked += (s, a) => ClickItem(IDs[foo]);
+                button.MouseButtonClicked += (s, a) => button.InvokeClick();
+                button.Click += (s, a) => ClickItem(IDs[foo]);
                 this.Controls.Add(button);
                 this.Cursor.Right(buttontext.Length + 1);
 

@@ -113,6 +113,9 @@ namespace HeartSignal
 
 		protected override void Dispose(bool disposing)
 		{
+			this.Clear();
+			this.Controls.Clear();
+			_actionWindow.IsEnabled = false;
 			_actionWindow.Dispose();
 			base.Dispose(disposing);
 		}

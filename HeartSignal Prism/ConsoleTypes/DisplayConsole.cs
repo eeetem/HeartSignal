@@ -39,12 +39,13 @@ namespace HeartSignal
          
             Utility.PrintParseMessage(contents,actionWindow,this,ExplicitLook);
 
-            
-            //todo search for big windows and print em first
+
             foreach (var window in subWindows)
             {
+                window.IsVisible = false;
                 window.IsEnabled = false;
                 window.Dispose();
+                Children.Remove(window);
 
             }
              subWindows = new List<ThingWindow>();
