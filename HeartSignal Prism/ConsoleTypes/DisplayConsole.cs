@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SadConsole.Input;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 using Console = SadConsole.Console;
@@ -48,37 +49,49 @@ namespace HeartSignal
                 Children.Remove(window);
 
             }
-             subWindows = new List<ThingWindow>();
-             if (examineMode)
-             {
-                 Cursor.NewLine();
+            subWindows = new List<ThingWindow>();
+            if (examineMode)
+            {
+                Cursor.NewLine();
                
-                 var closeAction = new Button("[X]".Length, 1)
-                 {
-                     Text = "[X]",
-                     Position = new Point(this.Width-4,Cursor.Position.Y+1),
-                     Theme = new ThingButtonTheme(new Gradient(Color.Red,Color.White,Color.Red))
-                 };
-                 Utility.PrintParseMessage(examineText,actionWindow,this,ExplicitLook);
-                 closeAction.MouseButtonClicked += (s, a) => examineMode = false;
-                 closeAction.MouseButtonClicked += (s, a) => ReDraw();
-                 this.Controls.Add(closeAction);
-             }
-             else
-             {
-                 foreach(string thing in things)
-                 {
-                     ThingWindow tw = new ThingWindow(this, thing);
-                     subWindows.Add(tw);
-                     Children.Add(tw);
-                 }
+                var closeAction = new Button("[X]".Length, 1)
+                {
+                    Text = "[X]",
+                    Position = new Point(this.Width-4,Cursor.Position.Y+1),
+                    Theme = new ThingButtonTheme(new Gradient(Color.Red,Color.White,Color.Red))
+                };
+                Utility.PrintParseMessage(examineText,actionWindow,this,ExplicitLook);
+                closeAction.MouseButtonClicked += (s, a) => QuitExamine();
+                this.Controls.Add(closeAction);
+            }
+            else
+            {
+                foreach(string thing in things)
+                {
+                    ThingWindow tw = new ThingWindow(this, thing);
+                    subWindows.Add(tw);
+                    Children.Add(tw);
+                }
            
             
           
-                 WindowSort();
-             }
+                WindowSort();
+            }
  
             
+        }
+
+        public void QuitExamine()
+        {
+            if(examineMode == false) return;
+            NetworkManager.SendNetworkMessage("unfocus");
+            examineMode = false;
+            ReDraw();
+        }
+        protected override void OnMouseExit(MouseScreenObjectState state)
+        {
+           QuitExamine();
+            base.OnMouseExit(state);
         }
 
         private bool needSort = false;

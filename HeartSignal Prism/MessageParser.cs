@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -17,10 +18,7 @@ namespace HeartSignal
 		
 		public static void ParseServerMessage(string input)
 		{
-			if (input.Contains("[keepalive]"))
-			{
-				return;
-			}
+		
 			int idx = input.IndexOf(':');
 			if (idx > 0 && input.Contains("[tag]"))
 			{
@@ -133,9 +131,26 @@ namespace HeartSignal
 				case "thingdata":
 					string id = jsonObj["id"].ToString();
 					string desc = " ";
-					desc = jsonObj["desc"].ToString();
 					string name= " ";
-					name = jsonObj["name"].ToString();
+					Color? color = null;
+					
+					if (jsonObj["name"] != null)
+					{
+						name = jsonObj["name"].ToString();
+						
+					}
+
+					if (jsonObj["desc"] != null)
+					{
+						desc = jsonObj["desc"].ToString();
+					}
+
+					if (jsonObj["color"] != null)
+					{
+						bool keep1 = false;
+						color = Color.White.FromParser(jsonObj["color"].ToString(), out keep1, out keep1, out keep1, out keep1, out keep1);
+					}
+					
 
 					ThingDatabase.ThingData oldData;
 					if (ThingDatabase.thingDatabase.TryGetValue(id, out oldData))
@@ -149,6 +164,11 @@ namespace HeartSignal
 						if (desc == " ")
 						{
 							desc = oldData.desc;
+						}
+
+						if (color == null)
+						{
+							color = oldData.color;
 						}
 					}
 					
@@ -186,6 +206,13 @@ namespace HeartSignal
 						ThingDatabase.ThingData data = new ThingDatabase.ThingData(name,desc);
 						data.actionDatabase = actionDatabase;
 						data.updateEvent = updaters;
+
+						if (color != null)
+						{
+							
+							data.color = (Color) color;
+						}
+
 
 						ThingDatabase.thingDatabase.Add(id, data);
 

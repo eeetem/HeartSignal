@@ -26,7 +26,7 @@ namespace HeartSignal
 			}
 
 	
-			while (DownloadQueue.FindIndex(x => x.ID == ID) >= 0) //if the soundeffect with this id is downloading - wait
+			while (DownloadQueue.FindIndex(x => x.ID == ID) >= 0 ) //if the soundeffect with this id is downloading - wait
 			{
 				//	System.Console.WriteLine("stopped by download"+request+param);
 					
@@ -231,8 +231,17 @@ namespace HeartSignal
 				ParseRequest(sound.Key, "stop",null);
 			
 			}
-		
-		
+
+			List<DownloadStruct> newDownloadQueue = new List<DownloadStruct>();
+			foreach (var download in DownloadQueue)
+			{
+
+				newDownloadQueue.Add( new DownloadStruct(download.file,"",download.ID));
+			}
+
+			DownloadQueue = newDownloadQueue;
+
+
 		}
 		private static void playSound(string id, string path,bool loop =false)
 		{

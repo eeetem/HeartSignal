@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SadRogue.Primitives;
 
 namespace HeartSignal
 {
@@ -13,12 +14,14 @@ namespace HeartSignal
 			public string name;
 			public Dictionary<string, List<string>> actionDatabase;
 			public ThingUpdate updateEvent;
+			public Color color;
 			public ThingData(string Name,string Desc)
 			{
 				desc = Desc;
 				this.name = Name;
 				actionDatabase = new Dictionary<string, List<string>>();
 				updateEvent = null;
+				color = Color.Purple;
 			}
 		}
 		

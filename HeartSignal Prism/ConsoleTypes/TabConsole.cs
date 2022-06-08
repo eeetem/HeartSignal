@@ -41,6 +41,10 @@ namespace HeartSignal
             }
             foreach (var tab in tabs.Keys)
             {
+                if (tab.Length + Cursor.Position.X + 1 > Width)
+                {
+                    Cursor.NewLine();
+                }
                 if (tab == selectedTab)
                 {
                     Cursor.Print(tab);
@@ -66,7 +70,7 @@ namespace HeartSignal
             }
 
 
-            Cursor.Position = new Point(Cursor.Position.X, Cursor.Position.Y+1);
+            Cursor.Position = new Point(0, Cursor.Position.Y+1);
             Utility.PrintParseMessage(tabs[selectedTab], actionWindow, this, true);
 
         

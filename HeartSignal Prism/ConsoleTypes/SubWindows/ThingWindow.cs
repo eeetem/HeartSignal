@@ -69,7 +69,7 @@ namespace HeartSignal
 				control.Position = new Point(control.Position.X + 1, control.Position.Y);
 			}
 			this.Surface.ShiftRight();
-			var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(AnimatedBorderComponent._borderCellStyle.Foreground, Color.Transparent));
+			var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(thingData.color, Color.Transparent));
 			this.DrawBox(new Rectangle(0, 0, Width, Height), boxShape);
 			Cursor.Position = new Point(1,0);
 			if (thingData.actionDatabase.ContainsKey("basic"))
@@ -81,7 +81,7 @@ namespace HeartSignal
 					{
 						Text = act,
 						Position = Cursor.Position,
-						Theme = new ThingButtonTheme(new Gradient(Color.Black, Color.White, Color.Black))
+						Theme = new ThingButtonTheme(new Gradient(thingData.color, Color.White, thingData.color))
 					};
 					action.MouseButtonClicked += (s, a) => _actionWindow.DoAction(_id, act);
 					action.MouseButtonClicked += (s,a) => _actionWindow.clickedThisFrame = true;
