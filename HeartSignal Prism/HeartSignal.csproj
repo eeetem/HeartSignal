@@ -47,6 +47,9 @@
     <None Update="Version.ver">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="img\disconnected.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

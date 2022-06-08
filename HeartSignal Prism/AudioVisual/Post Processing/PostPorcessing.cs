@@ -135,6 +135,7 @@ namespace HeartSignal
 			OverlayChangeInProgress = false;
 
 		}
+		
 
 		float GetNoise()
 		{

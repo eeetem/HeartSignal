@@ -170,7 +170,7 @@ namespace HeartSignal
 			{
 				Program.loginConsole?.miniDisplay?.Cursor.Print(e.Message).NewLine();
 			
-				Program.MainConsole.ReciveExternalInput("[clear]");
+				//Program.MainConsole.ReciveExternalInput("[clear]");
 				Program.MainConsole.ReciveExternalInput(e.Message);
 			}
 
@@ -178,6 +178,9 @@ namespace HeartSignal
 			
 
 			Program.MainConsole.ReciveExternalInput("Connection to server ended");
+			
+			PostPorcessing.SetOverlay("disconnected.jpg");
+			PostPorcessing.AddTween("overlayalpha",1f,1f);
 
 		}
 

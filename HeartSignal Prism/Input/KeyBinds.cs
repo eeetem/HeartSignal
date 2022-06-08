@@ -49,11 +49,11 @@ namespace HeartSignal
 						{
 							if (SadConsole.Game.Instance.Keyboard.IsKeyDown(Keys.LeftShift))
 							{
-								NetworkManager.SendNetworkMessage("stop");
+								NetworkManager.SendNetworkMessage("stopall");
 							}
 							else
 							{
-								NetworkManager.SendNetworkMessage("stopall");
+								NetworkManager.SendNetworkMessage("stop");
 							}
 
 						}
