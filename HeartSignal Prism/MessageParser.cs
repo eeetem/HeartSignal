@@ -230,8 +230,6 @@ namespace HeartSignal
 						lock (TabConsole.syncObj)
 						{
 							
-					
-
 						
 							JProperty property = (JProperty) jToken;
 							string tabname = property.Name;

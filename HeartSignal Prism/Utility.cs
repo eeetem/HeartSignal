@@ -377,7 +377,8 @@ namespace HeartSignal
                     if (spaced.Contains("!+!"))
                     {
                         string text;
-                        text = spaced.Replace("!+!", "").Replace("_", " ");
+                        text = spaced.Remove(0, spaced.IndexOf("!+!"));
+                        text = text.Replace("!+!", "").Replace("_", " ");
                         string tip = text.Substring(text.IndexOf('(') + 1, text.Length - (text.IndexOf('(') + 2));
                         text = text.Remove(text.IndexOf('('), text.Length - text.IndexOf('('));
                         tip = tip.Replace(")", "");
