@@ -57,6 +57,7 @@ namespace HeartSignal
                 };
                 tabbtn.MouseButtonClicked += (s, a) => selectedTab = tab;
                 tabbtn.MouseButtonClicked += (s, a) => ReDraw();
+                tabbtn.MouseButtonClicked += (s, a) => AudioManager.ParseRequest(null, "play", "interface/judge.ogg");
                 this.Controls.Add(tabbtn);
                 Cursor.Right(tab.Length);
                 
@@ -65,7 +66,7 @@ namespace HeartSignal
             }
 
 
-            Cursor.Position = new Point(0, 1);
+            Cursor.Position = new Point(Cursor.Position.X, Cursor.Position.Y+1);
             Utility.PrintParseMessage(tabs[selectedTab], actionWindow, this, true);
 
         

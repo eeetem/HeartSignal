@@ -161,27 +161,23 @@ namespace HeartSignal
 #endif
 						}
 
-						if (!client.IsConnected)
-						{
-							break;
-						}
-						//await Task.Delay(50);
+						
 					}
 				}
 
 			}
 			catch (Exception e)
 			{
-				Program.loginConsole.miniDisplay.Cursor.Print(needToSendMessage.ToString()).NewLine();
+				Program.loginConsole?.miniDisplay?.Cursor.Print(e.Message).NewLine();
 			
-
-				Program.MainConsole.ReciveExternalInput(e.ToString());
+				Program.MainConsole.ReciveExternalInput("[clear]");
+				Program.MainConsole.ReciveExternalInput(e.Message);
 			}
 
-			Program.loginConsole.miniDisplay.Cursor.Print("Could not connect to server").NewLine();
+			Program.loginConsole?.miniDisplay?.Cursor.Print("Connection to server ended").NewLine();
 			
 
-			Program.MainConsole.ReciveExternalInput("Could not connect to server");
+			Program.MainConsole.ReciveExternalInput("Connection to server ended");
 
 		}
 

@@ -357,7 +357,7 @@ namespace HeartSignal
 
         }
 
-        private bool clickedThisFrame = false;
+        public bool clickedThisFrame = false;
         public void ClickItem(string item)
         {
             if(clickedThisFrame) return;

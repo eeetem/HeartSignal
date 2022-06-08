@@ -17,7 +17,10 @@ namespace HeartSignal
 		
 		public static void ParseServerMessage(string input)
 		{
-			
+			if (input.Contains("[keepalive]"))
+			{
+				return;
+			}
 			int idx = input.IndexOf(':');
 			if (idx > 0 && input.Contains("[tag]"))
 			{
@@ -101,17 +104,27 @@ namespace HeartSignal
 					Program.RoomConsole.Examine(jsonObj["contents"].ToString());
 					break;
 				case "room":
-					Program.RoomConsole.contents = jsonObj["contents"].ToString();
-					List<string> things = new List<string>();
-					foreach (var jToken in jsonObj["things"])
+					if (jsonObj["contents"] != null)
 					{
-
-						things.Add(jToken.ToString());
-
-
+						Program.RoomConsole.contents = jsonObj["contents"].ToString();
 					}
 
-					Program.RoomConsole.things = things;
+					if (jsonObj["things"] != null)
+					{
+						
+						List<string> things = new List<string>();
+						foreach (var jToken in jsonObj["things"])
+						{
+
+							things.Add(jToken.ToString());
+
+
+						}
+
+						Program.RoomConsole.things = things;
+					}
+
+				
 					Program.RoomConsole.ReDraw();
 					break;
 				case "var":
@@ -119,8 +132,27 @@ namespace HeartSignal
 					break;
 				case "thingdata":
 					string id = jsonObj["id"].ToString();
-					string desc = jsonObj["desc"].ToString();
-					string name = jsonObj["name"].ToString();
+					string desc = " ";
+					desc = jsonObj["desc"].ToString();
+					string name= " ";
+					name = jsonObj["name"].ToString();
+
+					ThingDatabase.ThingData oldData;
+					if (ThingDatabase.thingDatabase.TryGetValue(id, out oldData))
+					{
+						if (name == " ")
+						{
+							name = oldData.name;
+
+						}
+
+						if (desc == " ")
+						{
+							desc = oldData.desc;
+						}
+					}
+					
+					
 					Dictionary<string, List<string>> actionDatabase = new Dictionary<string, List<string>>();
 					foreach (var jToken in jsonObj["actions"])
 					{
@@ -140,12 +172,16 @@ namespace HeartSignal
 					lock (ThingDatabase.DatabaseSyncObj)
 					{
 						ThingDatabase.ThingUpdate updaters = null;
+						
+						
+						
 						if (ThingDatabase.thingDatabase.ContainsKey(id))
 						{
 							updaters = ThingDatabase.thingDatabase[id].updateEvent;
 							ThingDatabase.thingDatabase.Remove(id);
 
 						}
+
 
 						ThingDatabase.ThingData data = new ThingDatabase.ThingData(name,desc);
 						data.actionDatabase = actionDatabase;

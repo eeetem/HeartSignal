@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using SadConsole;
 using SadRogue.Primitives;
 
 
+
 namespace HeartSignal
 {
+    
     public class ClassicConsole : SadConsole.UI.ControlsConsole
     {
         public string Prompt { get; set; }
@@ -104,11 +107,14 @@ namespace HeartSignal
 
                 System.Console.WriteLine(Cursor.Position);
 #endif
-
+             
                 SetRelevantViewPos();
             }
 
         }
+
+     
+            
 
         public void SetRelevantViewPos()
         {
@@ -120,4 +126,5 @@ namespace HeartSignal
         
 
     }
+
 }

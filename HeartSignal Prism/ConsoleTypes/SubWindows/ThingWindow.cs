@@ -84,6 +84,7 @@ namespace HeartSignal
 						Theme = new ThingButtonTheme(new Gradient(Color.Black, Color.White, Color.Black))
 					};
 					action.MouseButtonClicked += (s, a) => _actionWindow.DoAction(_id, act);
+					action.MouseButtonClicked += (s,a) => _actionWindow.clickedThisFrame = true;
 					this.Controls.Add(action);
 					Cursor.Right(act.Length + 1);
 				}
@@ -96,7 +97,7 @@ namespace HeartSignal
 				Theme = new ThingButtonTheme(new Gradient(Color.Black,Color.White,Color.Black))
 			};
 			examineAction.MouseButtonClicked += (s, a) => ThingDatabase.Examine(_id);
-			
+			examineAction.MouseButtonClicked += (s,a) => _actionWindow.clickedThisFrame = true;
 			this.Controls.Add(examineAction);
 			Cursor.Right("examine".Length+1);
 
