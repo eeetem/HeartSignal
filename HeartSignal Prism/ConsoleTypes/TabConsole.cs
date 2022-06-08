@@ -19,7 +19,7 @@ namespace HeartSignal
             SadComponents.Add(new MouseHandler());
 
         }
-
+        public static readonly object syncObj = new object();
         public Dictionary<string, string> tabs = new Dictionary<string, string>();
         private string selectedTab = "";
 
@@ -39,41 +39,46 @@ namespace HeartSignal
             {
                 selectedTab = tabs.Keys.ToList()[0];
             }
-            foreach (var tab in tabs.Keys)
+
+            lock (syncObj)
             {
-                if (tab.Length + Cursor.Position.X + 1 > Width)
+                
+         
+                foreach (var tab in tabs.Keys)
                 {
-                    Cursor.NewLine();
-                }
-                if (tab == selectedTab)
-                {
-                    Cursor.Print(tab);
-                    continue;
-                }
+                    if (tab.Length + Cursor.Position.X + 1 > Width)
+                    {
+                        Cursor.NewLine();
+                    }
+                    if (tab == selectedTab)
+                    {
+                        Cursor.Print(tab);
+                        continue;
+                    }
               
                 
                 
-                var tabbtn = new Button(tab.Length, 1)
-                {
-                    Text = tab,
-                    Position = Cursor.Position,
-                    Theme = new ButtonLinesTheme()
-                };
-                tabbtn.MouseButtonClicked += (s, a) => selectedTab = tab;
-                tabbtn.MouseButtonClicked += (s, a) => ReDraw();
-                tabbtn.MouseButtonClicked += (s, a) => AudioManager.ParseRequest(null, "play", "interface/judge.ogg");
-                this.Controls.Add(tabbtn);
-                Cursor.Right(tab.Length);
+                    var tabbtn = new Button(tab.Length, 1)
+                    {
+                        Text = tab,
+                        Position = Cursor.Position,
+                        Theme = new ButtonLinesTheme()
+                    };
+                    tabbtn.MouseButtonClicked += (s, a) => selectedTab = tab;
+                    tabbtn.MouseButtonClicked += (s, a) => ReDraw();
+                    tabbtn.MouseButtonClicked += (s, a) => AudioManager.ParseRequest(null, "play", "interface/judge.ogg");
+                    this.Controls.Add(tabbtn);
+                    Cursor.Right(tab.Length);
                 
                 
                
+                }
+
+
+                Cursor.Position = new Point(0, Cursor.Position.Y+1);
+                Utility.PrintParseMessage(tabs[selectedTab], actionWindow, this, true);
+
             }
-
-
-            Cursor.Position = new Point(0, Cursor.Position.Y+1);
-            Utility.PrintParseMessage(tabs[selectedTab], actionWindow, this, true);
-
-        
 
          
 

@@ -227,12 +227,19 @@ namespace HeartSignal
 				case "status":
 					foreach (var jToken in jsonObj["tabs"])
 					{
-						JProperty property = (JProperty) jToken;
-						string tabname = property.Name;
-						string contents = property.Value.ToString();
-						Program.StatusConsole.tabs.Remove(tabname);
-						Program.StatusConsole.tabs.Add(tabname,contents);
-						Program.StatusConsole.ReDraw();
+						lock (TabConsole.syncObj)
+						{
+							
+					
+
+						
+							JProperty property = (JProperty) jToken;
+							string tabname = property.Name;
+							string contents = property.Value.ToString();
+							Program.StatusConsole.tabs.Remove(tabname);
+							Program.StatusConsole.tabs.Add(tabname,contents);
+							Program.StatusConsole.ReDraw();
+						}
 					}
 					break;
 
@@ -346,8 +353,8 @@ namespace HeartSignal
 					cutstring = returned[0];
 					try
 					{
-						Program.MapConsole.mapdata =
-							ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
+						Program.MapConsole.SetMapData(
+							ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}'))));
 					}
 					catch (Exception E)
 					{

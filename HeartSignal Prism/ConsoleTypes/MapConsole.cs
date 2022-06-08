@@ -21,6 +21,10 @@ namespace HeartSignal
         }
         readonly Point middle = new Point(3,3);
 
+        public void SetMapData(List<string> data)
+        {
+            mapdata = data;
+        }
        public void Clicked(Point loc, MouseScreenObjectState state) {
 
             loc = new Point((int)Math.Floor((double)loc.X / 2), loc.Y); //cells are 2 coordinates wide
@@ -87,7 +91,7 @@ namespace HeartSignal
        }
 
        public List<string> cexists = new List<string>();
-        public List<string> mapdata = new List<string>();
+        private List<string> mapdata = new List<string>();
 
         protected override void DrawConsole()
         {
