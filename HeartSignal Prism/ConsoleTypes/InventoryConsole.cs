@@ -35,18 +35,19 @@ namespace HeartSignal
         }
 
 
-        private void DrawContents(NestedInfo info,int layer) {
-            if(info.Header == null) return;
+        private void DrawContents(NestedInfo info, int layer)
+        {
+            if (info.Header == null) return;
 
             this.DrawLine(Cursor.Position, Cursor.Position + new Point(layer, 0), ICellSurface.ConnectedLineThin[1]);
             Cursor.Right(layer);
-            Utility.PrintParseMessage(info.Header,actionWindow,this,false,1);
+            Utility.PrintParseMessage(info.Header, actionWindow, this, false, 1);
             int index = 0;
             foreach (NestedInfo innerinfo in info.Contents)
             {
-                
-                
-                if (RevealIndex[index] || layer > 0 || tempRevealIndex == index) 
+
+
+                if (RevealIndex[index] || layer > 0 || tempRevealIndex == index)
                 {
                     if (layer == 0)
                     {
@@ -54,18 +55,18 @@ namespace HeartSignal
                         {
                             Text = "[X]",
                             Position = Cursor.Position,
-                            Theme = new ThingButtonTheme(new Gradient(Color.Red,Color.Pink,Color.Red))
+                            Theme = new ThingButtonTheme(new Gradient(Color.Red, Color.Pink, Color.Red))
                         };
                         int index1 = index;
                         closeAction.MouseButtonClicked += (s, a) => RevealIndex[index1] = !RevealIndex[index1];
                         closeAction.MouseButtonClicked += (s, a) => ReDraw();
-         
+
                         this.Controls.Add(closeAction);
-                      Cursor.Right(3);
+                        Cursor.Right(3);
                     }
-               
+
                     DrawContents(innerinfo, layer + 1);
-                    
+
                 }
                 else
                 {
@@ -84,16 +85,21 @@ namespace HeartSignal
                         Cursor.Right(3);
                     }
 
-                    Utility.PrintParseMessage(innerinfo.Header,actionWindow,this,false,1);
+                    Utility.PrintParseMessage(innerinfo.Header, actionWindow, this, false, 1);
                 }
-                
-                
+
+
                 index++;
 
 
             }
 
-        }
+            if (layer == 1)
+            {
+                Cursor.Position = new Point(Cursor.Position.X, Cursor.Position.Y + 1);
+            }
+        
+    }
 
         public override bool ProcessMouse(MouseScreenObjectState state)
         {
