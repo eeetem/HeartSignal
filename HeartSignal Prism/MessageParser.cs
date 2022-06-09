@@ -18,7 +18,14 @@ namespace HeartSignal
 		
 		public static void ParseServerMessage(string input)
 		{
-		
+			if (input.Contains("[keepalive]"))
+			{
+				return;
+			}else if (input.Contains("[unfocus]"))
+			{
+				Program.RoomConsole.QuitExamine();
+				return;
+			}
 			int idx = input.IndexOf(':');
 			if (idx > 0 && input.Contains("[tag]"))
 			{

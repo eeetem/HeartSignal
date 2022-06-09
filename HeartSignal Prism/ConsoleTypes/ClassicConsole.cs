@@ -95,13 +95,7 @@ namespace HeartSignal
                     return;
                 }
                 //this probably isnt the best place for these
-                else if (value.Contains("[keepalive]"))
-                {
-                    return;
-                }else if (value.Contains("[unfocus]"))
-                {
-                    Program.RoomConsole.QuitExamine();
-                }
+           
 
                 if (Height < Cursor.Position.Y + 10)
                 {

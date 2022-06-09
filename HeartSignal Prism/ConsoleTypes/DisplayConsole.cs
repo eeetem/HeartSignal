@@ -90,7 +90,7 @@ namespace HeartSignal
         }
         protected override void OnMouseExit(MouseScreenObjectState state)
         {
-           QuitExamine();
+           //QuitExamine();
             base.OnMouseExit(state);
         }
 
