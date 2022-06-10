@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SadConsole;
 using SadRogue.Primitives;
 using SadConsole.Input;
+using Console = System.Console;
 
 namespace HeartSignal
 {
@@ -29,57 +30,29 @@ namespace HeartSignal
 
             loc = new Point((int)Math.Floor((double)loc.X / 2), loc.Y); //cells are 2 coordinates wide
 
-            double angle = Utility.GetAngleOfLineBetweenTwoPoints(loc, middle);
+            Point relative = loc - middle;
 
-            string msg = "";
+            string msg = "map";
+            if (state.Mouse.LeftButtonDown)
+            {
+                msg += "lmb";
+            }
+            else if (state.Mouse.RightButtonDown)
+            {
+                msg += "rmb";
+            }
+
             if (Game.Instance.Keyboard.IsKeyDown(Keys.LeftShift))
             {
-                msg = "run ";
+                msg += "shift";
             }
             if (Game.Instance.Keyboard.IsKeyDown(Keys.LeftControl))
             {
-                msg = "look ";
+                msg += "ctrl";
             }
 
-            if (angle == 0) {
-                msg += "west";
+            msg += " " + relative.X + " " + relative.Y;
 
-            }
-            else if (angle==180)
-            {
-                msg += "east";
-
-            }
-            else if (angle == 90)
-            {
-                msg += "north";
-
-            }
-            else if (angle == -90)
-            {
-                msg += "south";
-
-            }
-            else if (angle > 0 && angle < 90)
-            {
-                msg += "northwest";
-
-            }
-            else if (angle > 90 && angle < 180)
-            {
-                msg += "northeast";
-
-            }
-            else if (angle > -90 && angle < 0)
-            {
-                msg += "southwest";
-
-            }
-            else if (angle > -180 && angle < -90)
-            {
-                msg += "southeast";
-
-            }
 
             NetworkManager.SendNetworkMessage(msg);
 
@@ -87,7 +60,7 @@ namespace HeartSignal
 
        public void RightClicked(Point clickloc, MouseScreenObjectState state)
        {
-           AudioManager.StopAllSounds();
+           Clicked(clickloc,state);
        }
 
        public List<string> cexists = new List<string>();

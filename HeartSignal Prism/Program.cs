@@ -179,7 +179,7 @@ namespace HeartSignal
 
 
 			int MapConsoleHeight = 7;
-			int inventoryWidth = 30;
+			int inventoryWidth = 35;
 			int roomConsoleWidth = (Program.Width - (inventoryWidth * 2));
 			int barConsoleHeight = 6;//ONLY EVEN due to map console size increase
 			int topConsoleRowHeight = 15 + (int)(Program.Height* 0.2);

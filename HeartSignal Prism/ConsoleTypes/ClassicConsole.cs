@@ -94,8 +94,7 @@ namespace HeartSignal
                     ClearText();
                     return;
                 }
-                //this probably isnt the best place for these
-           
+       
 
                 if (Height < Cursor.Position.Y + 10)
                 {
@@ -106,8 +105,6 @@ namespace HeartSignal
 #if DEBUG
                 System.Console.WriteLine(value);
 
-
-                System.Console.WriteLine(Cursor.Position);
 #endif
              
                 SetRelevantViewPos();

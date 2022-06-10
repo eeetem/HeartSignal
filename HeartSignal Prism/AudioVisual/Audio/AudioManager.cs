@@ -22,7 +22,7 @@ namespace HeartSignal
 			//System.Console.WriteLine("recived " +request+param);
 			if (ID == null) {
 
-			 ID = 	new Random().Next(0, 1000).ToString();//this isnt gonna happend often so i dont want to store a random in memory
+			 ID = 	new Random().Next(0, 9999).ToString();//this isnt gonna happend often so i dont want to store a random in memory
 			}
 
 	
