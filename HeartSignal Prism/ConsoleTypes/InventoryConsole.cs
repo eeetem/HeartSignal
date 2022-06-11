@@ -43,6 +43,7 @@ namespace HeartSignal
             bool quitFlag = false;
             
             this.DrawLine(Cursor.Position, Cursor.Position + new Point(layer, 0), ICellSurface.ConnectedLineThin[1]);
+            Cursor.Print("└");
             Cursor.Right(layer);
             if (info.Contents.Count > 0 && layer > 0)
             {
@@ -59,6 +60,7 @@ namespace HeartSignal
                     int index1 = index;
                     closeAction.MouseButtonClicked += (s, a) => RevealIndex[layer,index1] = !RevealIndex[layer,index1];
                     closeAction.MouseButtonClicked += (s, a) => ReDraw();
+                    closeAction.MouseButtonClicked += (s, a) => AudioManager.ParseRequest(null, "play", "interface/nest_close.ogg");
 
                     this.Controls.Add(closeAction);
                 
@@ -74,7 +76,7 @@ namespace HeartSignal
                     int index1 = index;
                     closeAction.MouseButtonClicked += (s, a) => RevealIndex[layer,index1] = !RevealIndex[layer,index1];
                     closeAction.MouseButtonClicked += (s, a) => ReDraw();
-
+                    closeAction.MouseButtonClicked += (s, a) => AudioManager.ParseRequest(null, "play", "interface/nest_open.ogg");
                     this.Controls.Add(closeAction);
                 }
                 else
@@ -88,6 +90,7 @@ namespace HeartSignal
                     int index1 = index;
                     closeAction.MouseEnter += (s, a) => tempRevealIndex[layer] = index1;
                     closeAction.MouseEnter += (s, a) => ReDraw();
+                    closeAction.MouseEnter += (s, a) => AudioManager.ParseRequest(null, "play", "interface/nest_open.ogg");
                     this.Controls.Add(closeAction);
                     quitFlag = true;
 

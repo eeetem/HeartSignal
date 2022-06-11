@@ -50,30 +50,14 @@ namespace HeartSignal
                 Position = (Point) newPosition - new Point(0, surface.ViewPosition.Y);
             }
             Position = new Point(Math.Clamp(Position.X,  0, Math.Max(0,surface.ViewWidth-this.Width-1)), Position.Y);
-
+            
 
             this.Clear();
             Controls.Clear();
 
             this.Cursor.Position = new Point(0, 1);
-            string[] words = text.Split(" ");
 
-            
-            string toPrint = "";
-           foreach (var word in words)
-            {
-                if (word.Contains("[newline]"))
-                {
-
-                    Cursor.Print(toPrint).NewLine();
-                    toPrint = "";
-                }
-
-                toPrint +=word+" ";
-                toPrint = toPrint.Replace("[newline]", "");
-            }
-
-            Cursor.Print(toPrint);
+            Cursor.Print(text);
             this.Surface.ShiftRight();
             this.Resize(Width, Cursor.Position.Y + 2, Width, Cursor.Position.Y + 2, false);
             var boxShape = ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.Green, Color.Transparent));
