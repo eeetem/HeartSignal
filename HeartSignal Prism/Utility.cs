@@ -352,7 +352,7 @@ namespace HeartSignal
         }
         public static void PrintParseMessage(string message,ActionWindow ac,SadConsole.UI.ControlsConsole  con, bool explicitLook = false,int buffer = 0)
         {
-            message = message.Replace("[nl]", " \r\n");
+            
             string[] words = message.Split(" ");
             try
             {
@@ -419,6 +419,7 @@ namespace HeartSignal
 
                     else
                     {
+                        spaced = spaced.Replace("[nl]", " \r\n");
                         if (con.Cursor.Position.X + spaced.Length+buffer > con.Width && !spaced.Contains("["))
                         {
                             con.Cursor.NewLine().Right(buffer);

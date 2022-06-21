@@ -59,7 +59,7 @@ namespace HeartSignal
 	
 			this.Cursor.Position = new Point(0, 1);
 		
-			Utility.PrintParseMessage( thingData.desc.Replace("[nl]","\r\n"),_actionWindow,this,true);
+			Utility.PrintParseMessage( thingData.desc,_actionWindow,this,true);
 
 
 		
