@@ -272,6 +272,7 @@ namespace HeartSignal
 			RoomConsole.Resize(width, height, width, 100, true);
 			RoomConsole.Position = new Point(posx, posy);
 			RoomConsole.ReDraw();
+			NetworkManager.SendNetworkMessage("desclen " + width);
 			
 			
 			

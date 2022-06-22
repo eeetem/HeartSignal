@@ -360,73 +360,85 @@ namespace HeartSignal
                 {
 
                     string spaced = word.Replace("¦", " ",StringComparison.InvariantCultureIgnoreCase);
+                    while (true)
+                    {
+                        
+                        if (spaced.Contains("{"))
+                        {
+                            string varbl = spaced.Substring(spaced.IndexOf("{")+1, spaced.IndexOf("}")-spaced.IndexOf("{")-1);
+                            var varble = new Label(RemoveParserTags(Utility.GetVar(varbl)).Length)
+                            {
+                                Position = con.Cursor.Position,
+                                Theme = new VarblPrinterTheme(varbl)
+                            };
+                            con.Controls.Add(varble);
+                            con.Cursor.Right(RemoveParserTags(Utility.GetVar(varbl)).Length + 1);
+                            spaced = spaced.Remove(spaced.IndexOf("{"), spaced.IndexOf("}") - spaced.IndexOf("{")+1);
+                            continue;
+
+                        }
+                        if (spaced.Contains("!+!"))
+                        {
+                            string text;
+                            text = spaced.Remove(0, spaced.IndexOf("!+!"));
+                            text = text.Replace("!+!", "").Replace("_", " ");
+                            string tip = text.Substring(text.IndexOf('(') + 1, text.Length - (text.IndexOf('(') + 2));
+                            text = text.Remove(text.IndexOf('('), text.Length - text.IndexOf('('));
+                            tip = tip.Replace(")", "");
+
+                            Utility.CreateToolTip(text, tip, con, ac);
+                            spaced = spaced.Remove(0, spaced.IndexOf("!+!")+3);
+                            spaced = spaced.Remove(0, spaced.IndexOf("!+!")+3);
+                            spaced = spaced.Remove(0, spaced.IndexOf("!+!")+3);
+                        
+                            continue;
+                        }
+                        //"!/!click_me(output,theme)!/!"
+                        else if (spaced.Contains("!/!"))
+                        {
+                            string title = spaced.Substring(spaced.IndexOf("!/!")+3, spaced.IndexOf('(') - (spaced.IndexOf("!/!")+3));
+                            string output = spaced.Substring(spaced.IndexOf("(")+1, spaced.IndexOf(',') - (spaced.IndexOf("(")+1));
+                            string theme = spaced.Substring(spaced.IndexOf(",") + 1,   spaced.IndexOf(')') - (spaced.IndexOf(",")+1));
+                            Utility.CreateButton(title, output, theme, con);
+                            spaced = spaced.Remove(0, spaced.IndexOf("!/!")+3);
+                            spaced = spaced.Remove(0, spaced.IndexOf("!/!")+3);
+                            continue;
+                        }
+                        else if (spaced.Contains("<"))
+                        {
                     
-                    if (spaced.Contains("{"))
-                    {
-                        string varbl = spaced.Substring(spaced.IndexOf("{")+1, spaced.IndexOf("}")-spaced.IndexOf("{")-1);
-                        var varble = new Label(RemoveParserTags(Utility.GetVar(varbl)).Length)
-                        {
-                            Position = con.Cursor.Position,
-                            Theme = new VarblPrinterTheme(varbl)
-                        };
-                        con.Controls.Add(varble);
-                        con.Cursor.Right(RemoveParserTags(Utility.GetVar(varbl)).Length + 1);
-                        spaced = spaced.Remove(spaced.IndexOf("{"), spaced.IndexOf("}") - spaced.IndexOf("{")+1);
+                            string leftover = "";
+                            if (spaced.IndexOf("<") > 0)
+                            {
+                                string beginingbit = spaced.Substring(0, spaced.IndexOf("<"));
+                                con.Cursor.Print(beginingbit);
+                                spaced = spaced.Remove(0, spaced.IndexOf("<"));
+                            }
+
+                            if (spaced.Length > spaced.IndexOf('>'))
+                            {
+                                leftover = spaced.Substring(spaced.IndexOf('>') + 1, spaced.Length - (spaced.IndexOf('>') + 1));
+                            }
+
+                            spaced = spaced.Remove(spaced.IndexOf('>'), spaced.Length - spaced.IndexOf('>'));
+                            spaced = spaced.Replace("<", "").Replace(">", "");
+                            Utility.CreateButtonThingId(Utility.SplitThingId(spaced), con, ac,
+                                explicitLook,
+                                null, true);
+                            spaced = leftover;
+                            continue;
+                        }
+                        break;
 
                     }
-                    if (spaced.Contains("!+!"))
+                    spaced = spaced.Replace("[nl]", "\r\n");
+                    if (con.Cursor.Position.X + spaced.Length+buffer > con.Width && !spaced.Contains("["))
                     {
-                        string text;
-                        text = spaced.Remove(0, spaced.IndexOf("!+!"));
-                        text = text.Replace("!+!", "").Replace("_", " ");
-                        string tip = text.Substring(text.IndexOf('(') + 1, text.Length - (text.IndexOf('(') + 2));
-                        text = text.Remove(text.IndexOf('('), text.Length - text.IndexOf('('));
-                        tip = tip.Replace(")", "");
+                        con.Cursor.NewLine().Right(buffer);
+                    }
 
-                        Utility.CreateToolTip(text, tip, con, ac);
-                    }
-                    //"!/!click_me(output,theme)!/!"
-                   else if (spaced.Contains("!/!"))
-                    {
-                        string title = spaced.Substring(spaced.IndexOf("!/!")+3, spaced.IndexOf('(') - (spaced.IndexOf("!/!")+3));
-                        string output = spaced.Substring(spaced.IndexOf("(")+1, spaced.IndexOf(',') - (spaced.IndexOf("(")+1));
-                        string theme = spaced.Substring(spaced.IndexOf(",") + 1,   spaced.IndexOf(')') - (spaced.IndexOf(",")+1));
-                        Utility.CreateButton(title, output, theme, con);
-                    }
-                    else if (spaced.Contains("<"))
-                    {
+                    con.Cursor.Print(spaced).Right(1);
                     
-                        string leftover = "";
-                        if (spaced.IndexOf("<") > 0)
-                        {
-                            string beginingbit = spaced.Substring(0, spaced.IndexOf("<"));
-                            con.Cursor.Print(beginingbit);
-                            spaced = spaced.Remove(0, spaced.IndexOf("<"));
-                        }
-
-                        if (spaced.Length > spaced.IndexOf('>'))
-                        {
-                            leftover = spaced.Substring(spaced.IndexOf('>') + 1, spaced.Length - (spaced.IndexOf('>') + 1));
-                        }
-
-                        spaced = spaced.Remove(spaced.IndexOf('>'), spaced.Length - spaced.IndexOf('>'));
-                        spaced = spaced.Replace("<", "").Replace(">", "");
-                        Utility.CreateButtonThingId(Utility.SplitThingId(spaced), con, ac,
-                            explicitLook,
-                            null, true);
-                        con.Cursor.Print(leftover).Right(1);
-                    }
-
-                    else
-                    {
-                        spaced = spaced.Replace("[nl]", " \r\n");
-                        if (con.Cursor.Position.X + spaced.Length+buffer > con.Width && !spaced.Contains("["))
-                        {
-                            con.Cursor.NewLine().Right(buffer);
-                        }
-
-                        con.Cursor.Print(spaced).Right(1);
-                    }
                 }
 
                 con.Cursor.NewLine().Right(buffer);
