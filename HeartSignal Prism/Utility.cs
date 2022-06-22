@@ -156,15 +156,12 @@ namespace HeartSignal
                 console.Cursor.NewLine().Right(1);
             }
 
-            
 
-           bool offset3d = false;
             ButtonTheme TbuttonTheme;
             switch (theme)
             {
                 case "3d":
                     TbuttonTheme = new Button3dTheme();
-                    offset3d = true;
                     break;
                 case "line":
                     TbuttonTheme = new ButtonLinesTheme();
@@ -179,11 +176,6 @@ namespace HeartSignal
 
             }
 
-            if (offset3d)
-            {
-                console.Cursor.Position = console.Cursor.Position.WithY(console.Cursor.Position.Y - 1);
-            }
-
 
             var button = new Button(Utility.RemoveParserTags(title).Length, 1)
             {
@@ -191,10 +183,6 @@ namespace HeartSignal
                 Position = console.Cursor.Position,
                 Theme = TbuttonTheme
             };
-            if (offset3d)
-            {
-                console.Cursor.Position = console.Cursor.Position.WithY(console.Cursor.Position.Y +1);
-            }
 
 
             button.MouseButtonClicked += (s, a) => NetworkManager.SendNetworkMessage(output);

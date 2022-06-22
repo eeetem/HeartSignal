@@ -13,16 +13,15 @@ namespace HeartSignal
         {
             DefaultBackground = Color.Gray;
             DefaultForeground = Color.Black;
-            keyboard = new KeyboardHandler();
+            
             Cursor.IsVisible = true;
-            keyboard.CursorLastY = Cursor.Position.Y;
             IsFocused = true;
-            UseKeyboard = true;
-            keyboard.EnterPressed += SendCommand;
             Cursor.PrintAppearanceMatchesHost = false;
             Cursor.PrintAppearance = new ColoredGlyph(Color.Black, Color.Gray);
 
-     
+           keyboard = new KeyboardHandler();
+           keyboard.CursorLastY = Cursor.Position.Y;
+          keyboard.EnterPressed += SendCommand;
             SadComponents.Add(keyboard);
 
             Cursor.Print(">");

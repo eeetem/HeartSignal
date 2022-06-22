@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework.Graphics;
 using SadConsole;
 using SadConsole.Input;
 using SadRogue.Primitives;
 using SadConsole.UI.Controls;
+using Console = SadConsole.Console;
 
 namespace HeartSignal
 {
@@ -21,10 +23,12 @@ namespace HeartSignal
             Cursor.DisableWordBreak = true;
             Cursor.UseStringParser = true;
             UsePrintProcessor = true;
+
             
             SadComponents.Add( new MouseHandler());
            
         }
+
 
         public List<string> args = new List<string>();
 
@@ -34,6 +38,7 @@ namespace HeartSignal
         Choice,
         Text,
         Permanent,//has to be manually hid by other code
+        MultiLine,
         
         }
         public PopupType Type;
@@ -139,6 +144,43 @@ namespace HeartSignal
 
 
             }
+            else if (Type == PopupType.MultiLine)
+            {
+
+                Rectangle r = new Rectangle(2, 2+Cursor.Position.Y, Width - 4, 21);
+                ShapeParameters shapeParameters = ShapeParameters.CreateBorder(new ColoredGlyph(Color.Red,Color.Red,219));
+                Surface.DrawBox(r,shapeParameters);
+                
+                
+                Console typingSurface = new Console(Width - 6, 19);
+                typingSurface.Position = new Point(3, 3 + Cursor.Position.Y);
+                typingSurface.Cursor.IsEnabled = false;
+                typingSurface.Cursor.IsVisible = true;
+                typingSurface.Cursor.MouseClickReposition = true;
+                var keyboard = new KeyboardHandler {CursorLastY = Cursor.Position.Y};
+                typingSurface.SadComponents.Add(keyboard);
+                typingSurface.FocusOnMouseClick = true;
+                typingSurface.IsFocused = true;
+                typingSurface.AutoCursorOnFocus = true;
+                
+
+                Children.Add(typingSurface);
+
+               
+                
+                Cursor.Position = new Point(0, Cursor.Position.Y + 23);
+                var button = new Button(4, 1)
+                {
+                    Text = "OK",
+                    Position = new Point(Width / 2 - 4/2, Cursor.Position.Y)
+                };
+
+                button.Click += (s, a) => SendMultiLine(typingSurface.Surface);
+               button.Click += (s, a) => Children.Remove(typingSurface);
+                button.Click += (s, a) => typingSurface.Dispose();
+                button.Click += (s, a) => Close();
+                Controls.Add(button);
+            }
             else if (Type == PopupType.Permanent)
             {
 
@@ -162,6 +204,15 @@ namespace HeartSignal
 
 
 
+        }
+
+        private void SendMultiLine(ICellSurface surface)
+        {
+            for (int i = 0; i < surface.Height; i++)
+            {
+                NetworkManager.SendNetworkMessage(surface.GetString(0 + Width * i, Width * i + Width).TrimEnd(),bypassLock:true);
+            }
+            NetworkManager.SendNetworkMessage(".",bypassLock:true);
         }
         public override void Update(TimeSpan delta)
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using PrimS.Telnet;
 using System.IO;
+using Console = SadConsole.Console;
 
 namespace HeartSignal
 {
@@ -36,6 +37,10 @@ namespace HeartSignal
 		    //if (idx < 1)
 		    //{
 
+		    Program.PromptWindow.toptext = "ayo";
+		    Program.PromptWindow.middletext = "changooooooos";
+		    Program.PromptWindow.Type = PromptWindow.PopupType.MultiLine;
+		    Program.PromptWindow.needsDraw = true;
 
 		    idx = input.IndexOf('\r');
 		    
@@ -83,7 +88,6 @@ namespace HeartSignal
 	    public static bool lockMessages = false;
 	    public static bool SendNetworkMessage(string message, bool bypassLock = false)
 	    {
-
 		    if (lockMessages && !bypassLock)
 		    {
 			    return false;

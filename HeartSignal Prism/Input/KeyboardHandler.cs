@@ -3,6 +3,7 @@ using System.Linq;
 using SadConsole.Components;
 using SadConsole.Input;
 using SadConsole;
+using SadRogue.Primitives;
 using Console = SadConsole.Console;
 using Keys = SadConsole.Input.Keys;
 //using System.Windows.Forms;
@@ -17,8 +18,7 @@ namespace HeartSignal
         // this is a callback for the owner of this keyboard handler. It is called when the user presses ENTER.
         public delegate void KeyDelegate();
         public event KeyDelegate EnterPressed;
-        public event KeyDelegate UpPressed;
-        public event KeyDelegate DownPressed;
+
         //  public event KeyDelegate BackPressed;
 
         public int CursorLastY = 0;
@@ -30,11 +30,10 @@ namespace HeartSignal
         
         public override void ProcessKeyboard(IScreenObject consoleObject, Keyboard info, out bool handled)
         {
-            handled = false;
            
-            
-            if(handled) return;
+    
 
+           handled = false;
 
             // Upcast this because we know we're only using it with a Console type.
             Console console = (Console)consoleObject;
@@ -42,6 +41,7 @@ namespace HeartSignal
             // Check each key pressed.
             foreach (AsciiKey key in info.KeysPressed)
             {
+                
                 // If the character associated with the key pressed is a printable character, print it
                 if (key.Character != '\0')
                 {
@@ -119,20 +119,29 @@ namespace HeartSignal
                         console.Cursor.RightWrap(1);
                     
                 }
+                else if (key.Key == Keys.Up)
+                {
+
+
+
+                    console.Cursor.Position = new Point(console.Cursor.Position.X, console.Cursor.Position.Y - 1);
+
+                }
+                else if (key.Key == Keys.Down)
+                {
+
+
+                    
+                    console.Cursor.Position = new Point(console.Cursor.Position.X, console.Cursor.Position.Y + 1);
+                    
+                }
 
                 // Special character - ENTER
                 else if (key.Key == Keys.Enter)
                 {
                     EnterPressed?.Invoke();
                 }
-                else if (key.Key == Keys.Up)
-                {
-                    UpPressed?.Invoke();
-                }
-                else if (key.Key == Keys.Down)
-                {
-                    DownPressed?.Invoke();
-                }
+   
             }
 
             handled = true;

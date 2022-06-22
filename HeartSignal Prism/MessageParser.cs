@@ -135,6 +135,40 @@ namespace HeartSignal
 				case "var":
 					Utility.SetVar(jsonObj["name"].ToString(),jsonObj["value"].ToString());
 					break;
+				case "prompt":
+					Program.PromptWindow.toptext = jsonObj["top text"].ToString();
+					Program.PromptWindow.middletext = jsonObj["middle text"].ToString();
+					List<JToken> options = jsonObj["options"].ToList();
+
+					List<string> parsedOptions = new List<string>();
+					foreach (var token in options)
+					{
+						parsedOptions.Add(token.ToString());
+					}
+
+					switch (jsonObj["ptype"].ToString())
+					{
+						case "text":
+							Program.PromptWindow.Type = PromptWindow.PopupType.Text;
+							Program.PromptWindow.args = null;
+							break;
+						case "multiline":
+							Program.PromptWindow.Type = PromptWindow.PopupType.MultiLine;
+							Program.PromptWindow.args = null;
+							break;
+						case "choice":
+							Program.PromptWindow.Type = PromptWindow.PopupType.Choice;
+							Program.PromptWindow.args = parsedOptions;
+							break;
+						
+						
+					}
+					
+
+
+					Program.PromptWindow.needsDraw = true;
+					break;
+
 				case "thingdata":
 					string id = jsonObj["id"].ToString();
 					string desc = " ";
@@ -307,6 +341,7 @@ namespace HeartSignal
 					}*/
 					break;
 				//obsolete
+				case "prompt":
 				case "desc":
 				case "room":
 				case "argactions":
@@ -430,30 +465,7 @@ namespace HeartSignal
 
 
 					break;
-				case "prompt":
-
-					returned = RemoveParseTag(cutstring);
-					cutstring = returned[0];
-					string[] titles = returned[1].Split(";");
-					Program.PromptWindow.toptext = titles[0];
-					Program.PromptWindow.middletext = titles[1];
-					List<string> args4 = ExtractQuotationStrings(cutstring.Substring(0, cutstring.IndexOf('}')));
-					if (args4.Count > 0)
-					{
-						Program.PromptWindow.Type = PromptWindow.PopupType.Choice;
-						Program.PromptWindow.args = args4;
-					}
-					else
-					{
-						Program.PromptWindow.Type = PromptWindow.PopupType.Text;
-						Program.PromptWindow.args = null;
-					}
-
-
-					Program.PromptWindow.needsDraw = true;
-
-
-					break;
+			;
 
 				
 				case "accept":
