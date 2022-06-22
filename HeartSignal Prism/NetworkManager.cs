@@ -33,14 +33,7 @@ namespace HeartSignal
 
 
 		    //       idx = input.IndexOf('\n');
-
-		    //if (idx < 1)
-		    //{
-
-		    Program.PromptWindow.toptext = "ayo";
-		    Program.PromptWindow.middletext = "changooooooos";
-		    Program.PromptWindow.Type = PromptWindow.PopupType.MultiLine;
-		    Program.PromptWindow.needsDraw = true;
+		    
 
 		    idx = input.IndexOf('\r');
 		    
